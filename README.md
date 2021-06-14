@@ -2,11 +2,11 @@
 
 This is second version of scheduler bot for ZIEIT institute.
 
-### Deploying
+## Deploying
 
 `TODO`
 
-### Building
+## Building
 
 To build project you need:
 - `JDK` 1.8 or higher
@@ -14,6 +14,6 @@ To build project you need:
 
 Run `shadowJar` Gradle task to build minimized shadowed jar.
 
-### License
+## License
 
 MIT
