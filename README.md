@@ -13,3 +13,7 @@ To build project you need:
 - `Gradle` version 6.0 or higher
 
 Run `shadowJar` Gradle task to build minimized shadowed jar.
+
+### License
+
+MIT
