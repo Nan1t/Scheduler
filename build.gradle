@@ -1,34 +1,14 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "6.0.0"
-    id "java"
+    id 'java'
 }
 
-group "edu.zieit"
-version "1.0"
+allprojects {
+    group 'edu.zieit'
+    version '1.0'
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.0"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"
-
-    implementation "org.yaml:snakeyaml:1.28"
-    implementation "org.spongepowered:configurate-yaml:4.1.1"
-    implementation "org.hibernate.orm:hibernate-core:6.0.0.Alpha8"
-    implementation "org.apache.poi:poi:5.0.0"
-    implementation "org.telegram:telegrambots:5.2.0"
-}
-
-jar {
-    manifest {
-        attributes "Main-Class": "edu.zieit.scheduler.Main"
+    repositories {
+        mavenCentral()
     }
-}
-
-shadowJar {
-    minimize()
 }
 
 test {

@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.config;
+package edu.zieit.scheduler.api;
 
 import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;

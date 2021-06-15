@@ -1,0 +1,29 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'java'
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation project(':api')
+    implementation project(':schedule')
+
+    implementation 'org.telegram:telegrambots:5.2.0'
+    implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha8'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'edu.zieit.scheduler.Main'
+    }
+}
+
+shadowJar {
+    minimize()
+}
+
+test {
+    useJUnitPlatform()
+}

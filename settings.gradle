@@ -1,2 +1,5 @@
 rootProject.name = 'Scheduler'
+include 'api'
+include 'bot'
+include 'schedule'
 
