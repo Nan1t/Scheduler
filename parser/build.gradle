@@ -1,0 +1,16 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation project(':api')
+    implementation 'org.apache.poi:poi-ooxml:5.0.0'
+    implementation files('libs/renderer.jar')
+}
+
+test {
+    useJUnitPlatform()
+}
