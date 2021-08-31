@@ -12,9 +12,7 @@ To build project you need:
 - `JDK` 1.8 or higher
 - `Gradle` version 7.0 or higher
 
-Run `gradle build` command in terminal.
-**OR**  
-Run `shadowJar` Gradle task to build minimized shadowed jar.
+Run `gradlew shadowJar` command in terminal.
 
 ## License
 
