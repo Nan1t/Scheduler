@@ -6,11 +6,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
-    api ('com.github.NanitApi:napi-yaml:main-SNAPSHOT') {
-        exclude group: 'com.google.inject'
-        exclude group: 'com.google.guava'
-    }
-    api 'org.spongepowered:configurate-yaml:4.1.1'
+    api 'com.github.NanitApi:napi-yaml:main-SNAPSHOT'
+    //api 'org.spongepowered:configurate-yaml:4.1.1'
     api 'org.apache.poi:poi:5.0.0'
 }
 

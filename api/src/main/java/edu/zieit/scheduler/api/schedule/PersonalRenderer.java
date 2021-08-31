@@ -3,9 +3,9 @@ package edu.zieit.scheduler.api.schedule;
 import java.awt.image.BufferedImage;
 
 /**
- * Implementors of this interface should render associated schedule to image
+ * Implementors of this interface should render associated schedule to personal user's image
  */
-public interface ScheduleRenderer {
+public interface PersonalRenderer {
 
     /**
      * Get associated schedule
