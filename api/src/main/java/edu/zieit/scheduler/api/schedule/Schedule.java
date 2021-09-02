@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 public interface Schedule {
 
     /**
-     * Get schedule basic info
+     * Get schedule info
      * @return Schedule info
      */
     ScheduleInfo getInfo();

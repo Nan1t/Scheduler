@@ -17,10 +17,10 @@ public abstract class AbstractSchedule implements Schedule {
     private final DocumentRenderer documentRenderer;
     private BufferedImage documentImg;
 
-    public AbstractSchedule(ScheduleInfo info, Workbook workbook, DocumentRenderer documentRenderer) throws IllegalArgumentException {
+    public AbstractSchedule(ScheduleInfo info, Sheet sheet, DocumentRenderer documentRenderer) throws IllegalArgumentException {
         this.info = info;
-        this.workbook = workbook;
-        this.sheet = workbook.getSheetAt(info.getSheetIndex());
+        this.workbook = sheet.getWorkbook();
+        this.sheet = sheet;
         this.documentRenderer = documentRenderer;
     }
 

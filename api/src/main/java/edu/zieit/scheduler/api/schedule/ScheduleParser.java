@@ -1,5 +1,7 @@
 package edu.zieit.scheduler.api.schedule;
 
+import java.util.Collection;
+
 /**
  * Implementors of this interface parses schedule from url
  * and returns parsed schedule instance
@@ -9,8 +11,9 @@ public interface ScheduleParser {
     /**
      * Parse schedule
      * @param info Schedule info
-     * @return Parsed schedule
+     * @return Parsed schedule collection.
+     * Sometimes this collection may contains several schedules
      */
-    Schedule parse(ScheduleInfo info) throws ScheduleParseException;
+    Collection<Schedule> parse(ScheduleInfo info) throws ScheduleParseException;
 
 }

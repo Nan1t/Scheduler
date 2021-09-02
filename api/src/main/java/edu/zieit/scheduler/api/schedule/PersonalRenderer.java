@@ -1,5 +1,7 @@
 package edu.zieit.scheduler.api.schedule;
 
+import edu.zieit.scheduler.api.render.DocumentRenderException;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -8,15 +10,9 @@ import java.awt.image.BufferedImage;
 public interface PersonalRenderer {
 
     /**
-     * Get associated schedule
-     * @return Schedule instance
-     */
-    Schedule getSchedule();
-
-    /**
      * Render associated schedule to image
      * @return Rendered image
      */
-    BufferedImage render();
+    BufferedImage render() throws DocumentRenderException;
 
 }

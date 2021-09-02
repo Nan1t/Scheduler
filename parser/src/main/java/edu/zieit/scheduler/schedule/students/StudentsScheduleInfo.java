@@ -2,33 +2,23 @@ package edu.zieit.scheduler.schedule.students;
 
 import com.google.common.reflect.TypeToken;
 import edu.zieit.scheduler.api.SheetPoint;
-import edu.zieit.scheduler.api.schedule.ScheduleInfo;
+import edu.zieit.scheduler.schedule.AbstractScheduleInfo;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
-public class StudentsScheduleInfo extends ScheduleInfo {
+public class StudentsScheduleInfo extends AbstractScheduleInfo {
 
-    private final String id;
     private final String displayName;
     private final SheetPoint dayPoint;
-    private final SheetPoint classNumPoint;
-    private final SheetPoint groupsPoint;
 
-    private StudentsScheduleInfo(URL url, int sheetIndex, String id, String displayName,
-                                SheetPoint dayPoint, SheetPoint classNumPoint, SheetPoint groupsPoint) {
-        super(url, sheetIndex);
-        this.id = id;
+    private StudentsScheduleInfo(URL url, String displayName, SheetPoint dayPoint) {
+        super(url);
         this.displayName = displayName;
         this.dayPoint = dayPoint;
-        this.classNumPoint = classNumPoint;
-        this.groupsPoint = groupsPoint;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getDisplayName() {
@@ -39,19 +29,23 @@ public class StudentsScheduleInfo extends ScheduleInfo {
         return dayPoint;
     }
 
-    public SheetPoint getClassNumPoint() {
-        return classNumPoint;
-    }
-
-    public SheetPoint getGroupsPoint() {
-        return groupsPoint;
-    }
-
     public static class Serializer implements TypeSerializer<StudentsScheduleInfo> {
 
         @Override
-        public StudentsScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode value) throws ObjectMappingException {
-            return null;
+        public StudentsScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
+                throws ObjectMappingException {
+            URL url;
+
+            try {
+                url = new URL(node.getNode("url").getString(""));
+            } catch (MalformedURLException e) {
+                throw new ObjectMappingException("Incorrect or missing schedule URL");
+            }
+
+            String displayName = node.getNode("name").getString();
+            SheetPoint dayPoint = node.getNode("day_point").getValue(TypeToken.of(SheetPoint.class));
+
+            return new StudentsScheduleInfo(url, displayName, dayPoint);
         }
 
         @Override
