@@ -75,12 +75,12 @@ public class ScheduleDay {
             return this;
         }
 
-        public Builder withTimePoint(int classIndex, String time) {
+        public Builder addTimePoint(int classIndex, String time) {
             timeTable.put(classIndex, time);
             return this;
         }
 
-        public Builder withClass(int classIndex, ScheduleClass scheduleClass) {
+        public Builder addClass(int classIndex, ScheduleClass scheduleClass) {
             classes.computeIfAbsent(classIndex, (e) -> new ArrayList<>())
                     .add(scheduleClass);
             return this;
