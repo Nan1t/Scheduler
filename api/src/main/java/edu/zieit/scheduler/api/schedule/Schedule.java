@@ -21,10 +21,4 @@ public interface Schedule {
      */
     BufferedImage renderSheet() throws DocumentRenderException;
 
-    /**
-     * Get renderer for this schedule
-     * @return Schedule renderer
-     */
-    PersonalRenderer getPersonalRenderer();
-
 }

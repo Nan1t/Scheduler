@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.schedule.students;
 
-import edu.zieit.scheduler.Person;
+import edu.zieit.scheduler.api.Person;
 
 import java.util.*;
 

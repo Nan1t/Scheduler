@@ -14,6 +14,6 @@ public interface ScheduleParser {
      * @return Parsed schedule collection.
      * Sometimes this collection may contains several schedules
      */
-    Collection<Schedule> parse(ScheduleInfo info) throws ScheduleParseException;
+    Collection<Schedule> parse(final ScheduleInfo info) throws ScheduleParseException;
 
 }

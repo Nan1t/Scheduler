@@ -10,12 +10,12 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class StudentsScheduleInfo extends AbstractScheduleInfo {
+public class StudentScheduleInfo extends AbstractScheduleInfo {
 
     private final String displayName;
     private final SheetPoint dayPoint;
 
-    private StudentsScheduleInfo(URL url, String displayName, SheetPoint dayPoint) {
+    private StudentScheduleInfo(URL url, String displayName, SheetPoint dayPoint) {
         super(url);
         this.displayName = displayName;
         this.dayPoint = dayPoint;
@@ -29,10 +29,10 @@ public class StudentsScheduleInfo extends AbstractScheduleInfo {
         return dayPoint;
     }
 
-    public static class Serializer implements TypeSerializer<StudentsScheduleInfo> {
+    public static class Serializer implements TypeSerializer<StudentScheduleInfo> {
 
         @Override
-        public StudentsScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
+        public StudentScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
                 throws ObjectMappingException {
             URL url;
 
@@ -45,11 +45,11 @@ public class StudentsScheduleInfo extends AbstractScheduleInfo {
             String displayName = node.getNode("name").getString();
             SheetPoint dayPoint = node.getNode("day_point").getValue(TypeToken.of(SheetPoint.class));
 
-            return new StudentsScheduleInfo(url, displayName, dayPoint);
+            return new StudentScheduleInfo(url, displayName, dayPoint);
         }
 
         @Override
-        public void serialize(TypeToken<?> type, StudentsScheduleInfo obj, ConfigurationNode value) {
+        public void serialize(TypeToken<?> type, StudentScheduleInfo obj, ConfigurationNode value) {
 
         }
 

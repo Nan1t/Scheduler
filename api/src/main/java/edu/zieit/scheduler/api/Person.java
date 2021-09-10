@@ -1,4 +1,4 @@
-package edu.zieit.scheduler;
+package edu.zieit.scheduler.api;
 
 import java.util.Objects;
 

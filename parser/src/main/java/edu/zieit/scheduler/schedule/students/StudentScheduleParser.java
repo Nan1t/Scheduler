@@ -8,7 +8,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.Collection;
 
-public class StudentsScheduleParser extends AbstractScheduleParser {
+public class StudentScheduleParser extends AbstractScheduleParser {
 
     @Override
     public Collection<Schedule> parse(ScheduleInfo info) throws ScheduleParseException {

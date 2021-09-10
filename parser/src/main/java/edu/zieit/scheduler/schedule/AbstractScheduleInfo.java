@@ -28,4 +28,17 @@ public abstract class AbstractScheduleInfo implements ScheduleInfo {
     public String getId() {
         return id;
     }
+
+    @Override
+    public int hashCode() {
+        return url.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AbstractScheduleInfo) {
+            return this.url.equals(((AbstractScheduleInfo)obj).url);
+        }
+        return false;
+    }
 }
