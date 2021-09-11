@@ -1,9 +1,12 @@
 package edu.zieit.scheduler.schedule;
 
+import edu.zieit.scheduler.api.render.DocumentRenderer;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
 import edu.zieit.scheduler.api.schedule.ScheduleParseException;
 import edu.zieit.scheduler.api.schedule.ScheduleParser;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -11,6 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public abstract class AbstractScheduleParser implements ScheduleParser {
+
+    protected final DocumentRenderer renderer;
+
+    public AbstractScheduleParser(DocumentRenderer renderer) {
+        this.renderer = renderer;
+    }
 
     protected Workbook loadWorkbook(ScheduleInfo info) throws ScheduleParseException {
         String file = info.getUrl().toString();
@@ -29,6 +38,10 @@ public abstract class AbstractScheduleParser implements ScheduleParser {
         }
 
         return workbook;
+    }
+
+    protected Cell getCell(Sheet sheet, int row, int col) {
+        return sheet.getRow(row).getCell(col);
     }
 
 }

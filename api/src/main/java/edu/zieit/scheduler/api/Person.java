@@ -29,8 +29,7 @@ public class Person {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Person) {
-            Person person = (Person) o;
+        if (o instanceof Person person) {
             return minified.equals(person.minified);
         }
         return false;

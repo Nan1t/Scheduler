@@ -11,17 +11,17 @@ import java.awt.image.BufferedImage;
  */
 public abstract class DocumentRenderer {
 
-    private final RenderOptions options;
+    private final DocRenderOptions options;
 
     public DocumentRenderer() {
-        this.options = RenderOptions.DEFAULTS;
+        this.options = DocRenderOptions.DEFAULTS;
     }
 
-    public DocumentRenderer(RenderOptions options) {
+    public DocumentRenderer(DocRenderOptions options) {
         this.options = options;
     }
 
-    public RenderOptions getOptions() {
+    public DocRenderOptions getOptions() {
         return options;
     }
 
@@ -32,7 +32,7 @@ public abstract class DocumentRenderer {
      * Array element index equivalents sheet number. Counting from zero
      */
     public BufferedImage[] render(final Workbook book) throws DocumentRenderException {
-        BufferedImage[] images = new BufferedImage[book.getNumberOfSheets()];
+        var images = new BufferedImage[book.getNumberOfSheets()];
         int index = 0;
 
         for (Sheet sheet : book) {

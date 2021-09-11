@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Renderer for excel documents
+ * Renderer for excel documents. WIP
  */
 public class AwtRenderer extends DocumentRenderer {
 

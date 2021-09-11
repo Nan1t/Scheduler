@@ -9,10 +9,11 @@ This is second version of scheduler bot for ZIEIT institute.
 ## Building
 
 To build project you need:
-- `JDK` 1.8 or higher
+- `JDK` 17 or higher
 - `Gradle` version 7.0 or higher
 
-Run `gradlew shadowJar` command in terminal.
+1. Go to project root folder.
+2. Run `gradlew shadowJar` command in terminal.
 
 ## License
 

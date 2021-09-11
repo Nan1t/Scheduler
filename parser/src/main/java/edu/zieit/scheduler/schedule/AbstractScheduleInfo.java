@@ -16,7 +16,7 @@ public abstract class AbstractScheduleInfo implements ScheduleInfo {
     }
 
     public AbstractScheduleInfo(URL url) {
-        this(url, FileUtil.getName(url.toString()));
+        this(url, FileUtil.getName(url.toString()).toLowerCase());
     }
 
     @Override
@@ -37,7 +37,8 @@ public abstract class AbstractScheduleInfo implements ScheduleInfo {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof AbstractScheduleInfo) {
-            return this.url.equals(((AbstractScheduleInfo)obj).url);
+            AbstractScheduleInfo info = (AbstractScheduleInfo) obj;
+            return this.url.equals(info.url) && this.id.equals(info.id);
         }
         return false;
     }

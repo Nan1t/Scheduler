@@ -14,14 +14,20 @@ import java.util.Map;
 
 public class TeacherSchedule extends AbstractSchedule {
 
+    private final String title;
     private final TeacherScheduleInfo info;
     private final Map<Person, List<TeacherDay>> days;
 
     public TeacherSchedule(TeacherScheduleInfo info, Sheet sheet, DocumentRenderer documentRenderer,
-                           Map<Person, List<TeacherDay>> days) throws IllegalArgumentException {
+                           String title, Map<Person, List<TeacherDay>> days) throws IllegalArgumentException {
         super(sheet, documentRenderer);
         this.info = info;
+        this.title = title;
         this.days = days;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     @Override

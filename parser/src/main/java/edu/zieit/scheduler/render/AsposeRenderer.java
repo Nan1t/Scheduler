@@ -3,7 +3,7 @@ package edu.zieit.scheduler.render;
 import com.aspose.cells.*;
 import edu.zieit.scheduler.api.render.DocumentRenderException;
 import edu.zieit.scheduler.api.render.DocumentRenderer;
-import edu.zieit.scheduler.api.render.RenderOptions;
+import edu.zieit.scheduler.api.render.DocRenderOptions;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.awt.*;
@@ -19,7 +19,7 @@ public class AsposeRenderer extends DocumentRenderer {
         asposeOptions = convertOptions();
     }
 
-    public AsposeRenderer(RenderOptions options) {
+    public AsposeRenderer(DocRenderOptions options) {
         super(options);
         asposeOptions = convertOptions();
     }
@@ -27,7 +27,7 @@ public class AsposeRenderer extends DocumentRenderer {
     @Override
     public BufferedImage[] render(org.apache.poi.ss.usermodel.Workbook book) throws DocumentRenderException {
         Workbook workbook = toAsposeWorkbook(book);
-        BufferedImage[] images = new BufferedImage[workbook.getWorksheets().getCount()];
+        var images = new BufferedImage[workbook.getWorksheets().getCount()];
         int i = 0;
 
         for (Object sheet : workbook.getWorksheets()) {
@@ -60,7 +60,7 @@ public class AsposeRenderer extends DocumentRenderer {
     }
 
     private Workbook toAsposeWorkbook(org.apache.poi.ss.usermodel.Workbook book) throws DocumentRenderException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        var out = new ByteArrayOutputStream();
 
         try {
             book.write(out);
@@ -76,24 +76,16 @@ public class AsposeRenderer extends DocumentRenderer {
     }
 
     private ImageOrPrintOptions convertOptions() {
-        RenderOptions renderOptions = getOptions();
-        int format = ImageType.UNKNOWN;
-
-        switch (renderOptions.getFormat()) {
-            case JPEG:
-                format = ImageType.JPEG;
-                break;
-            case PNG:
-                format = ImageType.PNG;
-                break;
-            case GIF:
-                format = ImageType.GIF;
-                break;
-        }
+        DocRenderOptions renderOptions = getOptions();
+        int format = switch (renderOptions.format()) {
+            case JPEG -> ImageType.JPEG;
+            case PNG -> ImageType.PNG;
+            case GIF -> ImageType.GIF;
+        };
 
         ImageOrPrintOptions asposeOptions = new ImageOrPrintOptions();
-        asposeOptions.setHorizontalResolution(renderOptions.getDpi());
-        asposeOptions.setVerticalResolution(renderOptions.getDpi());
+        asposeOptions.setHorizontalResolution(renderOptions.dpi());
+        asposeOptions.setVerticalResolution(renderOptions.dpi());
         asposeOptions.setQuality(100);
         asposeOptions.setOnePagePerSheet(true);
         asposeOptions.setOutputBlankPageWhenNothingToPrint(true);
