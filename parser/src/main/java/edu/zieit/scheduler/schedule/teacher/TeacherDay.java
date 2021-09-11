@@ -38,14 +38,9 @@ public class TeacherDay {
             return this;
         }
 
-        public Builder addCourse(int classNumber, String course) {
-            classes.computeIfAbsent(classNumber, (e)->new HashSet<>()).add(course);
-            return this;
-        }
-
-        public Builder addCourses(int classNumber, String[] courses) {
+        public Builder addCourses(int classNumber, Collection<String> courses) {
             this.classes.computeIfAbsent(classNumber, (e)->new HashSet<>())
-                    .addAll(Arrays.asList(courses));
+                    .addAll(courses);
             return this;
         }
 

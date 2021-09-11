@@ -50,4 +50,8 @@ public final class ExcelUtil {
         }
     }
 
+    public static boolean isEmptyCell(Cell cell) {
+        return cell.getCellType() == CellType._NONE || cell.getCellType() == CellType.BLANK;
+    }
+
 }
