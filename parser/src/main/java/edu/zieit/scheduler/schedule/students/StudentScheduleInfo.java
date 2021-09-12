@@ -14,11 +14,13 @@ public class StudentScheduleInfo extends AbstractScheduleInfo {
 
     private final String displayName;
     private final SheetPoint dayPoint;
+    private final SheetPoint groupPoint;
 
-    private StudentScheduleInfo(URL url, String displayName, SheetPoint dayPoint) {
+    private StudentScheduleInfo(URL url, String displayName, SheetPoint dayPoint, SheetPoint groupPoint) {
         super(url);
         this.displayName = displayName;
         this.dayPoint = dayPoint;
+        this.groupPoint = groupPoint;
     }
 
     public String getDisplayName() {
@@ -27,6 +29,10 @@ public class StudentScheduleInfo extends AbstractScheduleInfo {
 
     public SheetPoint getDayPoint() {
         return dayPoint;
+    }
+
+    public SheetPoint getGroupPoint() {
+        return groupPoint;
     }
 
     public static class Serializer implements TypeSerializer<StudentScheduleInfo> {
@@ -44,8 +50,9 @@ public class StudentScheduleInfo extends AbstractScheduleInfo {
 
             String displayName = node.getNode("name").getString();
             SheetPoint dayPoint = node.getNode("day_point").getValue(TypeToken.of(SheetPoint.class));
+            SheetPoint groupPoint = node.getNode("group_point").getValue(TypeToken.of(SheetPoint.class));
 
-            return new StudentScheduleInfo(url, displayName, dayPoint);
+            return new StudentScheduleInfo(url, displayName, dayPoint, groupPoint);
         }
 
         @Override

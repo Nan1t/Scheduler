@@ -9,24 +9,18 @@ import java.util.*;
 public class ScheduleDay {
 
     private final String name;
-    private final String date;
     private final Map<Integer, String> timeTable;
     private final Map<Integer, List<ScheduleClass>> classes;
 
-    private ScheduleDay(String name, String date, Map<Integer, String> timeTable,
+    private ScheduleDay(String name, Map<Integer, String> timeTable,
                        Map<Integer, List<ScheduleClass>> classes) {
         this.name = name;
-        this.date = date;
         this.timeTable = timeTable;
         this.classes = classes;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getDate() {
-        return date;
     }
 
     /**
@@ -54,24 +48,16 @@ public class ScheduleDay {
     public static class Builder {
 
         private String name;
-        private String date;
         private final Map<Integer, String> timeTable;
         private final Map<Integer, List<ScheduleClass>> classes;
 
         private Builder() {
-            this.name = "";
-            this.date = "";
             this.timeTable = new HashMap<>();
             this.classes = new HashMap<>();
         }
 
         public Builder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        public Builder date(String date) {
-            this.date = date;
             return this;
         }
 
@@ -87,7 +73,7 @@ public class ScheduleDay {
         }
 
         public ScheduleDay build() {
-            return new ScheduleDay(name, date, timeTable, classes);
+            return new ScheduleDay(name, timeTable, classes);
         }
 
     }

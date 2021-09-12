@@ -17,7 +17,7 @@ public class TeacherSchedule extends AbstractSchedule {
     private final Map<Person, List<TeacherDay>> days;
 
     public TeacherSchedule(TeacherScheduleInfo info, Sheet sheet, DocumentRenderer documentRenderer,
-                           String title, Map<Person, List<TeacherDay>> days) throws IllegalArgumentException {
+                           String title, Map<Person, List<TeacherDay>> days) {
         super(sheet, documentRenderer);
         this.info = info;
         this.title = title;

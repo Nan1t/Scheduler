@@ -13,10 +13,11 @@ public final class ExcelUtil {
      * @return Defined range of cell or null if cell is not merged
      */
     public static CellRangeAddress getCellRange(Cell cell) {
-        for (CellRangeAddress region : cell.getSheet().getMergedRegions()) {
-            if (region.isInRange(cell)) return region;
+        if (cell != null) {
+            for (CellRangeAddress region : cell.getSheet().getMergedRegions()) {
+                if (region.isInRange(cell)) return region;
+            }
         }
-
         return null;
     }
 

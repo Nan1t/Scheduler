@@ -1,7 +1,5 @@
 package edu.zieit.scheduler.api.schedule;
 
-import edu.zieit.scheduler.api.render.DocumentRenderException;
-
 import java.awt.image.BufferedImage;
 
 /**
@@ -16,9 +14,9 @@ public interface Schedule {
     ScheduleInfo getInfo();
 
     /**
-     * Render static schedule's sheet source
+     * Get rendered image
      * @return Rendered image
      */
-    BufferedImage renderSheet() throws DocumentRenderException;
+    BufferedImage toImage();
 
 }

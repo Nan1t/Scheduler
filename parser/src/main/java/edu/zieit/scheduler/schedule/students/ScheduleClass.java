@@ -52,8 +52,7 @@ public class ScheduleClass {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ScheduleClass) {
-            ScheduleClass cl = (ScheduleClass) obj;
+        if (obj instanceof ScheduleClass cl) {
             return this.name.equals(cl.name)
                     && this.type.equals(cl.type)
                     && this.classroom.equals(cl.classroom)

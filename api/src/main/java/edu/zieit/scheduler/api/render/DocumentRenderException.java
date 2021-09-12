@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.api.render;
 
-public class DocumentRenderException extends Exception {
+public class DocumentRenderException extends RuntimeException {
 
     public DocumentRenderException(String message) {
         super(message);
