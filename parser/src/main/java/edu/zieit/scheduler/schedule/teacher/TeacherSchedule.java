@@ -7,10 +7,8 @@ import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TeacherSchedule extends AbstractSchedule {
 
@@ -39,7 +37,22 @@ public class TeacherSchedule extends AbstractSchedule {
         return days.getOrDefault(teacher, Collections.emptyList());
     }
 
+    public List<String> getTeachers() {
+        return days.keySet().stream()
+                .map(Person::toString)
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
+    }
+
     public PersonalRenderer getPersonalRenderer(Person person, Collection<Schedule> studentsSchedule) {
         return new TeacherScheduleRenderer(this, person, studentsSchedule);
+    }
+
+    @Override
+    public String toString() {
+        return "TeacherSchedule{" +
+                "title='" + title + '\'' +
+                ", days=" + days +
+                '}';
     }
 }

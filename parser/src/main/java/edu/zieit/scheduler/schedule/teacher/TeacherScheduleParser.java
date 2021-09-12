@@ -28,14 +28,15 @@ public class TeacherScheduleParser extends AbstractScheduleParser {
     public Collection<Schedule> parse(ScheduleInfo info) throws ScheduleParseException {
         Workbook workbook = loadWorkbook(info);
         Sheet sheet = workbook.getSheetAt(0);
-        String title = getCell(sheet, 0, 0).getStringCellValue();
+        Cell cell = getCell(sheet, 0, 0);
+        String title = ExcelUtil.getCellValue(cell);
 
         Map<Person, List<TeacherDay>> teachers = new HashMap<>();
         int row = POINT_TEACHER.row();
         Cell teacherCell = getCell(sheet, row, POINT_TEACHER.col());
 
         while (!ExcelUtil.isEmptyCell(teacherCell)) {
-            Person teacher = Person.from(teacherCell.getStringCellValue());
+            Person teacher = Person.from(ExcelUtil.getCellValue(teacherCell));
             List<TeacherDay> days = getDays(sheet, row);
             teachers.put(teacher, days);
 
@@ -49,9 +50,10 @@ public class TeacherScheduleParser extends AbstractScheduleParser {
     }
 
     private List<TeacherDay> getDays(Sheet sheet, final int teacherRow) {
-        var days = new LinkedList<TeacherDay>();
+        List<TeacherDay> days = new LinkedList<>();
         Cell dayCell = getCell(sheet, POINT_DAY.row(), POINT_DAY.col());
         int classNumRow = POINT_DAY.row() + 1;
+        int dayIndex = 1;
 
         while (!ExcelUtil.isEmptyCell(dayCell)) {
             var range = ExcelUtil.getCellRange(dayCell);
@@ -60,22 +62,29 @@ public class TeacherScheduleParser extends AbstractScheduleParser {
 
             var dayBuilder = TeacherDay.builder();
 
-            dayBuilder.displayName(dayCell.getStringCellValue());
+            dayBuilder.index(dayIndex);
 
             for (int col = range.getFirstColumn(); col < range.getLastColumn(); col++) {
                 Cell classNumCell = getCell(sheet, classNumRow, col);
                 Cell coursesCell = getCell(sheet, teacherRow, col);
                 int classNum = Integer.parseInt(ExcelUtil.getCellValue(classNumCell));
                 String coursesRaw = ExcelUtil.getCellValue(coursesCell);
-                Collection<String> courses = Arrays.stream(coursesRaw.split(","))
-                        .map(s->s.trim().toLowerCase())
-                        .collect(Collectors.toList());
 
-                dayBuilder.addCourses(classNum, courses);
+                if (!coursesRaw.strip().isEmpty()) {
+                    Collection<String> courses = Arrays.stream(coursesRaw.split(","))
+                            .map(s->s.trim().toLowerCase())
+                            .collect(Collectors.toList());
+
+                    dayBuilder.addCourses(classNum, courses);
+                }
             }
 
-            days.add(dayBuilder.build());
+            TeacherDay day = dayBuilder.build();
+
+            if (!day.isEmpty()) days.add(day);
+
             dayCell = getCell(sheet, POINT_DAY.row(), range.getLastColumn() + 1);
+            dayIndex++;
         }
 
         return days;

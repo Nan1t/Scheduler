@@ -6,6 +6,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleParseException;
 import edu.zieit.scheduler.api.schedule.ScheduleParser;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -40,8 +41,9 @@ public abstract class AbstractScheduleParser implements ScheduleParser {
         return workbook;
     }
 
-    protected Cell getCell(Sheet sheet, int row, int col) {
-        return sheet.getRow(row).getCell(col);
+    protected Cell getCell(Sheet sheet, int rowNum, int colNum) {
+        Row row = sheet.getRow(rowNum);
+        return row != null ? row.getCell(colNum) : null;
     }
 
 }

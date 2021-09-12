@@ -40,6 +40,11 @@ public class Person {
         return Objects.hash(minified);
     }
 
+    @Override
+    public String toString() {
+        return source;
+    }
+
     public static Person from(String source) {
         return new Person(source);
     }

@@ -4,20 +4,32 @@ import java.util.*;
 
 public class TeacherDay {
 
-    private final String displayName;
+    private final int index;
     private final Map<Integer, Collection<String>> classes;
 
-    public TeacherDay(String displayName, Map<Integer, Collection<String>> classes) {
-        this.displayName = displayName;
+    public TeacherDay(int index, Map<Integer, Collection<String>> classes) {
+        this.index = index;
         this.classes = classes;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public int getIndex() {
+        return index;
     }
 
     public Collection<String> getCourses(int classNumber) {
         return classes.getOrDefault(classNumber, Collections.emptyList());
+    }
+
+    public boolean isEmpty() {
+        return classes.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return "TeacherDay{" +
+                "index='" + index + '\'' +
+                ", classes=" + classes +
+                '}';
     }
 
     public static Builder builder() {
@@ -26,15 +38,15 @@ public class TeacherDay {
 
     public static class Builder {
 
-        private String displayName;
+        private int index;
         private final Map<Integer, Collection<String>> classes;
 
         private Builder() {
             this.classes = new HashMap<>();
         }
 
-        public Builder displayName(String displayName) {
-            this.displayName = displayName;
+        public Builder index(int index) {
+            this.index = index;
             return this;
         }
 
@@ -45,7 +57,7 @@ public class TeacherDay {
         }
 
         public TeacherDay build() {
-            return new TeacherDay(displayName, classes);
+            return new TeacherDay(index, classes);
         }
 
     }

@@ -43,6 +43,7 @@ public final class ExcelUtil {
     }
 
     public static String getCellValue(Cell cell) {
+        if (cell == null) return "";
         try {
             return cell.getStringCellValue();
         } catch (Exception e) {
@@ -51,7 +52,7 @@ public final class ExcelUtil {
     }
 
     public static boolean isEmptyCell(Cell cell) {
-        return cell.getCellType() == CellType._NONE || cell.getCellType() == CellType.BLANK;
+        return cell == null || cell.getCellType() == CellType._NONE || cell.getCellType() == CellType.BLANK;
     }
 
 }

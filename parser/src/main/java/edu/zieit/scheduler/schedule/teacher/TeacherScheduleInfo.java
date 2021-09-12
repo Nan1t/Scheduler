@@ -9,8 +9,8 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
 
     private final Map<String, String> associations;
 
-    public TeacherScheduleInfo(URL url, String id, Map<String, String> associations) {
-        super(url, id);
+    public TeacherScheduleInfo(URL url, Map<String, String> associations) {
+        super(url);
         this.associations = associations;
     }
 
