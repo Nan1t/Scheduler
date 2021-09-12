@@ -18,7 +18,7 @@ public class StudentSchedule extends AbstractSchedule {
     private Set<Schedule> group;
 
     public StudentSchedule(StudentScheduleInfo info, Sheet sheet, DocumentRenderer documentRenderer,
-                           List<ScheduleDay> days) throws Exception {
+                           List<ScheduleDay> days) {
         super(sheet, documentRenderer);
         this.info = info;
         this.days = days;

@@ -47,9 +47,21 @@ public class StudentScheduleParser extends AbstractScheduleParser {
     }
 
     private StudentSchedule parseSchedule(StudentScheduleInfo info, Sheet sheet) throws ScheduleParseException {
+        List<ScheduleDay> days = new LinkedList<>();
+        int row = info.getDayPoint().row();
+        Cell dayCell = getCell(sheet, row, info.getDayPoint().col());
 
+        while (!ExcelUtil.isEmptyCell(dayCell)) {
+            CellRangeAddress range = ExcelUtil.getCellRange(dayCell);
+            ScheduleDay day = parseDay(info, sheet, dayCell, range);
 
-        return null;
+            days.add(day);
+
+            row += range.getLastRow() - range.getFirstRow();
+            dayCell = getCell(sheet, row, info.getDayPoint().col());
+        }
+
+        return new StudentSchedule(info, sheet, renderer, days);
     }
 
     private ScheduleDay parseDay(StudentScheduleInfo info, Sheet sheet, Cell dayCell, CellRangeAddress range) {
