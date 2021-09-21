@@ -11,12 +11,12 @@ import java.util.Collection;
 public class TeacherScheduleRenderer implements PersonalRenderer {
 
     private final TeacherSchedule schedule;
-    private final Person teacher;
+    private final Person person;
     private final Collection<Schedule> studentsSchedule;
 
-    public TeacherScheduleRenderer(TeacherSchedule schedule, Person teacher, Collection<Schedule> studentsSchedule) {
+    public TeacherScheduleRenderer(TeacherSchedule schedule, Person person, Collection<Schedule> studentsSchedule) {
         this.schedule = schedule;
-        this.teacher = teacher;
+        this.person = person;
         this.studentsSchedule = studentsSchedule;
     }
 

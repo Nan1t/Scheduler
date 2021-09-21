@@ -16,7 +16,7 @@ public class StudentScheduleInfo extends AbstractScheduleInfo {
     private final SheetPoint dayPoint;
     private final SheetPoint groupPoint;
 
-    private StudentScheduleInfo(URL url, String displayName, SheetPoint dayPoint, SheetPoint groupPoint) {
+    public StudentScheduleInfo(URL url, String displayName, SheetPoint dayPoint, SheetPoint groupPoint) {
         super(url);
         this.displayName = displayName;
         this.dayPoint = dayPoint;

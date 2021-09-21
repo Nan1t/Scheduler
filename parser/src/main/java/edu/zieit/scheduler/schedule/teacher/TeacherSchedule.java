@@ -33,8 +33,8 @@ public class TeacherSchedule extends AbstractSchedule {
         return info;
     }
 
-    public List<TeacherDay> getDays(Person teacher) {
-        return days.getOrDefault(teacher, Collections.emptyList());
+    public List<TeacherDay> getDays(Person person) {
+        return days.getOrDefault(person, Collections.emptyList());
     }
 
     public List<String> getTeachers() {

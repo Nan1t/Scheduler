@@ -1,51 +1,42 @@
 package edu.zieit.scheduler.api;
 
-import java.util.Objects;
+import edu.zieit.scheduler.api.util.Levenstain;
 
-public class Person {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    private final String source;
-    private final String minified;
+public record Person(String firstName, String lastName, String patronymic) {
 
-    public Person(String source) {
-        this.source = source;
-        this.minified = minify(source);
-    }
+    public static final int MAX_SIMILARITY = 1;
 
-    public String getSource() {
-        return source;
-    }
+    public static Pattern PATTERN_TEACHER = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{0,32})\\s*([А-ЯЁЇІЄҐ])\\.([А-ЯЁЇІЄҐ])\\.*");
+    public static Pattern PATTERN_TEACHER_INLINE = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{1,32}\\s*[А-ЯЁЇІЄҐ]\\.[А-ЯЁЇІЄҐ]\\.*)\\s*(ауд\\..{1,3})");
 
-    public String getMinified() {
-        return minified;
-    }
-
-    private String minify(String source) {
-        String src = source;
-        src = src.replace(".", "");
-        src = src.replace(" ", "");
-        return src.toLowerCase();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof Person person) {
-            return minified.equals(person.minified);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(minified);
+    /**
+     * Check is this person similar to another.
+     * Two similar persons must have equals first name and patronymic
+     * and Levenstain distance of last name less or equal that MAX_SIMILARITY parameter
+     * @param another
+     * @return
+     */
+    public boolean isSimilar(Person another) {
+        int ln = Levenstain.calc(this.lastName(), another.lastName());
+        return ln <= MAX_SIMILARITY
+                && this.firstName().equals(another.firstName())
+                && this.patronymic().equals(another.patronymic());
     }
 
     @Override
     public String toString() {
-        return source;
+        return String.format("%s %s.%s.", lastName, firstName, patronymic);
     }
 
-    public static Person from(String source) {
-        return new Person(source);
+    public static Person simple(String firstName, String lastName, String patronymic) {
+        return new Person(firstName, lastName, patronymic);
+    }
+
+    public static Person teacher(String source) {
+        Matcher matcher = PATTERN_TEACHER.matcher(source);
+        return (matcher.find()) ? new Person(matcher.group(2), matcher.group(1), matcher.group(3)) : null;
     }
 }

@@ -36,9 +36,9 @@ public class TeacherScheduleParser extends AbstractScheduleParser {
         Cell teacherCell = getCell(sheet, row, POINT_TEACHER.col());
 
         while (!ExcelUtil.isEmptyCell(teacherCell)) {
-            Person teacher = Person.from(ExcelUtil.getCellValue(teacherCell));
+            Person person = Person.teacher(ExcelUtil.getCellValue(teacherCell));
             List<TeacherDay> days = getDays(sheet, row);
-            teachers.put(teacher, days);
+            teachers.put(person, days);
 
             row++;
             teacherCell = getCell(sheet, row, POINT_TEACHER.col());

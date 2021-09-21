@@ -9,25 +9,19 @@ import java.util.*;
  */
 public class ScheduleClass {
 
-    private final ScheduleDay day;
     private final String name;
     private final String type;
-    private final Person teacher;
+    private final Person person;
     private final String classroom;
     private final Collection<String> groups;
 
-    private ScheduleClass(ScheduleDay day, String name, String type, Person teacher,
+    private ScheduleClass(String name, String type, Person person,
                           String classroom, Collection<String> groups) {
-        this.day = day;
         this.name = name;
         this.type = type != null ? type : "";
-        this.teacher = teacher;
+        this.person = person;
         this.classroom = classroom != null ? classroom : "";
         this.groups = groups;
-    }
-
-    public ScheduleDay getDay() {
-        return day;
     }
 
     public String getName() {
@@ -39,7 +33,7 @@ public class ScheduleClass {
     }
 
     public Person getTeacher() {
-        return teacher;
+        return person;
     }
 
     public String getClassroom() {
@@ -56,7 +50,7 @@ public class ScheduleClass {
             return this.name.equals(cl.name)
                     && this.type.equals(cl.type)
                     && this.classroom.equals(cl.classroom)
-                    && this.teacher.equals(cl.teacher)
+                    && this.person.equals(cl.person)
                     && this.groups.equals(cl.groups);
         }
         return false;
@@ -64,7 +58,7 @@ public class ScheduleClass {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, teacher, classroom, groups);
+        return Objects.hash(name, type, person, classroom, groups);
     }
 
     @Override
@@ -72,27 +66,25 @@ public class ScheduleClass {
         return "Class{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
-                ", teacher='" + teacher + '\'' +
+                ", teacher='" + person + '\'' +
                 ", classroom='" + classroom + '\'' +
                 ", groups=" + groups +
                 '}';
     }
 
-    public static Builder builder(ScheduleDay day) {
-        return new Builder(day);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
 
-        private final ScheduleDay day;
         private String name;
         private String type;
-        private String teacher;
+        private Person teacher;
         private String classroom;
         private final Set<String> groups;
 
-        private Builder(ScheduleDay day) {
-            this.day = day;
+        private Builder() {
             this.groups = new HashSet<>();
         }
 
@@ -106,8 +98,13 @@ public class ScheduleClass {
             return this;
         }
 
-        public Builder teacher(String teacher) {
+        public Builder teacher(Person teacher) {
             this.teacher = teacher;
+            return this;
+        }
+
+        public Builder teacher(String teacher) {
+            this.teacher = Person.teacher(teacher);
             return this;
         }
 
@@ -116,13 +113,13 @@ public class ScheduleClass {
             return this;
         }
 
-        public Builder group(String group) {
+        public Builder withGroup(String group) {
             this.groups.add(group);
             return this;
         }
 
         public ScheduleClass build() {
-            return new ScheduleClass(day, name, type, Person.from(teacher), classroom, groups);
+            return new ScheduleClass(name, type, teacher, classroom, groups);
         }
 
     }

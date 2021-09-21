@@ -17,8 +17,18 @@ public final class ExcelUtil {
             for (CellRangeAddress region : cell.getSheet().getMergedRegions()) {
                 if (region.isInRange(cell)) return region;
             }
+            return getSingleRange(cell);
         }
         return null;
+    }
+
+    /**
+     * Get single cell range (first row == last row and first col == last col)
+     * @param cell non-null cell
+     * @return Single range
+     */
+    public static CellRangeAddress getSingleRange(Cell cell) {
+        return new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex(), cell.getColumnIndex(), cell.getColumnIndex());
     }
 
     /**

@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.schedule.students;
 
+import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.DocumentRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 public class StudentScheduleParser extends AbstractScheduleParser {
 
@@ -53,13 +55,14 @@ public class StudentScheduleParser extends AbstractScheduleParser {
 
         while (!ExcelUtil.isEmptyCell(dayCell)) {
             CellRangeAddress range = ExcelUtil.getCellRange(dayCell);
-            ScheduleDay day = parseDay(info, sheet, dayCell, range);
 
-            days.add(day);
+            days.add(parseDay(info, sheet, dayCell, range));
 
-            row += range.getLastRow() - range.getFirstRow();
+            row = range.getLastRow() + 1;
             dayCell = getCell(sheet, row, info.getDayPoint().col());
         }
+
+        System.out.println(days);
 
         return new StudentSchedule(info, sheet, renderer, days);
     }
@@ -72,19 +75,104 @@ public class StudentScheduleParser extends AbstractScheduleParser {
         int row = range.getFirstRow();
 
         while (row < range.getLastRow()) {
-            Cell classCell = getCell(sheet, row, classNumCol);
-            CellRangeAddress classRange = ExcelUtil.getCellRange(classCell);
-            int classRows = classRange.getLastRow() - classRange.getFirstRow();
+            Cell classNumCell = getCell(sheet, row, classNumCol);
+            Cell classTimeCell = getCell(sheet, row, classTimeCol);
+            CellRangeAddress classNumRange = ExcelUtil.getCellRange(classNumCell);
 
+            int classIndex = Integer.parseInt(ExcelUtil.getCellValue(classNumCell));
+            String classTime = ExcelUtil.getCellValue(classTimeCell);
 
+            builder.addTimePoint(classIndex, classTime);
 
-            row += classRows;
+            Collection<ScheduleClass> classes = parseClasses(info, sheet, row);
+
+            for (ScheduleClass scheduleClass : classes) {
+                builder.addClass(classIndex, scheduleClass);
+            }
+
+            row = classNumRange.getLastRow() + 1;
         }
 
-        builder.name(ExcelUtil.getCellValue(dayCell));
+        builder.name(ExcelUtil.getCellValue(dayCell).strip());
 
         return builder.build();
     }
 
+    private Collection<ScheduleClass> parseClasses(StudentScheduleInfo info, Sheet sheet, int classRow) {
+        List<ScheduleClass> classes = new LinkedList<>();
+        int col = info.getGroupPoint().col();
+        Cell classCell = getCell(sheet, classRow, col);
+
+        while (classCell != null && col < classCell.getRow().getLastCellNum()) {
+            Cell typeCell = getCell(sheet, classRow + 1, col);
+            Cell teacherCell = getCell(sheet, classRow + 2, col);
+            Cell classroomCell = getCell(sheet, classRow + 3, col);
+
+            if (ExcelUtil.isEmptyCell(classCell)
+                    && ExcelUtil.isEmptyCell(teacherCell)
+                    && ExcelUtil.isEmptyCell(classroomCell)) {
+                col++;
+                classCell = getCell(sheet, classRow, col);
+                continue;
+            }
+
+            CellRangeAddress range = ExcelUtil.getCellRange(classCell);
+            String name = ExcelUtil.getCellValue(classCell).strip();
+            String type = ExcelUtil.getCellValue(typeCell).strip();
+            String teacherName = ExcelUtil.getCellValue(teacherCell).strip();
+            Collection<String> groups = parseGroups(info, sheet, range);
+
+            if (Person.PATTERN_TEACHER.matcher(teacherName).find()) {
+                // Only one teacher
+                ScheduleClass.Builder builder = ScheduleClass.builder();
+
+                builder.name(name)
+                        .type(type)
+                        .teacher(teacherName)
+                        .classroom(ExcelUtil.getCellValue(classroomCell).strip());
+
+                groups.forEach(builder::withGroup);
+
+                classes.add(builder.build());
+            } else {
+                // Teachers and classrooms in one line
+                String[] parts = teacherName.split(",");
+
+                for (String part : parts) {
+                    Matcher matcher = Person.PATTERN_TEACHER_INLINE.matcher(part);
+
+                    if (matcher.find()) {
+                        String teacher = matcher.group(1);
+                        String classroom = matcher.group(2);
+                        ScheduleClass.Builder builder = ScheduleClass.builder();
+
+                        builder.name(name)
+                                .type(type)
+                                .teacher(teacher)
+                                .classroom(classroom);
+
+                        groups.forEach(builder::withGroup);
+
+                        classes.add(builder.build());
+                    }
+                }
+            }
+
+            col = range.getLastColumn() + 1;
+            classCell = getCell(sheet, classRow, col);
+        }
+
+        return classes;
+    }
+
+    private Collection<String> parseGroups(StudentScheduleInfo info, Sheet sheet, CellRangeAddress range) {
+        List<String> groups = new LinkedList<>();
+        for (int col = range.getFirstColumn(); col <= range.getLastColumn(); col++) {
+            Cell cell = getCell(sheet, info.getGroupPoint().row(), col);
+            String group = ExcelUtil.getCellValue(cell);
+            groups.add(group);
+        }
+        return groups;
+    }
 
 }

@@ -41,6 +41,14 @@ public class ScheduleDay {
         return classes.getOrDefault(classIndex, Collections.emptyList());
     }
 
+    @Override
+    public String toString() {
+        return "ScheduleDay{" +
+                "name='" + name + '\'' +
+                ", classes=" + classes +
+                '}';
+    }
+
     public static Builder builder() {
         return new Builder();
     }
