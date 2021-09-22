@@ -7,6 +7,7 @@ import edu.zieit.scheduler.schedule.AbstractSchedule;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents student's schedule
@@ -16,7 +17,7 @@ public class StudentSchedule extends AbstractSchedule {
     private final StudentScheduleInfo info;
     private final List<ScheduleDay> days;
     private String displayName;
-    private Set<Schedule> group;
+    private Collection<Schedule> group;
 
     public StudentSchedule(StudentScheduleInfo info, Sheet sheet, SheetRenderer sheetRenderer,
                            List<ScheduleDay> days) {
@@ -43,17 +44,29 @@ public class StudentSchedule extends AbstractSchedule {
         return group != null ? group : Collections.emptyList();
     }
 
-    public void addToGroup(Schedule schedule) {
-        if (group == null) group = new HashSet<>();
-        group.add(schedule);
+    public void setGroup(Collection<Schedule> group) {
+        this.group = group;
     }
 
     public boolean hasGroup() {
-        return group == null || group.isEmpty();
+        return group != null && !group.isEmpty();
     }
 
     @Override
     public StudentScheduleInfo getInfo() {
         return info;
+    }
+
+    @Override
+    public String toString() {
+        Collection<String> groups = group.stream()
+                .map(el -> ((StudentSchedule)el).getDisplayName())
+                .collect(Collectors.toList());
+
+        return "StudentSchedule{" +
+                "days=" + days +
+                ", displayName='" + displayName + '\'' +
+                ", group=" + groups +
+                '}';
     }
 }

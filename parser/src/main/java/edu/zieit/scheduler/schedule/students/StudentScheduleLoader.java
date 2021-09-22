@@ -41,12 +41,11 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             for (Sheet sheet : workbook) {
                 StudentSchedule schedule = parseSchedule(sinfo, sheet);
                 schedule.setDisplayName(sinfo.getDisplayName() + " " + sheet.getSheetName());
-
-                for (Schedule sch : schedules) {
-                    ((StudentSchedule) sch).addToGroup(schedule);
-                }
-
                 schedules.add(schedule);
+            }
+
+            for (Schedule schedule : schedules) {
+                ((StudentSchedule)schedule).setGroup(schedules);
             }
 
             return schedules;
@@ -66,8 +65,6 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             row = range.getLastRow() + 1;
             dayCell = getCell(sheet, row, info.getDayPoint().col());
         }
-
-        System.out.println(days);
 
         return new StudentSchedule(info, sheet, renderer, days);
     }
@@ -127,24 +124,12 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             String teacherName = ExcelUtil.getCellValue(teacherCell).strip();
             Collection<String> groups = parseGroups(info, sheet, range);
 
-            if (Person.PATTERN_TEACHER.matcher(teacherName).find()) {
-                // Only one teacher
-                ScheduleClass.Builder builder = ScheduleClass.builder();
-
-                builder.name(name)
-                        .type(type)
-                        .teacher(teacherName)
-                        .classroom(ExcelUtil.getCellValue(classroomCell).strip());
-
-                groups.forEach(builder::withGroup);
-
-                classes.add(builder.build());
-            } else {
+            if (Person.REGEX_TEACHER_INLINE.matcher(teacherName).find()) {
                 // Teachers and classrooms in one line
                 String[] parts = teacherName.split(",");
 
                 for (String part : parts) {
-                    Matcher matcher = Person.PATTERN_TEACHER_INLINE.matcher(part);
+                    Matcher matcher = Person.REGEX_TEACHER_INLINE.matcher(part);
 
                     if (matcher.find()) {
                         String teacher = matcher.group(1);
@@ -161,6 +146,22 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
                         classes.add(builder.build());
                     }
                 }
+            } else {
+                // Only one teacher
+                ScheduleClass.Builder builder = ScheduleClass.builder();
+                Person teacher = Person.empty();
+
+                if (Person.REGEX_TEACHER.matcher(teacherName).find()) {
+                    teacher = Person.teacher(teacherName);
+                }
+
+                builder.name(name)
+                        .type(type)
+                        .teacher(teacher)
+                        .classroom(ExcelUtil.getCellValue(classroomCell).strip());
+
+                groups.forEach(builder::withGroup);
+                classes.add(builder.build());
             }
 
             col = range.getLastColumn() + 1;
