@@ -1,8 +1,8 @@
 package edu.zieit.scheduler.render;
 
 import com.aspose.cells.*;
-import edu.zieit.scheduler.api.render.DocumentRenderException;
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import edu.zieit.scheduler.api.render.RenderException;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.render.DocRenderOptions;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-public class AsposeRenderer extends DocumentRenderer {
+public class AsposeRenderer extends SheetRenderer {
 
     private final ImageOrPrintOptions asposeOptions;
 
@@ -25,7 +25,7 @@ public class AsposeRenderer extends DocumentRenderer {
     }
 
     @Override
-    public BufferedImage[] render(org.apache.poi.ss.usermodel.Workbook book) throws DocumentRenderException {
+    public BufferedImage[] render(org.apache.poi.ss.usermodel.Workbook book) throws RenderException {
         Workbook workbook = toAsposeWorkbook(book);
         var images = new BufferedImage[workbook.getWorksheets().getCount()];
         int i = 0;
@@ -40,13 +40,13 @@ public class AsposeRenderer extends DocumentRenderer {
     }
 
     @Override
-    public BufferedImage render(Sheet sheet) throws DocumentRenderException {
+    public BufferedImage render(Sheet sheet) throws RenderException {
         Workbook workbook = toAsposeWorkbook(sheet.getWorkbook());
         Worksheet worksheet = workbook.getWorksheets().get(sheet.getWorkbook().getSheetIndex(sheet));
         return render(worksheet);
     }
 
-    private BufferedImage render(Worksheet worksheet) throws DocumentRenderException {
+    private BufferedImage render(Worksheet worksheet) throws RenderException {
         try {
             SheetRender render = new SheetRender(worksheet, asposeOptions);
             float[] size = render.getPageSize(0);
@@ -55,23 +55,23 @@ public class AsposeRenderer extends DocumentRenderer {
             render.toImage(0, graphics);
             return image;
         } catch (Exception e) {
-            throw new DocumentRenderException(e);
+            throw new RenderException(e);
         }
     }
 
-    private Workbook toAsposeWorkbook(org.apache.poi.ss.usermodel.Workbook book) throws DocumentRenderException {
+    private Workbook toAsposeWorkbook(org.apache.poi.ss.usermodel.Workbook book) throws RenderException {
         var out = new ByteArrayOutputStream();
 
         try {
             book.write(out);
         } catch (IOException e) {
-            throw new DocumentRenderException(e);
+            throw new RenderException(e);
         }
 
         try {
             return new Workbook(new ByteArrayInputStream(out.toByteArray()));
         } catch (Exception e) {
-            throw new DocumentRenderException(e);
+            throw new RenderException(e);
         }
     }
 

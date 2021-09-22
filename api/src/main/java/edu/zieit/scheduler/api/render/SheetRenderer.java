@@ -6,18 +6,18 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.awt.image.BufferedImage;
 
 /**
- * Interface for renderers
+ * Abstract class for renderers
  * Renderers able to get document as input and render it to image.
  */
-public abstract class DocumentRenderer {
+public abstract class SheetRenderer {
 
     private final DocRenderOptions options;
 
-    public DocumentRenderer() {
+    public SheetRenderer() {
         this.options = DocRenderOptions.DEFAULTS;
     }
 
-    public DocumentRenderer(DocRenderOptions options) {
+    public SheetRenderer(DocRenderOptions options) {
         this.options = options;
     }
 
@@ -31,7 +31,7 @@ public abstract class DocumentRenderer {
      * @return Array of rendered sheets.
      * Array element index equivalents sheet number. Counting from zero
      */
-    public BufferedImage[] render(final Workbook book) throws DocumentRenderException {
+    public BufferedImage[] render(final Workbook book) throws RenderException {
         var images = new BufferedImage[book.getNumberOfSheets()];
         int index = 0;
 
@@ -48,6 +48,6 @@ public abstract class DocumentRenderer {
      * @param sheet Sheet object
      * @return Rendered image
      */
-    public abstract BufferedImage render(final Sheet sheet) throws DocumentRenderException;
+    public abstract BufferedImage render(final Sheet sheet) throws RenderException;
 
 }

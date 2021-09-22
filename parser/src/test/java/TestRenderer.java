@@ -1,4 +1,4 @@
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.render.AwtRenderer;
 import edu.zieit.scheduler.util.SizeUtil;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -21,7 +21,7 @@ public class TestRenderer {
         Path imgFile = Paths.get("E:\\IdeaProjects\\Scheduler\\build\\test.jpg");
         Workbook workbook = new XSSFWorkbook(Files.newInputStream(file));
         Sheet sheet = workbook.getSheetAt(0);
-        DocumentRenderer renderer = new AwtRenderer();
+        SheetRenderer renderer = new AwtRenderer();
 
         try {
             BufferedImage img = renderer.render(sheet);

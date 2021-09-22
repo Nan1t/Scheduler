@@ -54,7 +54,7 @@ public final class ExcelUtil {
     }
 
     public static String getCellValue(Cell cell) {
-        if (cell == null) return "";
+        if (isEmptyCell(cell)) return "";
         try {
             return cell.getStringCellValue();
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package edu.zieit.scheduler.schedule.students;
 
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import com.google.common.base.Preconditions;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,9 +18,9 @@ public class StudentSchedule extends AbstractSchedule {
     private String displayName;
     private Set<Schedule> group;
 
-    public StudentSchedule(StudentScheduleInfo info, Sheet sheet, DocumentRenderer documentRenderer,
+    public StudentSchedule(StudentScheduleInfo info, Sheet sheet, SheetRenderer sheetRenderer,
                            List<ScheduleDay> days) {
-        super(sheet, documentRenderer);
+        super(sheet, sheetRenderer);
         this.info = info;
         this.days = days;
         setDisplayName(info.getDisplayName());
@@ -30,6 +31,7 @@ public class StudentSchedule extends AbstractSchedule {
     }
 
     public void setDisplayName(String displayName) {
+        Preconditions.checkNotNull(displayName, "Display name cannot be null");
         this.displayName = displayName;
     }
 

@@ -1,11 +1,11 @@
 package edu.zieit.scheduler.schedule.students;
 
 import edu.zieit.scheduler.api.Person;
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
 import edu.zieit.scheduler.api.schedule.ScheduleParseException;
-import edu.zieit.scheduler.schedule.AbstractScheduleParser;
+import edu.zieit.scheduler.schedule.AbstractScheduleLoader;
 import edu.zieit.scheduler.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -18,14 +18,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class StudentScheduleParser extends AbstractScheduleParser {
+public class StudentScheduleLoader extends AbstractScheduleLoader {
 
-    public StudentScheduleParser(DocumentRenderer renderer) {
+    public StudentScheduleLoader(SheetRenderer renderer) {
         super(renderer);
     }
 
     @Override
-    public Collection<Schedule> parse(ScheduleInfo info) throws ScheduleParseException {
+    public Collection<Schedule> load(ScheduleInfo info) throws ScheduleParseException {
         if (!(info instanceof StudentScheduleInfo sinfo))
             return Collections.emptyList();
 
@@ -41,6 +41,11 @@ public class StudentScheduleParser extends AbstractScheduleParser {
             for (Sheet sheet : workbook) {
                 StudentSchedule schedule = parseSchedule(sinfo, sheet);
                 schedule.setDisplayName(sinfo.getDisplayName() + " " + sheet.getSheetName());
+
+                for (Schedule sch : schedules) {
+                    ((StudentSchedule) sch).addToGroup(schedule);
+                }
+
                 schedules.add(schedule);
             }
 

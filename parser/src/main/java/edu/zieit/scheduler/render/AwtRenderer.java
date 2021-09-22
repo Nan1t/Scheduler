@@ -1,7 +1,7 @@
 package edu.zieit.scheduler.render;
 
 import edu.zieit.scheduler.util.ExcelUtil;
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.util.SizeUtil;
 import edu.zieit.scheduler.util.StyleUtil;
 import org.apache.poi.ss.usermodel.*;
@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * Renderer for excel documents. WIP
  */
-public class AwtRenderer extends DocumentRenderer {
+public class AwtRenderer extends SheetRenderer {
 
     private static final int LINE_SPACING = 8;
 

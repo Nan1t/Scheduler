@@ -36,8 +36,7 @@ public abstract class AbstractScheduleInfo implements ScheduleInfo {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof AbstractScheduleInfo) {
-            AbstractScheduleInfo info = (AbstractScheduleInfo) obj;
+        if (obj instanceof AbstractScheduleInfo info) {
             return this.url.equals(info.url) && this.id.equals(info.id);
         }
         return false;

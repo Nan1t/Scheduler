@@ -2,11 +2,11 @@ package edu.zieit.scheduler.schedule.teacher;
 
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.SheetPoint;
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
 import edu.zieit.scheduler.api.schedule.ScheduleParseException;
-import edu.zieit.scheduler.schedule.AbstractScheduleParser;
+import edu.zieit.scheduler.schedule.AbstractScheduleLoader;
 import edu.zieit.scheduler.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -15,21 +15,20 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TeacherScheduleParser extends AbstractScheduleParser {
+public class TeacherScheduleLoader extends AbstractScheduleLoader {
 
     private static final SheetPoint POINT_DAY = new SheetPoint(1, 2);
     private static final SheetPoint POINT_TEACHER = new SheetPoint(0, 4);
 
-    public TeacherScheduleParser(DocumentRenderer renderer) {
+    public TeacherScheduleLoader(SheetRenderer renderer) {
         super(renderer);
     }
 
     @Override
-    public Collection<Schedule> parse(ScheduleInfo info) throws ScheduleParseException {
+    public Collection<Schedule> load(ScheduleInfo info) throws ScheduleParseException {
         Workbook workbook = loadWorkbook(info);
         Sheet sheet = workbook.getSheetAt(0);
-        Cell cell = getCell(sheet, 0, 0);
-        String title = ExcelUtil.getCellValue(cell);
+        String title = ExcelUtil.getCellValue(getCell(sheet, 0, 0));
 
         Map<Person, List<TeacherDay>> teachers = new HashMap<>();
         int row = POINT_TEACHER.row();

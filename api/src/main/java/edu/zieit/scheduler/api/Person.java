@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.api;
 
-import edu.zieit.scheduler.api.util.Levenstain;
+import edu.zieit.scheduler.api.util.Levenshtein;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,18 +9,18 @@ public record Person(String firstName, String lastName, String patronymic) {
 
     public static final int MAX_SIMILARITY = 1;
 
-    public static Pattern PATTERN_TEACHER = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{0,32})\\s*([А-ЯЁЇІЄҐ])\\.([А-ЯЁЇІЄҐ])\\.*");
-    public static Pattern PATTERN_TEACHER_INLINE = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{1,32}\\s*[А-ЯЁЇІЄҐ]\\.[А-ЯЁЇІЄҐ]\\.*)\\s*(ауд\\..{1,3})");
+    public static Pattern PATTERN_TEACHER = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{0,32})\\s*([А-ЯЁЇІЄҐ])\\.\\s*([А-ЯЁЇІЄҐ])\\.*");
+    public static Pattern PATTERN_TEACHER_INLINE = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{1,32}\\s*[А-ЯЁЇІЄҐ]\\.\\s*[А-ЯЁЇІЄҐ]\\.*)\\s*(ауд\\..{1,3})");
 
     /**
      * Check is this person similar to another.
      * Two similar persons must have equals first name and patronymic
-     * and Levenstain distance of last name less or equal that MAX_SIMILARITY parameter
-     * @param another
-     * @return
+     * and Levenshtein distance of last name less or equal that MAX_SIMILARITY parameter
+     * @param another another Person
+     * @return true is this Person similar to another or false otherwise
      */
     public boolean isSimilar(Person another) {
-        int ln = Levenstain.calc(this.lastName(), another.lastName());
+        int ln = Levenshtein.calcDistance(this.lastName(), another.lastName());
         return ln <= MAX_SIMILARITY
                 && this.firstName().equals(another.firstName())
                 && this.patronymic().equals(another.patronymic());

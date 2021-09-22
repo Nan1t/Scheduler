@@ -1,7 +1,7 @@
 package edu.zieit.scheduler.schedule.teacher;
 
 import edu.zieit.scheduler.api.Person;
-import edu.zieit.scheduler.api.render.DocumentRenderException;
+import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.api.schedule.PersonalRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 
@@ -21,7 +21,7 @@ public class TeacherScheduleRenderer implements PersonalRenderer {
     }
 
     @Override
-    public BufferedImage render() throws DocumentRenderException {
+    public BufferedImage render() throws RenderException {
         return null;
     }
 

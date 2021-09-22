@@ -1,10 +1,10 @@
 package edu.zieit.scheduler.api.util;
 
-public final class Levenstain {
+public final class Levenshtein {
 
-    private Levenstain() { }
+    private Levenshtein() { }
 
-    public static int calc(String str1, String str2) {
+    public static int calcDistance(String str1, String str2) {
         int[] Di_1 = new int[str2.length() + 1];
         int[] Di = new int[str2.length() + 1];
 

@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.schedule;
 
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -10,8 +10,8 @@ public abstract class AbstractSchedule implements Schedule {
 
     private final BufferedImage documentImg;
 
-    public AbstractSchedule(Sheet sheet, DocumentRenderer documentRenderer) {
-        this.documentImg = documentRenderer.render(sheet);
+    public AbstractSchedule(Sheet sheet, SheetRenderer renderer) {
+        this.documentImg = renderer.render(sheet);
     }
 
     @Override

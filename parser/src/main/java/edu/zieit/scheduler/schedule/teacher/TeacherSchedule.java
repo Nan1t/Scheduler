@@ -1,7 +1,7 @@
 package edu.zieit.scheduler.schedule.teacher;
 
 import edu.zieit.scheduler.api.Person;
-import edu.zieit.scheduler.api.render.DocumentRenderer;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.PersonalRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
@@ -16,9 +16,9 @@ public class TeacherSchedule extends AbstractSchedule {
     private final TeacherScheduleInfo info;
     private final Map<Person, List<TeacherDay>> days;
 
-    public TeacherSchedule(TeacherScheduleInfo info, Sheet sheet, DocumentRenderer documentRenderer,
+    public TeacherSchedule(TeacherScheduleInfo info, Sheet sheet, SheetRenderer sheetRenderer,
                            String title, Map<Person, List<TeacherDay>> days) {
-        super(sheet, documentRenderer);
+        super(sheet, sheetRenderer);
         this.info = info;
         this.title = title;
         this.days = days;
@@ -33,11 +33,11 @@ public class TeacherSchedule extends AbstractSchedule {
         return info;
     }
 
-    public List<TeacherDay> getDays(Person person) {
+    public Collection<TeacherDay> getDays(Person person) {
         return days.getOrDefault(person, Collections.emptyList());
     }
 
-    public List<String> getTeachers() {
+    public Collection<String> getTeachers() {
         return days.keySet().stream()
                 .map(Person::toString)
                 .sorted(Comparator.naturalOrder())

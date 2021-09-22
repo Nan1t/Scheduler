@@ -5,7 +5,6 @@ import edu.zieit.scheduler.schedule.AbstractScheduleInfo;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,7 +27,7 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
     public static class Serializer implements TypeSerializer<TeacherScheduleInfo> {
 
         @Override
-        public @Nullable TeacherScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
+        public TeacherScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
                 throws ObjectMappingException {
             URL url;
 
