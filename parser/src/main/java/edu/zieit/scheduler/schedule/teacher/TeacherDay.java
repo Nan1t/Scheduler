@@ -4,20 +4,20 @@ import java.util.*;
 
 public class TeacherDay {
 
-    private final int index;
-    private final Map<Integer, Collection<String>> classes;
+    private final String name;
+    private final Map<Integer, TeacherClass> classes;
 
-    public TeacherDay(int index, Map<Integer, Collection<String>> classes) {
-        this.index = index;
+    public TeacherDay(String name, Map<Integer, TeacherClass> classes) {
+        this.name = name;
         this.classes = classes;
     }
 
-    public int getIndex() {
-        return index;
+    public String getName() {
+        return name;
     }
 
-    public Collection<String> getCourses(int classNumber) {
-        return classes.getOrDefault(classNumber, Collections.emptyList());
+    public Map<Integer, TeacherClass> getClasses() {
+        return classes;
     }
 
     public boolean isEmpty() {
@@ -27,7 +27,7 @@ public class TeacherDay {
     @Override
     public String toString() {
         return "TeacherDay{" +
-                "index='" + index + '\'' +
+                "name='" + name + '\'' +
                 ", classes=" + classes +
                 '}';
     }
@@ -38,26 +38,25 @@ public class TeacherDay {
 
     public static class Builder {
 
-        private int index;
-        private final Map<Integer, Collection<String>> classes;
+        private String name;
+        private final Map<Integer, TeacherClass> classes;
 
         private Builder() {
             this.classes = new HashMap<>();
         }
 
-        public Builder index(int index) {
-            this.index = index;
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
-        public Builder addCourses(int classNumber, Collection<String> courses) {
-            this.classes.computeIfAbsent(classNumber, (e)->new HashSet<>())
-                    .addAll(courses);
+        public Builder addCourses(int classNumber, TeacherClass teacherClass) {
+            this.classes.putIfAbsent(classNumber, teacherClass);
             return this;
         }
 
         public TeacherDay build() {
-            return new TeacherDay(index, classes);
+            return new TeacherDay(name, classes);
         }
 
     }

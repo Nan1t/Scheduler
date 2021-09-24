@@ -1,0 +1,6 @@
+teachers.head.days: 'День'
+teachers.head.class.num: '№'
+teachers.head.class.time: 'Время'
+teachers.head.classes: 'Пары'
+teachers.notfound: 'Не найдено. Поиск в: %s'
+teachers.classroom.missing: 'Дистанционно?'

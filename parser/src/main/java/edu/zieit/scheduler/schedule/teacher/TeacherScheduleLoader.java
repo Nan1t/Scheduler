@@ -52,7 +52,6 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
         List<TeacherDay> days = new LinkedList<>();
         Cell dayCell = getCell(sheet, POINT_DAY.row(), POINT_DAY.col());
         int classNumRow = POINT_DAY.row() + 1;
-        int dayIndex = 1;
 
         while (!ExcelUtil.isEmptyCell(dayCell)) {
             var range = ExcelUtil.getCellRange(dayCell);
@@ -60,8 +59,9 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
             if (range == null) continue;
 
             var dayBuilder = TeacherDay.builder();
+            String dayName = ExcelUtil.getCellValue(dayCell);
 
-            dayBuilder.index(dayIndex);
+            dayBuilder.name(dayName);
 
             for (int col = range.getFirstColumn(); col < range.getLastColumn(); col++) {
                 Cell classNumCell = getCell(sheet, classNumRow, col);
@@ -74,7 +74,7 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
                             .map(s->s.trim().toLowerCase())
                             .collect(Collectors.toList());
 
-                    dayBuilder.addCourses(classNum, courses);
+                    dayBuilder.addCourses(classNum, new TeacherClass(coursesRaw, courses));
                 }
             }
 
@@ -83,7 +83,6 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
             if (!day.isEmpty()) days.add(day);
 
             dayCell = getCell(sheet, POINT_DAY.row(), range.getLastColumn() + 1);
-            dayIndex++;
         }
 
         return days;

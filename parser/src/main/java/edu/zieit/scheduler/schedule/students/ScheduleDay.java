@@ -1,6 +1,9 @@
 package edu.zieit.scheduler.schedule.students;
 
+import edu.zieit.scheduler.api.Person;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Schedule's day representation.
@@ -29,7 +32,7 @@ public class ScheduleDay {
      * @return Class beginning time or empty string if nothing found
      */
     public String getClassTime(int classIndex) {
-        return timeTable.getOrDefault(classIndex, "");
+        return timeTable.get(classIndex);
     }
 
     /**
@@ -37,14 +40,28 @@ public class ScheduleDay {
      * @param classIndex Class index
      * @return List of schedule's classes
      */
-    public List<ScheduleClass> getClasses(int classIndex) {
+    public Collection<ScheduleClass> getClasses(int classIndex) {
         return classes.getOrDefault(classIndex, Collections.emptyList());
+    }
+
+    /**
+     * Get classes list relevant for index and teacher
+     * @param classIndex Class index
+     * @param teacher Teacher person
+     * @return Collection of classes
+     */
+    public Collection<ScheduleClass> getClasses(int classIndex, Person teacher) {
+        return getClasses(classIndex)
+                .stream()
+                .filter(cl -> cl.getTeacher().equals(teacher))
+                .collect(Collectors.toList());
     }
 
     @Override
     public String toString() {
         return "ScheduleDay{" +
-                "name='" + name + '\'' +
+                "timetable='" + timeTable + "'" +
+                ", name='" + name + '\'' +
                 ", classes=" + classes +
                 '}';
     }
@@ -70,7 +87,7 @@ public class ScheduleDay {
         }
 
         public Builder addTimePoint(int classIndex, String time) {
-            timeTable.put(classIndex, time);
+            timeTable.putIfAbsent(classIndex, time);
             return this;
         }
 

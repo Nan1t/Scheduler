@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.schedule.students;
 
+import edu.zieit.scheduler.api.NamespaceKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
@@ -66,7 +67,15 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             dayCell = getCell(sheet, row, info.getDayPoint().col());
         }
 
-        return new StudentSchedule(info, sheet, renderer, days);
+        NamespaceKey key;
+
+        if (sheet.getWorkbook().getNumberOfSheets() > 1) {
+            key = NamespaceKey.of(info.getId(), sheet.getSheetName().toLowerCase());
+        } else {
+            key = NamespaceKey.of(info.getId());
+        }
+
+        return new StudentSchedule(info, key, sheet, renderer, days);
     }
 
     private ScheduleDay parseDay(StudentScheduleInfo info, Sheet sheet, Cell dayCell, CellRangeAddress range) {
@@ -95,7 +104,11 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             row = classNumRange.getLastRow() + 1;
         }
 
-        builder.name(ExcelUtil.getCellValue(dayCell).strip());
+        builder.name(ExcelUtil.getCellValue(dayCell)
+                .lines()
+                .findFirst()
+                .orElse("day")
+                .strip());
 
         return builder.build();
     }
@@ -122,10 +135,12 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             String name = ExcelUtil.getCellValue(classCell).strip();
             String type = ExcelUtil.getCellValue(typeCell).strip();
             String teacherName = ExcelUtil.getCellValue(teacherCell).strip();
+            String classrooms = ExcelUtil.getCellValue(classroomCell).strip();
             Collection<String> groups = parseGroups(info, sheet, range);
 
             if (Person.REGEX_TEACHER_INLINE.matcher(teacherName).find()) {
                 // Teachers and classrooms in one line
+                teacherName += "," + classrooms;
                 String[] parts = teacherName.split(",");
 
                 for (String part : parts) {
@@ -158,7 +173,7 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
                 builder.name(name)
                         .type(type)
                         .teacher(teacher)
-                        .classroom(ExcelUtil.getCellValue(classroomCell).strip());
+                        .classroom(classrooms);
 
                 groups.forEach(builder::withGroup);
                 classes.add(builder.build());

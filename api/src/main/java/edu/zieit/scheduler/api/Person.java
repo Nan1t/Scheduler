@@ -2,6 +2,7 @@ package edu.zieit.scheduler.api;
 
 import edu.zieit.scheduler.api.util.Levenshtein;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +39,21 @@ public record Person(String firstName, String lastName, String patronymic) {
     @Override
     public String toString() {
         return isEmpty() ? "NONE" : String.format("%s %s.%s.", lastName, firstName, patronymic);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(firstName, person.firstName)
+                && Objects.equals(lastName, person.lastName)
+                && Objects.equals(patronymic, person.patronymic);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, patronymic);
     }
 
     public static Person empty() {

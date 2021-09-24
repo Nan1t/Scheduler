@@ -1,6 +1,7 @@
 package edu.zieit.scheduler.schedule.teacher;
 
 import com.google.common.reflect.TypeToken;
+import edu.zieit.scheduler.api.NamespaceKey;
 import edu.zieit.scheduler.schedule.AbstractScheduleInfo;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -13,15 +14,15 @@ import java.util.Map;
 
 public class TeacherScheduleInfo extends AbstractScheduleInfo {
 
-    private final Map<String, String> associations;
+    private final Map<String, NamespaceKey> associations;
 
-    public TeacherScheduleInfo(URL url, Map<String, String> associations) {
+    public TeacherScheduleInfo(URL url, Map<String, NamespaceKey> associations) {
         super(url);
         this.associations = associations;
     }
 
-    public String getScheduleId(String abbreviation) {
-        return associations.get(abbreviation);
+    public NamespaceKey getAssociation(String abbreviation) {
+        return associations.get(abbreviation.toLowerCase());
     }
 
     public static class Serializer implements TypeSerializer<TeacherScheduleInfo> {
@@ -37,12 +38,13 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
                 throw new ObjectMappingException("Incorrect or missing schedule URL");
             }
 
-            Map<String, String> associations = new HashMap<>();
+            Map<String, NamespaceKey> associations = new HashMap<>();
 
             for (var entry : node.getNode("associations").getChildrenMap().entrySet()) {
-                String abbreviation = entry.getValue().getString().toLowerCase();
-                String scheduleId = entry.getKey().toString().toLowerCase();
-                associations.put(abbreviation, scheduleId);
+                String abbreviation = entry.getKey().toString().toLowerCase();
+                String rawKey = entry.getValue().getString(null);
+                NamespaceKey key = NamespaceKey.parse(rawKey);
+                associations.put(abbreviation, key);
             }
 
             return new TeacherScheduleInfo(url, associations);

@@ -2,16 +2,11 @@ plugins {
     id 'java-library'
 }
 
-compileJava.options.encoding = 'UTF-8'
-compileTestJava.options.encoding = 'UTF-8'
-
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
-    implementation project(':api')
-    implementation files('libs/renderer.jar')
-    implementation 'org.apache.poi:poi-ooxml:5.0.0'
+    api project(':parser')
 }
 
 test {

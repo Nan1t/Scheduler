@@ -2,8 +2,8 @@ package edu.zieit.scheduler.schedule.teacher;
 
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
-import edu.zieit.scheduler.api.schedule.PersonalRenderer;
-import edu.zieit.scheduler.api.schedule.Schedule;
+import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -18,7 +18,7 @@ public class TeacherSchedule extends AbstractSchedule {
 
     public TeacherSchedule(TeacherScheduleInfo info, Sheet sheet, SheetRenderer sheetRenderer,
                            String title, Map<Person, List<TeacherDay>> days) {
-        super(sheet, sheetRenderer);
+        super(info, sheet, sheetRenderer);
         this.info = info;
         this.title = title;
         this.days = days;
@@ -44,8 +44,9 @@ public class TeacherSchedule extends AbstractSchedule {
                 .collect(Collectors.toList());
     }
 
-    public PersonalRenderer getPersonalRenderer(Person person, Collection<Schedule> studentsSchedule) {
-        return new TeacherScheduleRenderer(this, person, studentsSchedule);
+    @Override
+    public ScheduleRenderer getPersonalRenderer(Person person, ScheduleManager manager) {
+        return new TeacherScheduleRenderer(this, person, manager);
     }
 
     @Override

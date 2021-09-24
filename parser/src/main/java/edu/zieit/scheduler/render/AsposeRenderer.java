@@ -6,6 +6,7 @@ import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.render.DocRenderOptions;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -49,11 +50,9 @@ public class AsposeRenderer extends SheetRenderer {
     private BufferedImage render(Worksheet worksheet) throws RenderException {
         try {
             SheetRender render = new SheetRender(worksheet, asposeOptions);
-            float[] size = render.getPageSize(0);
-            BufferedImage image = new BufferedImage((int) size[0], (int) size[1], BufferedImage.TYPE_INT_RGB);
-            Graphics2D graphics = image.createGraphics();
-            render.toImage(0, graphics);
-            return image;
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            render.toImage(0, output);
+            return ImageIO.read(new ByteArrayInputStream(output.toByteArray()));
         } catch (Exception e) {
             throw new RenderException(e);
         }
@@ -90,6 +89,7 @@ public class AsposeRenderer extends SheetRenderer {
         asposeOptions.setOnePagePerSheet(true);
         asposeOptions.setOutputBlankPageWhenNothingToPrint(true);
         asposeOptions.setImageType(format);
+        asposeOptions.setCellAutoFit(true);
 
         return asposeOptions;
     }

@@ -2,11 +2,11 @@ package edu.zieit.scheduler.schedule.consult;
 
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
-import edu.zieit.scheduler.api.schedule.PersonalRenderer;
+import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 
 import java.awt.image.BufferedImage;
 
-public class ConsultScheduleRenderer implements PersonalRenderer {
+public class ConsultScheduleRenderer implements ScheduleRenderer {
 
     private final ConsultSchedule schedule;
     private final Person teacher;

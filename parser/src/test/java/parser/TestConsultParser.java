@@ -1,17 +1,13 @@
 package parser;
 
 import edu.zieit.scheduler.api.SheetPoint;
-import edu.zieit.scheduler.api.render.RenderException;
-import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
 import edu.zieit.scheduler.api.schedule.ScheduleLoader;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleInfo;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleLoader;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.jupiter.api.Test;
 
-import java.awt.image.BufferedImage;
 import java.net.URL;
 
 public class TestConsultParser {
@@ -24,13 +20,6 @@ public class TestConsultParser {
 
         for (Schedule schedule : loader.load(info)) {
             System.out.println(schedule);
-        }
-    }
-
-    private static class EmptyRenderer extends SheetRenderer {
-        @Override
-        public BufferedImage render(Sheet sheet) throws RenderException {
-            return null;
         }
     }
 

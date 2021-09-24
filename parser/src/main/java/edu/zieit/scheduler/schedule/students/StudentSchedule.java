@@ -1,6 +1,7 @@
 package edu.zieit.scheduler.schedule.students;
 
 import com.google.common.base.Preconditions;
+import edu.zieit.scheduler.api.NamespaceKey;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
@@ -19,9 +20,9 @@ public class StudentSchedule extends AbstractSchedule {
     private String displayName;
     private Collection<Schedule> group;
 
-    public StudentSchedule(StudentScheduleInfo info, Sheet sheet, SheetRenderer sheetRenderer,
+    public StudentSchedule(StudentScheduleInfo info, NamespaceKey key, Sheet sheet, SheetRenderer sheetRenderer,
                            List<ScheduleDay> days) {
-        super(sheet, sheetRenderer);
+        super(key, sheet, sheetRenderer);
         this.info = info;
         this.days = days;
         setDisplayName(info.getDisplayName());
@@ -38,6 +39,12 @@ public class StudentSchedule extends AbstractSchedule {
 
     public Collection<ScheduleDay> getDays() {
         return days;
+    }
+
+    public Optional<ScheduleDay> getDay(String dayName) {
+        return days.stream()
+                .filter(day -> day.getName().equalsIgnoreCase(dayName))
+                .findFirst();
     }
 
     public Collection<Schedule> getGroup() {

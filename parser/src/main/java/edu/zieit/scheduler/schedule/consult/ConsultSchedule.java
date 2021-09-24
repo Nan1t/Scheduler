@@ -3,7 +3,8 @@ package edu.zieit.scheduler.schedule.consult;
 import com.google.common.base.Preconditions;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
-import edu.zieit.scheduler.api.schedule.PersonalRenderer;
+import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import edu.zieit.scheduler.schedule.AbstractScheduleBuilder;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -18,7 +19,7 @@ public class ConsultSchedule extends AbstractSchedule {
 
     public ConsultSchedule(ConsultScheduleInfo info, Sheet sheet, SheetRenderer renderer,
                            String title, Map<Person, List<ConsultDay>> weekMap) {
-        super(sheet, renderer);
+        super(info, sheet, renderer);
         this.info = info;
         this.title = title;
         this.weekMap = weekMap;
@@ -32,7 +33,8 @@ public class ConsultSchedule extends AbstractSchedule {
         return weekMap.getOrDefault(teacher, Collections.emptyList());
     }
 
-    public PersonalRenderer getPersonalRenderer(Person teacher) {
+    @Override
+    public ScheduleRenderer getPersonalRenderer(Person teacher, ScheduleManager manager) {
         return new ConsultScheduleRenderer(this, teacher);
     }
 

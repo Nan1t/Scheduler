@@ -1,25 +1,80 @@
 package parser;
 
-import edu.zieit.scheduler.api.schedule.Schedule;
-import edu.zieit.scheduler.api.schedule.ScheduleInfo;
-import edu.zieit.scheduler.api.schedule.ScheduleLoader;
+import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.Person;
+import edu.zieit.scheduler.api.SheetPoint;
+import edu.zieit.scheduler.api.schedule.*;
+import edu.zieit.scheduler.render.AsposeRenderer;
+import edu.zieit.scheduler.schedule.students.StudentScheduleInfo;
+import edu.zieit.scheduler.schedule.students.StudentScheduleLoader;
 import edu.zieit.scheduler.schedule.teacher.TeacherSchedule;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleInfo;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
+import napi.configurate.yaml.lang.Language;
+import napi.configurate.yaml.source.ConfigSources;
 import org.junit.jupiter.api.Test;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class TestTeacherParser {
 
+    private Collection<Schedule> parse() {
+        URL url = getClass().getResource("/Teachers.xls");
+        Map<String, NamespaceKey> associations = new HashMap<>();
+
+        associations.put("1", NamespaceKey.of("1"));
+        associations.put("2", NamespaceKey.of("2"));
+        associations.put("3", NamespaceKey.of("3"));
+        associations.put("4", NamespaceKey.of("4"));
+        associations.put("5", NamespaceKey.of("5"));
+        associations.put("к9", NamespaceKey.of("1k"));
+        associations.put("кол", NamespaceKey.of("2k"));
+        associations.put("кол3", NamespaceKey.of("3k"));
+        associations.put("кол4", NamespaceKey.of("4k"));
+        associations.put("1(з)", NamespaceKey.of("zo", "1 курс"));
+        associations.put("2(з)", NamespaceKey.of("zo", "2 курс"));
+        associations.put("3(з)", NamespaceKey.of("zo", "3 курс"));
+        associations.put("4(з)", NamespaceKey.of("zo", "4 курс"));
+        associations.put("5(з)", NamespaceKey.of("zo", "5 курс"));
+        associations.put("1к(з)", NamespaceKey.of("zc", "1 курс"));
+        associations.put("2к(з)", NamespaceKey.of("zc", "2 курс"));
+        associations.put("1,2,3 курс", NamespaceKey.of("do", "1,2,3 курс"));
+        associations.put("магістратура", NamespaceKey.of("zo", "магістратура"));
+
+        ScheduleInfo info = new TeacherScheduleInfo(url, associations);
+        ScheduleLoader parser = new TeacherScheduleLoader(new AsposeRenderer());
+        return parser.load(info);
+    }
+
+    private Map<NamespaceKey, Schedule> parseStudents() {
+        String[] paths = {"1.xls", "2.xls", "3.xls", "4.xls", "5.xls", "1k.xls", "2k.xls", "3k.xls", "4k.xls", "zc.xlsx", "zo.xlsx", "do.xls"};
+        Map<NamespaceKey, Schedule> scheduleMap = new HashMap<>();
+
+        for (String str : paths) {
+            URL url = getClass().getResource("/" + str);
+
+            ScheduleInfo info = new StudentScheduleInfo(url, "Schedule " + str,
+                    new SheetPoint(0, 7),
+                    new SheetPoint(4, 5));
+            ScheduleLoader parser = new StudentScheduleLoader(new EmptyRenderer());
+
+            for (Schedule schedule : parser.load(info)) {
+                scheduleMap.put(schedule.getKey(), schedule);
+                System.out.println("Loaded " + schedule.getKey());
+            }
+
+        }
+
+        return scheduleMap;
+    }
+
     @Test
     public void testParse() throws Exception {
-        URL url = getClass().getResource("/Teachers.xls");
-        ScheduleInfo info = new TeacherScheduleInfo(url, Map.of());
-        ScheduleLoader parser = new TeacherScheduleLoader(null);
-        Collection<Schedule> schedules = parser.load(info);
+        Collection<Schedule> schedules = parse();
 
         for (Schedule schedule : schedules) {
             System.out.println(schedule.toString());
@@ -28,6 +83,28 @@ public class TestTeacherParser {
                 System.out.println(((TeacherSchedule) schedule).getTeachers());
             }
         }
+    }
+
+    @Test
+    public void testRender() throws Exception {
+        TestScheduleManager manager = new TestScheduleManager();
+        Language lang = Language.builder()
+                .source(ConfigSources.resource("/lang.yml", this))
+                .build();
+
+        lang.reload();
+
+        Collection<Schedule> schedules = parse();
+        Schedule teachers = schedules.stream().findFirst().get();
+
+        manager.setLang(lang);
+        manager.setStudentSchedule(parseStudents());
+        manager.setTeacherSchedule(teachers);
+
+        ScheduleRenderer renderer = teachers.getPersonalRenderer(Person.teacher("Резніченко Ю.С."), manager);
+        BufferedImage image = renderer.render();
+
+        ImageIO.write(image, "jpeg", Paths.get("./test.jpeg").toFile());
     }
 
 }

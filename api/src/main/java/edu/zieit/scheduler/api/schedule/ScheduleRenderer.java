@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 /**
  * Implementors of this interface should render associated schedule to personal user's image
  */
-public interface PersonalRenderer {
+public interface ScheduleRenderer {
 
     /**
      * Render associated schedule to image
