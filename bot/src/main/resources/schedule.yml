@@ -1,0 +1,139 @@
+#
+# Настройка расписания
+#
+
+# Период проверки расписания в миллисекундах
+check_rate: 10000
+
+# Настройка таблицы занятости преподавателей
+teachers:
+  url: "http://www.zieit.edu.ua/wp-content/uploads/Rozklad/Teachers.xls"
+  associations:
+    '1': "1"
+    '2': "2"
+    '3': "3"
+    '4': "4"
+    '5': "5"
+    'К9': "1k"
+    'Кол': "2k"
+    'Кол3': "3k"
+    'Кол4': "4k"
+    '1(з)': "zo:1 курс"
+    '2(з)': "zo:2 курс"
+    '3(з)': "zo:3 курс"
+    '4(з)': "zo:4 курс"
+    '5(з)': "zo:5 курс"
+    '1К(з)': "zc:1 курс"
+    '2К(з)': "zc:2 курс"
+    '1,2,3 курс': "do:1,2,3 курс"
+    'Магістратура': "zo:Магістратура"
+    'Дист': "do:Магістратура"
+
+# Настройка расписания консультаций
+consult:
+  url: "http://www.zieit.edu.ua/wp-content/uploads/Rozklad/consultation.xls"
+  day_point:
+    col: 0
+    row: 0
+  teacher_point:
+    col: 0
+    row: 0
+
+# Настройка расписания студентов
+students:
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/1.xls"
+    name: "Інститут 1 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/2.xls"
+    name: "Інститут 2 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/3.xls"
+    name: "Інститут 3 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/4.xls"
+    name: "Інститут 4 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/5.xls"
+    name: "Інститут 5 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/1k.xls"
+    name: "Колледж 1 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/2k.xls"
+    name: "Колледж 2 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/3k.xls"
+    name: "Колледж 3 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/4k.xls"
+    name: "Колледж 4 курс"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/zo.xlsx"
+    name: "Інститут заочний"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/zc.xlsx"
+    name: "Колледж заочний"
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5
+  - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/do.xls"
+    name: "Дист."
+    day_point:
+      col: 0
+      row: 7
+    teacher_point:
+      col: 4
+      row: 5

@@ -1,0 +1,12 @@
+#
+# Языковой файл
+#
+
+schedule.render.head.days: 'День'
+
+teachers.head.class.num: '№'
+teachers.head.class.time: 'Час'
+teachers.head.classes: 'Пари'
+teachers.notfound: 'Не знайдено. Пошук у: %s'
+
+consult.head.time: 'Час консулт.'

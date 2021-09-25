@@ -58,7 +58,8 @@ public record NamespaceKey(String namespace, String key) {
     public static NamespaceKey parse(String str) {
         Preconditions.checkNotNull(str, "Raw NamespaceKey cannot be null");
         String[] arr = str.split(":");
-        if (arr.length != 2) throw new IllegalArgumentException("Invalid namespaced key");
+        if (arr.length == 1) return of(arr[0]);
+        if (arr.length != 2) throw new IllegalArgumentException("Invalid namespaced key: " + str);
         return of(arr[0], arr[1]);
     }
 
