@@ -2,11 +2,12 @@ package edu.zieit.scheduler.api;
 
 import edu.zieit.scheduler.api.util.Levenshtein;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public record Person(String firstName, String lastName, String patronymic) {
+public record Person(String firstName, String lastName, String patronymic) implements Serializable {
 
     private static final Person EMPTY = simple(null, null, null);
 

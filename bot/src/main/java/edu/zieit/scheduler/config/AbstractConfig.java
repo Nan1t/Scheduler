@@ -9,8 +9,8 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public abstract class AbstractConfig {
 
@@ -41,12 +41,14 @@ public abstract class AbstractConfig {
 
     protected abstract void load() throws ObjectMappingException;
 
-    protected Map<String, String> loadProperties(ConfigurationNode node) {
-        Map<String, String> map = new HashMap<>();
+    protected Properties loadProperties(ConfigurationNode node) {
+        Properties properties = new Properties();
         for (var entry : node.getChildrenMap().entrySet()) {
-            map.put(entry.getKey().toString(), entry.getValue().getString());
+            String key = entry.getKey().toString();
+            String value = entry.getValue().getString();
+            properties.put(key, value);
         }
-        return map;
+        return properties;
     }
 
 }

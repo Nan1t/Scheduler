@@ -2,12 +2,13 @@ package edu.zieit.scheduler.api;
 
 import com.google.common.base.Preconditions;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Useful Id wrapper to identify schedule by namespace (filename) and key (sheet name)
  */
-public record NamespaceKey(String namespace, String key) {
+public record NamespaceKey(String namespace, String key) implements Serializable {
 
     /**
      * Get same key but only with namespace name, without key
@@ -29,6 +30,21 @@ public record NamespaceKey(String namespace, String key) {
     @Override
     public String toString() {
         return key.isEmpty() ? namespace : String.format("%s:%s", namespace, key);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o instanceof NamespaceKey key) {
+            return this.namespace.equals(key.namespace)
+                    && this.key.equals(key.key);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(namespace, key);
     }
 
     /**
@@ -61,20 +77,5 @@ public record NamespaceKey(String namespace, String key) {
         if (arr.length == 1) return of(arr[0]);
         if (arr.length != 2) throw new IllegalArgumentException("Invalid namespaced key: " + str);
         return of(arr[0], arr[1]);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o instanceof NamespaceKey key) {
-            return this.namespace.equals(key.namespace)
-                    && this.key.equals(key.key);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(namespace, key);
     }
 }

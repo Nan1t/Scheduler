@@ -3,15 +3,12 @@ package edu.zieit.scheduler.config;
 import napi.configurate.yaml.conf.Configuration;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 public final class MainConfig extends AbstractConfig {
 
-    private String dbHost;
-    private int dbPort;
-    private String dbUser;
-    private String dbPassword;
-    private Map<String, String> dbProperties;
+    private Properties dbProperties;
 
     private String tgBotName;
     private String tgToken;
@@ -25,12 +22,7 @@ public final class MainConfig extends AbstractConfig {
 
     @Override
     protected void load() {
-        dbHost = conf.getNode("database", "host").getString();
-        dbPort = conf.getNode("database", "port").getInt();
-        dbUser = conf.getNode("database", "user").getString();
-        dbPassword = conf.getNode("database", "password").getString();
-        dbProperties = loadProperties(conf.getNode("database", "properties"));
-
+        dbProperties = loadProperties(conf.getNode("database"));
         tgBotName = conf.getNode("telegram", "bot_name").getString();
         tgToken = conf.getNode("telegram", "token").getString();
 
@@ -42,23 +34,7 @@ public final class MainConfig extends AbstractConfig {
         return conf;
     }
 
-    public String getDbHost() {
-        return dbHost;
-    }
-
-    public int getDbPort() {
-        return dbPort;
-    }
-
-    public String getDbUser() {
-        return dbUser;
-    }
-
-    public String getDbPassword() {
-        return dbPassword;
-    }
-
-    public Map<String, String> getDbProperties() {
+    public Properties getDbProperties() {
         return dbProperties;
     }
 

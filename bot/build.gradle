@@ -12,6 +12,7 @@ dependencies {
 
     implementation 'org.telegram:telegrambots:5.3.0'
     implementation 'org.hibernate.orm:hibernate-core:6.0.0.Alpha8'
+    implementation 'com.h2database:h2:1.4.200'
 }
 
 jar {
