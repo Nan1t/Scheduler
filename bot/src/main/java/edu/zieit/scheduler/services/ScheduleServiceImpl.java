@@ -15,10 +15,14 @@ import edu.zieit.scheduler.schedule.students.StudentScheduleInfo;
 import edu.zieit.scheduler.schedule.students.StudentScheduleLoader;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
 import napi.configurate.yaml.lang.Language;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class ScheduleServiceImpl implements ScheduleService {
+
+    private static final Logger logger = LogManager.getLogger(ScheduleServiceImpl.class);
 
     private final Language lang;
     private final ScheduleConfig config;
@@ -78,6 +82,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 for (Schedule schedule : studentsLoader.load(info)) {
                     studentsSchedule.put(schedule.getKey(), schedule);
                     updated.add(schedule);
+                    logger.info("Loaded schedule {}", schedule.getKey());
                 }
 
                 saveHash(info.getId(), newHash);
@@ -98,6 +103,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             if (opt.isPresent()) {
                 teachersSchedule = opt.get();
                 saveHash(config.getTeachers().getId(), newHash);
+                logger.info("Loaded teachers schedule");
                 return true;
             }
         }
@@ -116,6 +122,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             if (opt.isPresent()) {
                 consultSchedule = opt.get();
                 saveHash(config.getConsult().getId(), newHash);
+                logger.info("Loaded consultations schedule");
                 return true;
             }
         }
