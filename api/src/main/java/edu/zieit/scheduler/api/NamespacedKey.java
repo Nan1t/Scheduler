@@ -8,13 +8,13 @@ import java.util.Objects;
 /**
  * Useful Id wrapper to identify schedule by namespace (filename) and key (sheet name)
  */
-public record NamespaceKey(String namespace, String key) implements Serializable {
+public record NamespacedKey(String namespace, String key) implements Serializable {
 
     /**
      * Get same key but only with namespace name, without key
      * @return Namespaced key instance
      */
-    public NamespaceKey withoutKey() {
+    public NamespacedKey withoutKey() {
         return of(namespace);
     }
 
@@ -23,7 +23,7 @@ public record NamespaceKey(String namespace, String key) implements Serializable
      * @param another Another NamespacedKey
      * @return true is namespaces equals or false otherwise
      */
-    public boolean compareNamespace(NamespaceKey another) {
+    public boolean compareNamespace(NamespacedKey another) {
         return another.namespace().equals(this.namespace());
     }
 
@@ -35,7 +35,7 @@ public record NamespaceKey(String namespace, String key) implements Serializable
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof NamespaceKey key) {
+        if (o instanceof NamespacedKey key) {
             return this.namespace.equals(key.namespace)
                     && this.key.equals(key.key);
         }
@@ -53,8 +53,8 @@ public record NamespaceKey(String namespace, String key) implements Serializable
      * @param key Key name
      * @return New NamespaceKey instance
      */
-    public static NamespaceKey of(String namespace, String key) {
-        return new NamespaceKey(namespace.strip(), key.strip());
+    public static NamespacedKey of(String namespace, String key) {
+        return new NamespacedKey(namespace.strip(), key.strip());
     }
 
     /**
@@ -62,7 +62,7 @@ public record NamespaceKey(String namespace, String key) implements Serializable
      * @param namespace Namespace name
      * @return New NamespaceKey instance
      */
-    public static NamespaceKey of(String namespace) {
+    public static NamespacedKey of(String namespace) {
         return of(namespace, "");
     }
 
@@ -71,7 +71,7 @@ public record NamespaceKey(String namespace, String key) implements Serializable
      * @param str Raw key string
      * @return Parsed key instance
      */
-    public static NamespaceKey parse(String str) {
+    public static NamespacedKey parse(String str) {
         Preconditions.checkNotNull(str, "Raw NamespaceKey cannot be null");
         String[] arr = str.split(":");
         if (arr.length == 1) return of(arr[0]);

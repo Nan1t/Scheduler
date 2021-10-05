@@ -1,7 +1,9 @@
 package edu.zieit.scheduler;
 
+import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.config.ScheduleConfig;
+import edu.zieit.scheduler.data.dao.TeacherSubsDao;
 import edu.zieit.scheduler.data.subscription.SubscriptionPoints;
 import edu.zieit.scheduler.data.subscription.SubscriptionStudent;
 import edu.zieit.scheduler.data.subscription.SubscriptionTeacher;
@@ -38,6 +40,13 @@ public final class Scheduler {
 
         initHibernate();
 
+        TeacherSubsDao dao = new TeacherSubsDao(sessionFactory);
+        SubscriptionTeacher sub = new SubscriptionTeacher();
+        sub.setTelegramId("idtest");
+        sub.setTeacher(Person.simple("First", "Last", "Part"));
+
+        dao.create(sub);
+
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Safe shutdown thread"));
     }
 
@@ -49,9 +58,9 @@ public final class Scheduler {
         Configuration configuration = new Configuration();
 
         configuration.addProperties(conf.getDbProperties());
-        configuration.addAnnotatedClass(SubscriptionPoints.class);
+        //configuration.addAnnotatedClass(SubscriptionPoints.class);
         configuration.addAnnotatedClass(SubscriptionTeacher.class);
-        configuration.addAnnotatedClass(SubscriptionStudent.class);
+        //configuration.addAnnotatedClass(SubscriptionStudent.class);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());

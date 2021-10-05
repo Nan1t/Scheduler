@@ -18,4 +18,12 @@ public class TeacherSubsDao {
         }
     }
 
+    public void create(SubscriptionTeacher sub) {
+        try (Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            session.save(sub);
+            session.getTransaction().commit();
+        }
+    }
+
 }

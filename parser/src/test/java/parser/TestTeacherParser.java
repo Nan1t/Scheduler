@@ -1,6 +1,6 @@
 package parser;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.SheetPoint;
 import edu.zieit.scheduler.api.schedule.*;
@@ -24,35 +24,35 @@ public class TestTeacherParser {
 
     private Collection<Schedule> parse() {
         URL url = getClass().getResource("/Teachers.xls");
-        Map<String, NamespaceKey> associations = new HashMap<>();
+        Map<String, NamespacedKey> associations = new HashMap<>();
 
-        associations.put("1", NamespaceKey.of("1"));
-        associations.put("2", NamespaceKey.of("2"));
-        associations.put("3", NamespaceKey.of("3"));
-        associations.put("4", NamespaceKey.of("4"));
-        associations.put("5", NamespaceKey.of("5"));
-        associations.put("к9", NamespaceKey.of("1k"));
-        associations.put("кол", NamespaceKey.of("2k"));
-        associations.put("кол3", NamespaceKey.of("3k"));
-        associations.put("кол4", NamespaceKey.of("4k"));
-        associations.put("1(з)", NamespaceKey.of("zo", "1 курс"));
-        associations.put("2(з)", NamespaceKey.of("zo", "2 курс"));
-        associations.put("3(з)", NamespaceKey.of("zo", "3 курс"));
-        associations.put("4(з)", NamespaceKey.of("zo", "4 курс"));
-        associations.put("5(з)", NamespaceKey.of("zo", "5 курс"));
-        associations.put("1к(з)", NamespaceKey.of("zc", "1 курс"));
-        associations.put("2к(з)", NamespaceKey.of("zc", "2 курс"));
-        associations.put("1,2,3 курс", NamespaceKey.of("do", "1,2,3 курс"));
-        associations.put("магістратура", NamespaceKey.of("zo", "магістратура"));
+        associations.put("1", NamespacedKey.of("1"));
+        associations.put("2", NamespacedKey.of("2"));
+        associations.put("3", NamespacedKey.of("3"));
+        associations.put("4", NamespacedKey.of("4"));
+        associations.put("5", NamespacedKey.of("5"));
+        associations.put("к9", NamespacedKey.of("1k"));
+        associations.put("кол", NamespacedKey.of("2k"));
+        associations.put("кол3", NamespacedKey.of("3k"));
+        associations.put("кол4", NamespacedKey.of("4k"));
+        associations.put("1(з)", NamespacedKey.of("zo", "1 курс"));
+        associations.put("2(з)", NamespacedKey.of("zo", "2 курс"));
+        associations.put("3(з)", NamespacedKey.of("zo", "3 курс"));
+        associations.put("4(з)", NamespacedKey.of("zo", "4 курс"));
+        associations.put("5(з)", NamespacedKey.of("zo", "5 курс"));
+        associations.put("1к(з)", NamespacedKey.of("zc", "1 курс"));
+        associations.put("2к(з)", NamespacedKey.of("zc", "2 курс"));
+        associations.put("1,2,3 курс", NamespacedKey.of("do", "1,2,3 курс"));
+        associations.put("магістратура", NamespacedKey.of("zo", "магістратура"));
 
         ScheduleInfo info = new TeacherScheduleInfo(url, associations);
         ScheduleLoader parser = new TeacherScheduleLoader(new AsposeRenderer());
         return parser.load(info);
     }
 
-    private Map<NamespaceKey, Schedule> parseStudents() {
+    private Map<NamespacedKey, Schedule> parseStudents() {
         String[] paths = {"1.xls", "2.xls", "3.xls", "4.xls", "5.xls", "1k.xls", "2k.xls", "3k.xls", "4k.xls", "zc.xlsx", "zo.xlsx", "do.xls"};
-        Map<NamespaceKey, Schedule> scheduleMap = new HashMap<>();
+        Map<NamespacedKey, Schedule> scheduleMap = new HashMap<>();
 
         for (String str : paths) {
             URL url = getClass().getResource("/" + str);

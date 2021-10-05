@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.schedule.teacher;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.api.schedule.ScheduleManager;
@@ -206,7 +206,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         List<StudentSchedule> schedules = new LinkedList<>();
 
         for (String course : teacherClass.courses()) {
-            NamespaceKey scheduleKey = this.schedule.getInfo().getAssociation(course);
+            NamespacedKey scheduleKey = this.schedule.getInfo().getAssociation(course);
 
             if (scheduleKey == null) // Try to find schedule by raw "pointer"
                 scheduleKey = this.schedule.getInfo().getAssociation(teacherClass.raw());

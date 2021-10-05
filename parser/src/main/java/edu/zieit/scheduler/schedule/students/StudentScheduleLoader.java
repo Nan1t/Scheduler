@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.schedule.students;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
@@ -67,12 +67,12 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             dayCell = getCell(sheet, row, info.getDayPoint().col());
         }
 
-        NamespaceKey key;
+        NamespacedKey key;
 
         if (sheet.getWorkbook().getNumberOfSheets() > 1) {
-            key = NamespaceKey.of(info.getId(), sheet.getSheetName().toLowerCase());
+            key = NamespacedKey.of(info.getId(), sheet.getSheetName().toLowerCase());
         } else {
-            key = NamespaceKey.of(info.getId());
+            key = NamespacedKey.of(info.getId());
         }
 
         return new StudentSchedule(info, key, sheet, renderer, days);

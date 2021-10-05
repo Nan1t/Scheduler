@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.data.subscription;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -17,7 +17,7 @@ public class SubscriptionStudent {
     private String telegramId;
     @Type(type = "edu.zieit.scheduler.data.types.NamespaceKeyType")
     @Column(name = "schedule_key")
-    private NamespaceKey scheduleKey;
+    private NamespacedKey scheduleKey;
 
     public String getTelegramId() {
         return telegramId;
@@ -27,11 +27,11 @@ public class SubscriptionStudent {
         this.telegramId = telegramId;
     }
 
-    public NamespaceKey getScheduleKey() {
+    public NamespacedKey getScheduleKey() {
         return scheduleKey;
     }
 
-    public void setScheduleKey(NamespaceKey scheduleKey) {
+    public void setScheduleKey(NamespacedKey scheduleKey) {
         this.scheduleKey = scheduleKey;
     }
 }

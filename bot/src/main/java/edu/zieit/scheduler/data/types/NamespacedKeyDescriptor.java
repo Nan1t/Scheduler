@@ -1,33 +1,33 @@
 package edu.zieit.scheduler.data.types;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
-public class NamespaceKeyType implements UserType<NamespaceKey> {
+public class NamespacedKeyDescriptor implements UserType {
 
-    public NamespaceKeyType() { }
+    public NamespacedKeyDescriptor() { }
 
     @Override
     public int[] sqlTypes() {
-        return new int[Types.VARCHAR];
+        return new int[StringType.INSTANCE.sqlType()];
     }
 
     @Override
-    public Class<NamespaceKey> returnedClass() {
-        return NamespaceKey.class;
+    public Class<NamespacedKey> returnedClass() {
+        return NamespacedKey.class;
     }
 
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        if (x instanceof NamespaceKey k1 && y instanceof NamespaceKey k2) {
+        if (x instanceof NamespacedKey k1 && y instanceof NamespacedKey k2) {
             return k1.equals(k2);
         }
         return false;
@@ -39,15 +39,15 @@ public class NamespaceKeyType implements UserType<NamespaceKey> {
     }
 
     @Override
-    public NamespaceKey nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
-        String str = rs.getString(position);
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
+        String str = rs.getString(names[0]);
         if (str != null)
-            return NamespaceKey.parse(str);
+            return NamespacedKey.parse(str);
         return null;
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, NamespaceKey value, int index, SharedSessionContractImplementor session) throws SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
         st.setString(index, value.toString());
     }
 

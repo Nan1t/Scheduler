@@ -1,6 +1,6 @@
 package parser;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleManager;
 import napi.configurate.yaml.lang.Language;
@@ -10,7 +10,7 @@ import java.util.Map;
 public class TestScheduleManager implements ScheduleManager {
 
     private Language lang;
-    private Map<NamespaceKey, Schedule> studentSchedule;
+    private Map<NamespacedKey, Schedule> studentSchedule;
     private Schedule teacherSchedule;
     private Schedule consultSchedule;
 
@@ -20,7 +20,7 @@ public class TestScheduleManager implements ScheduleManager {
     }
 
     @Override
-    public Schedule getStudentSchedule(NamespaceKey key) {
+    public Schedule getStudentSchedule(NamespacedKey key) {
         return studentSchedule.get(key);
     }
 
@@ -38,7 +38,7 @@ public class TestScheduleManager implements ScheduleManager {
         this.lang = lang;
     }
 
-    public void setStudentSchedule(Map<NamespaceKey, Schedule> studentSchedule) {
+    public void setStudentSchedule(Map<NamespacedKey, Schedule> studentSchedule) {
         this.studentSchedule = studentSchedule;
     }
 

@@ -3,25 +3,29 @@ package edu.zieit.scheduler.data.types;
 import edu.zieit.scheduler.api.Person;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
-public class PersonType implements UserType<Person> {
+public class PersonDescriptor implements UserType {
 
-    public PersonType() { }
+    public PersonDescriptor() { }
 
     @Override
     public int[] sqlTypes() {
-        return new int[] {Types.VARCHAR, Types.CLOB};
+        return new int[] {
+                StringType.INSTANCE.sqlType(),
+                StringType.INSTANCE.sqlType(),
+                StringType.INSTANCE.sqlType()
+        };
     }
 
     @Override
-    public Class<Person> returnedClass() {
+    public Class<?> returnedClass() {
         return Person.class;
     }
 
@@ -36,15 +40,16 @@ public class PersonType implements UserType<Person> {
     }
 
     @Override
-    public Person nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
-        String firstName = rs.getString("first_name");
-        String lastName = rs.getString("last_name");
-        String patronymic = rs.getString("patronymic");
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
+        String firstName = rs.getString(names[0]);
+        String lastName = rs.getString(names[1]);
+        String patronymic = rs.getString(names[2]);
         return Person.simple(firstName, lastName, patronymic);
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, Person person, int index, SharedSessionContractImplementor session) throws SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
+        Person person = (Person) value;
         st.setString(index, person.firstName());
         st.setString(index+1, person.lastName());
         st.setString(index+2, person.patronymic());

@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.schedule;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
@@ -13,24 +13,24 @@ import java.awt.image.BufferedImage;
 
 public abstract class AbstractSchedule implements Schedule {
 
-    private final NamespaceKey key;
+    private final NamespacedKey key;
     private final BufferedImage documentImg;
     private final SheetRenderer renderer;
 
     public AbstractSchedule(ScheduleInfo info, Sheet sheet, SheetRenderer renderer) {
-        this.key = NamespaceKey.of(info.getId());
+        this.key = NamespacedKey.of(info.getId());
         this.renderer = renderer;
         this.documentImg = renderer.render(sheet);
     }
 
-    public AbstractSchedule(NamespaceKey key, Sheet sheet, SheetRenderer renderer) {
+    public AbstractSchedule(NamespacedKey key, Sheet sheet, SheetRenderer renderer) {
         this.key = key;
         this.renderer = renderer;
         this.documentImg = renderer.render(sheet);
     }
 
     @Override
-    public NamespaceKey getKey() {
+    public NamespacedKey getKey() {
         return key;
     }
 

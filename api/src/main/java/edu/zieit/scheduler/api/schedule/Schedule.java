@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.api.schedule;
 
-import edu.zieit.scheduler.api.NamespaceKey;
+import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 
 import java.awt.image.BufferedImage;
@@ -20,7 +20,7 @@ public interface Schedule {
      * Get unique key of this schedule
      * @return Unique schedule key
      */
-    NamespaceKey getKey();
+    NamespacedKey getKey();
 
     /**
      * Get rendered image
