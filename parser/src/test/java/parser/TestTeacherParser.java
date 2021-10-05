@@ -87,7 +87,7 @@ public class TestTeacherParser {
 
     @Test
     public void testRender() throws Exception {
-        TestScheduleManager manager = new TestScheduleManager();
+        TestScheduleService manager = new TestScheduleService();
         Language lang = Language.builder()
                 .source(ConfigSources.resource("/lang.yml", this))
                 .build();

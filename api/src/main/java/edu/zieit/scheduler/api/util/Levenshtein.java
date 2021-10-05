@@ -1,9 +1,18 @@
 package edu.zieit.scheduler.api.util;
 
+/**
+ * Levenshtein distance util
+ */
 public final class Levenshtein {
 
     private Levenshtein() { }
 
+    /**
+     * Calculate Levenshtein distance between two strings
+     * @param str1 First string
+     * @param str2 Second string
+     * @return Levenshtein distance value
+     */
     public static int calcDistance(String str1, String str2) {
         int[] Di_1 = new int[str2.length() + 1];
         int[] Di = new int[str2.length() + 1];

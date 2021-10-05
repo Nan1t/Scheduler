@@ -1,6 +1,6 @@
-package edu.zieit.scheduler.data.types;
+package edu.zieit.scheduler.persistence.descriptors;
 
-import edu.zieit.scheduler.api.Person;
+import edu.zieit.scheduler.api.NamespacedKey;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.StringType;
@@ -11,27 +11,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PersonDescriptor implements UserType {
+public class NamespacedKeyDescriptor implements UserType {
 
-    public PersonDescriptor() { }
+    public NamespacedKeyDescriptor() { }
 
     @Override
     public int[] sqlTypes() {
-        return new int[] {
-                StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType()
-        };
+        return new int[] {StringType.INSTANCE.sqlType()};
     }
 
     @Override
-    public Class<?> returnedClass() {
-        return Person.class;
+    public Class<NamespacedKey> returnedClass() {
+        return NamespacedKey.class;
     }
 
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        return x.equals(y);
+        if (x instanceof NamespacedKey k1 && y instanceof NamespacedKey k2) {
+            return k1.equals(k2);
+        }
+        return false;
     }
 
     @Override
@@ -41,18 +40,15 @@ public class PersonDescriptor implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
-        String firstName = rs.getString(names[0]);
-        String lastName = rs.getString(names[1]);
-        String patronymic = rs.getString(names[2]);
-        return Person.simple(firstName, lastName, patronymic);
+        String str = rs.getString(names[0]);
+        if (str != null)
+            return NamespacedKey.parse(str);
+        return null;
     }
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
-        Person person = (Person) value;
-        st.setString(index, person.firstName());
-        st.setString(index+1, person.lastName());
-        st.setString(index+2, person.patronymic());
+        st.setString(index, value.toString());
     }
 
     @Override

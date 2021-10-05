@@ -3,7 +3,7 @@ package edu.zieit.scheduler.schedule.consult;
 import com.google.common.base.Preconditions;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
-import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import edu.zieit.scheduler.schedule.AbstractScheduleBuilder;
@@ -34,7 +34,7 @@ public class ConsultSchedule extends AbstractSchedule {
     }
 
     @Override
-    public ScheduleRenderer getPersonalRenderer(Person teacher, ScheduleManager manager) {
+    public ScheduleRenderer getPersonalRenderer(Person teacher, ScheduleService manager) {
         return new ConsultScheduleRenderer(this, teacher, manager);
     }
 

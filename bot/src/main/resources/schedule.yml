@@ -46,7 +46,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/2.xls"
@@ -54,7 +54,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/3.xls"
@@ -62,7 +62,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/4.xls"
@@ -70,7 +70,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/5.xls"
@@ -78,7 +78,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/1k.xls"
@@ -86,7 +86,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/2k.xls"
@@ -94,7 +94,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/3k.xls"
@@ -102,7 +102,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/4k.xls"
@@ -110,7 +110,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/zo.xlsx"
@@ -118,7 +118,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/zc.xlsx"
@@ -126,7 +126,7 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/do.xls"
@@ -134,6 +134,14 @@ students:
     day_point:
       col: 0
       row: 7
-    teacher_point:
+    group_point:
       col: 4
       row: 5
+
+# Настройка рендеринга таблиц расписания
+render:
+  # Доступные форматы: JPEG, PNG, GIF
+  format: JPEG
+  # Кол-во точек на дюйм.
+  # Чем больше число, тем четче картинка, но тяжелее итоговый файл
+  dpi: 300

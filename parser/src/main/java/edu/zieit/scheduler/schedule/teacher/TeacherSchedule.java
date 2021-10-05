@@ -2,7 +2,7 @@ package edu.zieit.scheduler.schedule.teacher;
 
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
-import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -45,7 +45,7 @@ public class TeacherSchedule extends AbstractSchedule {
     }
 
     @Override
-    public ScheduleRenderer getPersonalRenderer(Person person, ScheduleManager manager) {
+    public ScheduleRenderer getPersonalRenderer(Person person, ScheduleService manager) {
         return new TeacherScheduleRenderer(this, person, manager);
     }
 

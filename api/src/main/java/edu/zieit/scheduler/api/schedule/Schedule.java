@@ -34,6 +34,6 @@ public interface Schedule {
      * @param manager Schedule manager
      * @return Created personal schedule renderer
      */
-    ScheduleRenderer getPersonalRenderer(Person person, ScheduleManager manager);
+    ScheduleRenderer getPersonalRenderer(Person person, ScheduleService manager);
 
 }

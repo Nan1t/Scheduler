@@ -2,7 +2,7 @@ package edu.zieit.scheduler.schedule.consult;
 
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
-import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.util.ExcelUtil;
 import napi.configurate.yaml.lang.Language;
@@ -23,7 +23,7 @@ public class ConsultScheduleRenderer implements ScheduleRenderer {
 
     private Font boldFont;
 
-    public ConsultScheduleRenderer(ConsultSchedule schedule, Person teacher, ScheduleManager manager) {
+    public ConsultScheduleRenderer(ConsultSchedule schedule, Person teacher, ScheduleService manager) {
         this.schedule = schedule;
         this.teacher = teacher;
         this.lang = manager.getLang();

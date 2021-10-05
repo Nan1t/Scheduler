@@ -2,12 +2,13 @@ package parser;
 
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.schedule.Schedule;
-import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import napi.configurate.yaml.lang.Language;
 
+import java.util.Collection;
 import java.util.Map;
 
-public class TestScheduleManager implements ScheduleManager {
+public class TestScheduleService implements ScheduleService {
 
     private Language lang;
     private Map<NamespacedKey, Schedule> studentSchedule;
@@ -48,5 +49,20 @@ public class TestScheduleManager implements ScheduleManager {
 
     public void setConsultSchedule(Schedule consultSchedule) {
         this.consultSchedule = consultSchedule;
+    }
+
+    @Override
+    public Collection<Schedule> reloadStudentSchedule() {
+        return null;
+    }
+
+    @Override
+    public boolean reloadTeacherSchedule() {
+        return false;
+    }
+
+    @Override
+    public boolean reloadConsultSchedule() {
+        return false;
     }
 }

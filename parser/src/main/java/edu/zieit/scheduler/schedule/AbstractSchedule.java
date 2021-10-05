@@ -5,7 +5,7 @@ import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
-import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -44,7 +44,7 @@ public abstract class AbstractSchedule implements Schedule {
     }
 
     @Override
-    public ScheduleRenderer getPersonalRenderer(Person person, ScheduleManager manager) {
+    public ScheduleRenderer getPersonalRenderer(Person person, ScheduleService manager) {
         throw new RuntimeException("Renderer not implemented for this schedule type");
     }
 

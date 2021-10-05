@@ -1,12 +1,17 @@
 package edu.zieit.scheduler;
 
-import edu.zieit.scheduler.api.Person;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.config.ScheduleConfig;
-import edu.zieit.scheduler.data.dao.TeacherSubsDao;
-import edu.zieit.scheduler.data.subscription.SubscriptionPoints;
-import edu.zieit.scheduler.data.subscription.SubscriptionStudent;
-import edu.zieit.scheduler.data.subscription.SubscriptionTeacher;
+import edu.zieit.scheduler.persistence.ScheduleHash;
+import edu.zieit.scheduler.persistence.dao.PointsSubsDao;
+import edu.zieit.scheduler.persistence.dao.ScheduleHashesDao;
+import edu.zieit.scheduler.persistence.dao.StudentSubsDao;
+import edu.zieit.scheduler.persistence.dao.TeacherSubsDao;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionStudent;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
+import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
 import org.hibernate.SessionFactory;
@@ -18,18 +23,14 @@ import java.nio.file.Paths;
 
 public final class Scheduler {
 
-    private MainConfig conf;
-    private ScheduleConfig scheduleConf;
-    private Language lang;
-
     private SessionFactory sessionFactory;
 
     public void start() throws Exception {
         Path rootDir = Paths.get("./");
 
-        conf = new MainConfig(rootDir);
-        scheduleConf = new ScheduleConfig(rootDir);
-        lang = Language.builder()
+        MainConfig conf = new MainConfig(rootDir);
+        ScheduleConfig scheduleConf = new ScheduleConfig(rootDir);
+        Language lang = Language.builder()
                 .source(ConfigSources.resource("/lang.yml", this)
                         .copyTo(rootDir))
                 .build();
@@ -38,14 +39,16 @@ public final class Scheduler {
         scheduleConf.reload();
         lang.reload();
 
-        initHibernate();
+        initHibernate(conf);
 
-        TeacherSubsDao dao = new TeacherSubsDao(sessionFactory);
-        SubscriptionTeacher sub = new SubscriptionTeacher();
-        sub.setTelegramId("idtest");
-        sub.setTeacher(Person.simple("First", "Last", "Part"));
+        TeacherSubsDao teacherDao = new TeacherSubsDao(sessionFactory);
+        StudentSubsDao studentDao = new StudentSubsDao(sessionFactory);
+        PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
+        ScheduleHashesDao hashesDao = new ScheduleHashesDao(sessionFactory);
 
-        dao.create(sub);
+        ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
+
+        scheduleService.reloadAll();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Safe shutdown thread"));
     }
@@ -54,13 +57,15 @@ public final class Scheduler {
 
     }
 
-    private void initHibernate() {
+    private void initHibernate(MainConfig conf) {
         Configuration configuration = new Configuration();
 
         configuration.addProperties(conf.getDbProperties());
-        //configuration.addAnnotatedClass(SubscriptionPoints.class);
+
+        configuration.addAnnotatedClass(SubscriptionPoints.class);
         configuration.addAnnotatedClass(SubscriptionTeacher.class);
-        //configuration.addAnnotatedClass(SubscriptionStudent.class);
+        configuration.addAnnotatedClass(SubscriptionStudent.class);
+        configuration.addAnnotatedClass(ScheduleHash.class);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());

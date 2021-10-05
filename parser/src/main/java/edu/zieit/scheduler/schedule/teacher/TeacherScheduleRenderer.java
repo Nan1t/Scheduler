@@ -3,7 +3,7 @@ package edu.zieit.scheduler.schedule.teacher;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
-import edu.zieit.scheduler.api.schedule.ScheduleManager;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.schedule.students.ScheduleClass;
 import edu.zieit.scheduler.schedule.students.ScheduleDay;
@@ -21,12 +21,12 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
 
     private final TeacherSchedule schedule;
     private final Person person;
-    private final ScheduleManager manager;
+    private final ScheduleService manager;
     private final Language lang;
 
     private Font boldFont;
 
-    public TeacherScheduleRenderer(TeacherSchedule schedule, Person person, ScheduleManager manager) {
+    public TeacherScheduleRenderer(TeacherSchedule schedule, Person person, ScheduleService manager) {
         this.schedule = schedule;
         this.person = person;
         this.manager = manager;
