@@ -7,7 +7,6 @@ import edu.zieit.scheduler.api.render.DocRenderOptions;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 

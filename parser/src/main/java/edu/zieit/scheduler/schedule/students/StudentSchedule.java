@@ -66,9 +66,9 @@ public class StudentSchedule extends AbstractSchedule {
 
     @Override
     public String toString() {
-        Collection<String> groups = group.stream()
+        Collection<String> groups = group != null ? group.stream()
                 .map(el -> ((StudentSchedule)el).getDisplayName())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()) : Collections.emptyList();
 
         return "StudentSchedule{" +
                 "days=" + days +

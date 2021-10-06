@@ -7,7 +7,7 @@ check_rate: 10000
 
 # Настройка таблицы занятости преподавателей
 teachers:
-  url: "http://www.zieit.edu.ua/wp-content/uploads/Rozklad/Teachers.xls"
+  url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/Teachers.xls"
   associations:
     '1': "1"
     '2': "2"
@@ -31,7 +31,7 @@ teachers:
 
 # Настройка расписания консультаций
 consult:
-  url: "http://www.zieit.edu.ua/wp-content/uploads/Rozklad/consultation.xls"
+  url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/consultation.xls"
   day_point:
     col: 0
     row: 0
