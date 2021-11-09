@@ -16,6 +16,8 @@ public final class MainConfig extends AbstractConfig {
     private Pattern regexTeacherDefault;
     private Pattern regexTeacherInline;
 
+    private int threadPoolSize;
+
     public MainConfig(Path rootDir) {
         super(rootDir, "/config.yml", Map.of());
     }
@@ -28,6 +30,8 @@ public final class MainConfig extends AbstractConfig {
 
         regexTeacherDefault = Pattern.compile(conf.getNode("expressions", "teacher_default").getString(""));
         regexTeacherInline = Pattern.compile(conf.getNode("expressions", "teacher_inline").getString(""));
+
+        threadPoolSize = conf.getNode("thread_pool_size").getInt(4);
     }
 
     public Configuration getConf() {
@@ -52,5 +56,9 @@ public final class MainConfig extends AbstractConfig {
 
     public Pattern getRegexTeacherInline() {
         return regexTeacherInline;
+    }
+
+    public int getThreadPoolSize() {
+        return threadPoolSize;
     }
 }

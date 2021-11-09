@@ -10,3 +10,6 @@ teachers.head.classes: 'Пари'
 teachers.notfound: 'Не знайдено. Пошук у: %s'
 
 consult.head.time: 'Час консулт.'
+
+cmd.unsupported: 'Невірний формат запиту'
+cmd.notfound: 'Команда не знайдена. Для допомоги по командам, введіть /help'

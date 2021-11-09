@@ -1,6 +1,8 @@
 package edu.zieit.scheduler;
 
+import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
+import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.ScheduleHash;
@@ -14,16 +16,23 @@ import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public final class Scheduler {
 
+    private static final Logger logger = LogManager.getLogger(Scheduler.class);
+
     private SessionFactory sessionFactory;
+    private SchedulerBot bot;
 
     public void start() throws Exception {
         Path rootDir = Paths.get("./");
@@ -39,6 +48,9 @@ public final class Scheduler {
         scheduleConf.reload();
         lang.reload();
 
+        Person.REGEX_TEACHER = conf.getRegexTeacherDefault();
+        Person.REGEX_TEACHER_INLINE = conf.getRegexTeacherInline();
+
         initHibernate(conf);
 
         TeacherSubsDao teacherDao = new TeacherSubsDao(sessionFactory);
@@ -48,13 +60,27 @@ public final class Scheduler {
 
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
 
-        scheduleService.reloadAll();
+        logger.info("Loading schedule ...");
+        //scheduleService.reloadAll();
+        logger.info("All schedule loaded");
+
+        bot = new SchedulerBot(conf, lang);
+        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+
+        logger.info("Starting long polling bot ...");
+        botsApi.registerBot(bot);
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Safe shutdown thread"));
+
+        logger.info("Done! Scheduler ready to work");
     }
 
     public void shutdown() {
-
+        logger.info("Closing connections ...");
+        sessionFactory.close();
+        logger.info("Closing long polling bot ...");
+        bot.shutdown();
+        System.out.println("Goodbye!");
     }
 
     private void initHibernate(MainConfig conf) {
@@ -71,5 +97,15 @@ public final class Scheduler {
                 .applySettings(configuration.getProperties());
 
         sessionFactory = configuration.buildSessionFactory(builder.build());
+    }
+
+    public static void main(String[] args) {
+        System.setProperty("java.awt.headless", "true");
+
+        try {
+            new Scheduler().start();
+        } catch (Throwable t) {
+            logger.error("Cannot start scheduler", t);
+        }
     }
 }

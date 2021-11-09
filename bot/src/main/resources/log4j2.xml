@@ -9,17 +9,20 @@
             </Policies>
             <DefaultRolloverStrategy max="1000"/>
         </RollingRandomAccessFile>
-        <Console name="STDOUT" target="SYSTEM_OUT" ignoreExceptions="false">
+        <Console name="Console" target="SYSTEM_OUT" ignoreExceptions="false">
             <PatternLayout pattern="[%d{HH:mm:ss}] %level: %msg%n"/>
         </Console>
     </Appenders>
     <Loggers>
+        <Logger name="org.hibernate" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
         <Root level="info">
             <filters>
                 <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
             </filters>
-            <AppenderRef ref="File"/>
-            <AppenderRef ref="TerminalConsole" level="info"/>
+            <AppenderRef ref="File" level="debug"/>
+            <AppenderRef ref="Console" level="info"/>
         </Root>
     </Loggers>
 </Configuration>

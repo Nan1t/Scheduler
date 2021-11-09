@@ -36,6 +36,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     private Schedule teachersSchedule;
     private Schedule consultSchedule;
 
+    private boolean firstLoad;
+
     public ScheduleServiceImpl(Language lang, ScheduleConfig config, ScheduleHashesDao hashesDao) {
         this.lang = lang;
         this.config = config;
@@ -48,6 +50,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.consultLoader = new ConsultScheduleLoader(renderer);
 
         this.studentsSchedule = new HashMap<>();
+        this.firstLoad = true;
     }
 
     @Override
@@ -78,16 +81,21 @@ public class ScheduleServiceImpl implements ScheduleService {
             ScheduleHash oldHash = hashesDao.find(info.getId());
             String newHash = HashUtil.getHash(info.getUrl());
 
-            if (studentsSchedule.isEmpty() || oldHash == null || !oldHash.getHash().equals(newHash)) {
+            if (firstLoad || oldHash == null || !oldHash.getHash().equals(newHash)) {
                 for (Schedule schedule : studentsLoader.load(info)) {
                     studentsSchedule.put(schedule.getKey(), schedule);
                     updated.add(schedule);
-                    logger.info("Loaded schedule {}", schedule.getKey());
+                    logger.info("Loaded schedule '{}'", schedule.getKey());
                 }
 
                 saveHash(info.getId(), newHash);
+                continue;
             }
+
+            logger.info("Skipping schedule {}", info.getId());
         }
+
+        firstLoad = false;
 
         return updated;
     }
