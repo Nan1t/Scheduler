@@ -61,10 +61,10 @@ public final class Scheduler {
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
 
         logger.info("Loading schedule ...");
-        //scheduleService.reloadAll();
+        scheduleService.reloadAll();
         logger.info("All schedule loaded");
 
-        bot = new SchedulerBot(conf, lang);
+        bot = new SchedulerBot(conf, lang, scheduleService);
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
 
         logger.info("Starting long polling bot ...");

@@ -1,11 +1,23 @@
 package edu.zieit.scheduler.bot.chat;
 
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+public abstract class State {
 
-public interface State {
+    private final State next;
 
-    BotApiMethod activate(InputContext ctx);
+    public State(State next) {
+        this.next = next;
+    }
 
-    BotApiMethod onInput(InputContext ctx);
+    public State() {
+        this(null);
+    }
+
+    public State getNext() {
+        return next;
+    }
+
+    public abstract void activate(ChatSession session);
+
+    public abstract InputResult input(ChatInput input, ChatSession session);
 
 }

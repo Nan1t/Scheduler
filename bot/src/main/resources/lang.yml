@@ -11,5 +11,9 @@ teachers.notfound: 'Не знайдено. Пошук у: %s'
 
 consult.head.time: 'Час консулт.'
 
-cmd.unsupported: 'Невірний формат запиту'
-cmd.notfound: 'Команда не знайдена. Для допомоги по командам, введіть /help'
+cmd.unsupported: 'Невірний формат запиту. Для допомоги по командам, введіть /help'
+
+cmd.teacher.subs.list: 'Оберіть викладача'
+
+choice.prev: 'Назад'
+choice.next: 'Вперед'

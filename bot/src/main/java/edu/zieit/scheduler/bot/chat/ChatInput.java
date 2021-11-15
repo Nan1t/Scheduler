@@ -1,20 +1,19 @@
 package edu.zieit.scheduler.bot.chat;
 
-import edu.zieit.scheduler.bot.ChatManager;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-public class InputContext {
+public class ChatInput {
 
     private final ChatSession session;
     private final ChatManager manager;
     private final Update update;
     private final String chatId;
 
-    public InputContext(ChatSession session, ChatManager manager, Update update) {
+    public ChatInput(String chatId, ChatSession session, ChatManager manager, Update update) {
         this.session = session;
         this.manager = manager;
         this.update = update;
-        this.chatId = update.getMessage().getChatId().toString();
+        this.chatId = chatId;
     }
 
     public ChatSession getSession() {
@@ -31,5 +30,13 @@ public class InputContext {
 
     public String getChatId() {
         return chatId;
+    }
+
+    public int getMessageId() {
+        if (update.hasMessage())
+            return update.getMessage().getMessageId();
+        if (update.hasCallbackQuery())
+            return update.getCallbackQuery().getMessage().getMessageId();
+        return Integer.MIN_VALUE;
     }
 }
