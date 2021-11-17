@@ -1,6 +1,7 @@
 package edu.zieit.scheduler.api.schedule;
 
 import edu.zieit.scheduler.api.NamespacedKey;
+import edu.zieit.scheduler.api.render.SheetRenderer;
 import napi.configurate.yaml.lang.Language;
 
 import java.util.Collection;
@@ -8,6 +9,12 @@ import java.util.Collection;
 public interface ScheduleService {
 
     Language getLang();
+
+    /**
+     * Get renderer of workbook's sheet
+     * @return Current renderer
+     */
+    SheetRenderer renderer();
 
     /**
      * Get students schedule by key

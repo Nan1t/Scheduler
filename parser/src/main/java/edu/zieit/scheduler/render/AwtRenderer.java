@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.render;
 
+import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.util.ExcelUtil;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.util.SizeUtil;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -79,6 +81,11 @@ public class AwtRenderer extends SheetRenderer {
         }
 
         return image;
+    }
+
+    @Override
+    public InputStream renderStream(Sheet sheet) throws RenderException {
+        return null;
     }
 
     private void drawText(Graphics2D graphics, Cell cell) {

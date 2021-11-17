@@ -18,9 +18,7 @@ public abstract class AbstractSchedule implements Schedule {
     private final SheetRenderer renderer;
 
     public AbstractSchedule(ScheduleInfo info, Sheet sheet, SheetRenderer renderer) {
-        this.key = NamespacedKey.of(info.getId());
-        this.renderer = renderer;
-        this.documentImg = renderer.render(sheet);
+        this(NamespacedKey.of(info.getId()), sheet, renderer);
     }
 
     public AbstractSchedule(NamespacedKey key, Sheet sheet, SheetRenderer renderer) {

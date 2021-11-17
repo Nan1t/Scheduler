@@ -14,6 +14,7 @@ import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionStudent;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
+import edu.zieit.scheduler.services.SubsService;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
 import org.apache.logging.log4j.LogManager;
@@ -58,13 +59,14 @@ public final class Scheduler {
         PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
         ScheduleHashesDao hashesDao = new ScheduleHashesDao(sessionFactory);
 
+        SubsService subsService = new SubsService(teacherDao, studentDao, pointsDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
 
         logger.info("Loading schedule ...");
         scheduleService.reloadAll();
         logger.info("All schedule loaded");
 
-        bot = new SchedulerBot(conf, lang, scheduleService);
+        bot = new SchedulerBot(conf, lang, scheduleService, subsService);
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
 
         logger.info("Starting long polling bot ...");

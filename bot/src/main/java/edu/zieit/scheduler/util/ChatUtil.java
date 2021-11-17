@@ -1,13 +1,18 @@
 package edu.zieit.scheduler.util;
 
-import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
-public class ChatUtil {
+import java.io.InputStream;
+
+public final class ChatUtil {
 
     private ChatUtil() {}
 
@@ -32,6 +37,37 @@ public class ChatUtil {
                     .replyMarkup(kb)
                     .text(text)
                     .build();
+        }
+    }
+
+    /**
+     * Build message that sends new or edit exists message with photo and caption
+     * @param session Chat session
+     * @param is Photo as stream
+     * @param text Message text
+     * @return Built method to send
+     */
+    public static PartialBotApiMethod[] editableMessage(ChatSession session, InputStream is, String filename, String text) {
+        if (session.hasValidLastMsgId()) {
+            return new PartialBotApiMethod[] {
+                    DeleteMessage.builder()
+                            .chatId(session.getChatId())
+                            .messageId(session.getLastMsgId())
+                            .build(),
+                    SendPhoto.builder()
+                            .chatId(session.getChatId())
+                            .caption(text)
+                            .photo(new InputFile(is, filename))
+                            .build()
+            };
+        } else {
+            return new PartialBotApiMethod[] {
+                    SendPhoto.builder()
+                            .chatId(session.getChatId())
+                            .caption(text)
+                            .photo(new InputFile(is, filename))
+                            .build()
+            };
         }
     }
 

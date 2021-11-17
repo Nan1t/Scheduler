@@ -13,6 +13,7 @@ import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.Collection;
 
 public class ConsultScheduleRenderer implements ScheduleRenderer {
@@ -31,6 +32,17 @@ public class ConsultScheduleRenderer implements ScheduleRenderer {
 
     @Override
     public BufferedImage render() throws RenderException {
+        Sheet sheet = renderBase();
+        return schedule.getRenderer().render(sheet);
+    }
+
+    @Override
+    public InputStream renderStream() throws RenderException {
+        Sheet sheet = renderBase();
+        return schedule.getRenderer().renderStream(sheet);
+    }
+
+    private Sheet renderBase() {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
 
@@ -59,7 +71,7 @@ public class ConsultScheduleRenderer implements ScheduleRenderer {
             dayRow++;
         }
 
-        return schedule.getRenderer().render(sheet);
+        return sheet;
     }
 
     private void initFonts(Sheet sheet) {

@@ -66,6 +66,7 @@ public record Person(String firstName, String lastName, String patronymic) imple
     }
 
     public static Person teacher(String source) {
+        if (source == null) return null;
         Matcher matcher = REGEX_TEACHER.matcher(source);
         return (matcher.find()) ? new Person(matcher.group(2), matcher.group(1), matcher.group(3)) : null;
     }

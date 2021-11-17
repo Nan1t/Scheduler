@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 
 /**
  * Abstract class for renderers
@@ -49,5 +50,12 @@ public abstract class SheetRenderer {
      * @return Rendered image
      */
     public abstract BufferedImage render(final Sheet sheet) throws RenderException;
+
+    /**
+     * Render single sheet of workbook and return as input stream
+     * @param sheet Sheet object
+     * @return Rendered image
+     */
+    public abstract InputStream renderStream(final Sheet sheet) throws RenderException;
 
 }

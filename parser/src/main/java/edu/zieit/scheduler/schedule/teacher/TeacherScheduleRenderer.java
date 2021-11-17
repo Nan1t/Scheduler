@@ -5,6 +5,7 @@ import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
+import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.schedule.students.ScheduleClass;
 import edu.zieit.scheduler.schedule.students.ScheduleDay;
 import edu.zieit.scheduler.schedule.students.StudentSchedule;
@@ -15,6 +16,7 @@ import org.apache.poi.ss.util.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.*;
 
 public class TeacherScheduleRenderer implements ScheduleRenderer {
@@ -35,6 +37,17 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
 
     @Override
     public BufferedImage render() throws RenderException {
+        Sheet sheet = renderBase();
+        return schedule.getRenderer().render(sheet);
+    }
+
+    @Override
+    public InputStream renderStream() throws RenderException {
+        Sheet sheet = renderBase();
+        return schedule.getRenderer().renderStream(sheet);
+    }
+
+    private Sheet renderBase() {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
         Collection<TeacherDay> days = schedule.getDays(person);
@@ -47,7 +60,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
             lastRow = drawDay(sheet, day, lastRow);
         }
 
-        return schedule.getRenderer().render(sheet);
+        return sheet;
     }
 
     private void initFonts(Sheet sheet) {
@@ -130,14 +143,16 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
     private void drawClass(Sheet sheet, Cell dayCell, TeacherDay teacherDay, TeacherClass teacherClass, int classNum, int classRow) {
         Collection<StudentSchedule> studentSchedules = getScheduleByCourses(teacherClass);
 
-        String time = null;
-
         Cell classNumCell = getOrCreateCell(sheet, classRow, 1);
         Cell classTimeCell = getOrCreateCell(sheet, classRow, 2);
         Cell titleCell = getOrCreateCell(sheet, classRow, 3);
         Cell typeCell = getOrCreateCell(sheet, classRow+1, 3);
         Cell groupsCell = getOrCreateCell(sheet, classRow+2, 3);
         Cell classroomCell = getOrCreateCell(sheet, classRow+3, 3);
+
+        CellStyle style = groupsCell.getCellStyle();
+        style.setWrapText(true);
+        groupsCell.setCellStyle(style);
 
         sheet.addMergedRegion(new CellRangeAddress(classRow, classRow+3, 1, 1));
         sheet.addMergedRegion(new CellRangeAddress(classRow, classRow+3, 2, 2));
@@ -151,9 +166,6 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
             Optional<ScheduleDay> day = schedule.getDay(teacherDay.getName());
 
             if (day.isPresent()) {
-                if (time == null)
-                    time = day.get().getClassTime(classNum);
-
                 Collection<ScheduleClass> classes = day.get().getClasses(classNum, person);
 
                 for (ScheduleClass cl : classes) {
@@ -171,7 +183,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         String classroom = String.join(",", classrooms);
 
         classNumCell.setCellValue(classNum);
-        classTimeCell.setCellValue(time);
+        classTimeCell.setCellValue(TimeTable.getTime(classNum));
 
         if (names.isEmpty() && groupsSet.isEmpty()) {
             titleCell.setCellValue(String.format(lang.of("teachers.notfound"), teacherClass.raw()));

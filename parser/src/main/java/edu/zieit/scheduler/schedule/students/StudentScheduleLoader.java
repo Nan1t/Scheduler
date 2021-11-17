@@ -7,12 +7,14 @@ import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
 import edu.zieit.scheduler.api.schedule.ScheduleParseException;
 import edu.zieit.scheduler.schedule.AbstractScheduleLoader;
+import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -35,6 +37,11 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
         if (workbook.getNumberOfSheets() == 1) {
             Sheet sheet = workbook.getSheetAt(0);
             Schedule schedule = parseSchedule(sinfo, sheet);
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                // Ignore
+            }
             return Collections.singletonList(schedule);
         } else {
             List<Schedule> schedules = new LinkedList<>();
@@ -47,6 +54,12 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
 
             for (Schedule schedule : schedules) {
                 ((StudentSchedule)schedule).setGroup(schedules);
+            }
+
+            try {
+                workbook.close();
+            } catch (IOException e) {
+                // Ignore
             }
 
             return schedules;
@@ -93,7 +106,7 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             int classIndex = Integer.parseInt(ExcelUtil.getCellValue(classNumCell));
             String classTime = ExcelUtil.getCellValue(classTimeCell);
 
-            builder.addTimePoint(classIndex, classTime);
+            TimeTable.addClassTime(classIndex, classTime);
 
             Collection<ScheduleClass> classes = parseClasses(info, sheet, row);
 

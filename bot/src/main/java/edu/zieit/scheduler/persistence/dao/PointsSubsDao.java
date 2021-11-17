@@ -17,8 +17,11 @@ public class PointsSubsDao extends Dao {
         withSession(session -> session.saveOrUpdate(sub));
     }
 
-    public void delete(SubscriptionPoints sub) {
-        withSession(session -> session.delete(sub));
+    public void delete(String tgId) {
+        withSession(session -> session.createQuery(
+                "delete subs_points where tg_id = :tg_id")
+                .setParameter("tg_id", tgId)
+                .executeUpdate());
     }
 
 }

@@ -12,27 +12,15 @@ import java.util.stream.Collectors;
 public class ScheduleDay {
 
     private final String name;
-    private final Map<Integer, String> timeTable;
     private final Map<Integer, List<ScheduleClass>> classes;
 
-    private ScheduleDay(String name, Map<Integer, String> timeTable,
-                       Map<Integer, List<ScheduleClass>> classes) {
+    private ScheduleDay(String name, Map<Integer, List<ScheduleClass>> classes) {
         this.name = name;
-        this.timeTable = timeTable;
         this.classes = classes;
     }
 
     public String getName() {
         return name;
-    }
-
-    /**
-     * Get class beginning time by class index (1 - based)
-     * @param classIndex Class index (1 - based)
-     * @return Class beginning time or empty string if nothing found
-     */
-    public String getClassTime(int classIndex) {
-        return timeTable.get(classIndex);
     }
 
     /**
@@ -60,8 +48,7 @@ public class ScheduleDay {
     @Override
     public String toString() {
         return "ScheduleDay{" +
-                "timetable='" + timeTable + "'" +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", classes=" + classes +
                 '}';
     }
@@ -73,21 +60,14 @@ public class ScheduleDay {
     public static class Builder {
 
         private String name;
-        private final Map<Integer, String> timeTable;
         private final Map<Integer, List<ScheduleClass>> classes;
 
         private Builder() {
-            this.timeTable = new HashMap<>();
             this.classes = new HashMap<>();
         }
 
         public Builder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        public Builder addTimePoint(int classIndex, String time) {
-            timeTable.putIfAbsent(classIndex, time);
             return this;
         }
 
@@ -98,7 +78,7 @@ public class ScheduleDay {
         }
 
         public ScheduleDay build() {
-            return new ScheduleDay(name, timeTable, classes);
+            return new ScheduleDay(name, classes);
         }
 
     }

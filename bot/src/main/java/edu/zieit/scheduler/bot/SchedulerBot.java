@@ -4,16 +4,15 @@ import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatManager;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.config.MainConfig;
+import edu.zieit.scheduler.services.SubsService;
 import napi.configurate.yaml.lang.Language;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
-
-import java.io.Serializable;
 
 public class SchedulerBot extends TelegramLongPollingBot {
 
@@ -22,13 +21,15 @@ public class SchedulerBot extends TelegramLongPollingBot {
     private final Language lang;
     private final ChatManager chatManager;
     private final ScheduleService scheduleService;
+    private final SubsService subsService;
 
-    public SchedulerBot(MainConfig conf, Language lang, ScheduleService scheduleService) {
+    public SchedulerBot(MainConfig conf, Language lang, ScheduleService scheduleService, SubsService subsService) {
         this.username = conf.getTgBotName();
         this.token = conf.getTgToken();
         this.lang = lang;
         this.chatManager = new ChatManager(this, conf);
         this.scheduleService = scheduleService;
+        this.subsService = subsService;
     }
 
     public Language getLang() {
@@ -37,6 +38,10 @@ public class SchedulerBot extends TelegramLongPollingBot {
 
     public ScheduleService getScheduleService() {
         return scheduleService;
+    }
+
+    public SubsService getSubsService() {
+        return subsService;
     }
 
     @Override
@@ -54,9 +59,27 @@ public class SchedulerBot extends TelegramLongPollingBot {
         chatManager.handleUpdate(update);
     }
 
+    public void send(ChatSession session, Object[] methods) {
+        for (Object method : methods) {
+            send(session, method);
+        }
+    }
+
     public void send(ChatSession session, Object method) {
         if (method instanceof BotApiMethod apiMethod) {
             sendApiMethodAsync(apiMethod, new LastMessageCallback(session));
+            return;
+        }
+        if (method instanceof SendPhoto sendPhoto) {
+            executeAsync(sendPhoto);
+            return;
+        }
+        if (method instanceof SendDocument sendDoc) {
+            executeAsync(sendDoc);
+            return;
+        }
+        if (method instanceof EditMessageMedia editMedia) {
+            executeAsync(editMedia);
         }
     }
 

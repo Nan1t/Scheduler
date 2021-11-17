@@ -28,6 +28,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleConfig config;
     private final ScheduleHashesDao hashesDao;
 
+    private final SheetRenderer renderer;
+
     private final ScheduleLoader studentsLoader;
     private final ScheduleLoader teachersLoader;
     private final ScheduleLoader consultLoader;
@@ -43,7 +45,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.config = config;
         this.hashesDao = hashesDao;
 
-        SheetRenderer renderer = new AsposeRenderer(config.getRenderOptions());
+        this.renderer = new AsposeRenderer(config.getRenderOptions());
 
         this.studentsLoader = new StudentScheduleLoader(renderer);
         this.teachersLoader = new TeacherScheduleLoader(renderer);
@@ -56,6 +58,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Language getLang() {
         return lang;
+    }
+
+    @Override
+    public SheetRenderer renderer() {
+        return renderer;
     }
 
     @Override

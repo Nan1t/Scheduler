@@ -36,6 +36,8 @@ public class AsposeRenderer extends SheetRenderer {
             i++;
         }
 
+        workbook.dispose();
+
         return images;
     }
 
@@ -43,7 +45,29 @@ public class AsposeRenderer extends SheetRenderer {
     public BufferedImage render(Sheet sheet) throws RenderException {
         Workbook workbook = toAsposeWorkbook(sheet.getWorkbook());
         Worksheet worksheet = workbook.getWorksheets().get(sheet.getWorkbook().getSheetIndex(sheet));
-        return render(worksheet);
+        BufferedImage img = render(worksheet);
+        worksheet.dispose();
+        return img;
+    }
+
+    @Override
+    public InputStream renderStream(Sheet sheet) throws RenderException {
+        Workbook workbook = toAsposeWorkbook(sheet.getWorkbook());
+        Worksheet worksheet = workbook.getWorksheets().get(sheet.getWorkbook().getSheetIndex(sheet));
+        InputStream stream = renderStream(worksheet);
+        worksheet.dispose();
+        return stream;
+    }
+
+    private InputStream renderStream(Worksheet worksheet) throws RenderException {
+        try {
+            SheetRender render = new SheetRender(worksheet, asposeOptions);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            render.toImage(0, output);
+            return new ByteArrayInputStream(output.toByteArray());
+        } catch (Exception e) {
+            throw new RenderException(e);
+        }
     }
 
     private BufferedImage render(Worksheet worksheet) throws RenderException {
@@ -88,7 +112,7 @@ public class AsposeRenderer extends SheetRenderer {
         asposeOptions.setOnePagePerSheet(true);
         asposeOptions.setOutputBlankPageWhenNothingToPrint(true);
         asposeOptions.setImageType(format);
-        asposeOptions.setCellAutoFit(true);
+        //asposeOptions.setCellAutoFit(true);
 
         return asposeOptions;
     }

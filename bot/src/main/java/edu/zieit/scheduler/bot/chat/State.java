@@ -16,6 +16,10 @@ public abstract class State {
         return next;
     }
 
+    public boolean hasNext() {
+        return next != null;
+    }
+
     public abstract void activate(ChatSession session);
 
     public abstract InputResult input(ChatInput input, ChatSession session);

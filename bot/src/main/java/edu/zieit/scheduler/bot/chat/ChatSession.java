@@ -1,5 +1,8 @@
 package edu.zieit.scheduler.bot.chat;
 
+import edu.zieit.scheduler.bot.SchedulerBot;
+import napi.configurate.yaml.lang.Language;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,11 +18,19 @@ public class ChatSession {
     public ChatSession(ChatManager chatManager, String chatId) {
         this.chatManager = chatManager;
         this.chatId = chatId;
-        setLastMsgId(Integer.MIN_VALUE);
+        resetLastMsgId();
     }
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public SchedulerBot getBot() {
+        return chatManager.getBot();
+    }
+
+    public Language getLang() {
+        return chatManager.getBot().getLang();
     }
 
     public String getChatId() {
@@ -31,8 +42,8 @@ public class ChatSession {
     }
 
     public void updateState(State state) {
-        this.state = state;
         state.activate(this);
+        this.state = state.hasNext() ? state : null;
     }
 
     public int getLastMsgId() {
@@ -41,6 +52,10 @@ public class ChatSession {
 
     public void setLastMsgId(int lastMsgId) {
         this.lastMsgId = lastMsgId;
+    }
+
+    public void resetLastMsgId() {
+        setLastMsgId(Integer.MIN_VALUE);
     }
 
     public boolean hasValidLastMsgId() {

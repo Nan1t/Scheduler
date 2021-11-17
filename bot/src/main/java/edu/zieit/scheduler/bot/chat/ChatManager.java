@@ -1,7 +1,9 @@
 package edu.zieit.scheduler.bot.chat;
 
 import edu.zieit.scheduler.bot.SchedulerBot;
-import edu.zieit.scheduler.bot.states.teacher.StateTeacherOut;
+import edu.zieit.scheduler.bot.states.teacher.StateTeacher;
+import edu.zieit.scheduler.bot.states.teacher.StateTeacherDeny;
+import edu.zieit.scheduler.bot.states.teacher.StateTeacherSubs;
 import edu.zieit.scheduler.bot.states.teacher.StateTeacherList;
 import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
@@ -26,8 +28,7 @@ public class ChatManager {
         this.bot = bot;
         threadPool = Executors.newFixedThreadPool(conf.getThreadPoolSize());
         sessions = new HashMap<>();
-        registerState("tsub", new StateTeacherList(bot.getLang()));
-        registerState("teacher", new StateTeacherOut());
+        registerStates();
     }
 
     public SchedulerBot getBot() {
@@ -38,8 +39,10 @@ public class ChatManager {
         return baseStates.get(cmd.toLowerCase());
     }
 
-    public void registerState(String cmd, State state) {
-        baseStates.put(cmd.toLowerCase(), state);
+    public void registerState(State state, String... aliases) {
+        for (String alias : aliases) {
+            baseStates.put(alias.toLowerCase(), state);
+        }
     }
 
     public void handleUpdate(Update update) {
@@ -50,27 +53,33 @@ public class ChatManager {
         ChatSession session = getOrCreateSession(chatId);
         ChatInput input = new ChatInput(chatId, session, this, update);
 
-        if (update.hasMessage() && update.getMessage().isCommand()) {
-            String cmdRaw = update.getMessage().getText();
-            String[] arr = cmdRaw.split("@");
+        if (update.hasMessage()) {
+            session.resetLastMsgId();
 
-            if (arr.length > 1 && !arr[1].equalsIgnoreCase(bot.getBotUsername())) {
-                // Command not for this bot
-                endSession(chatId);
+            if (update.getMessage().isCommand()) {
+                String cmdRaw = update.getMessage().getText();
+                String[] arr = cmdRaw.split("@");
+
+                if (arr.length > 1 && !arr[1].equalsIgnoreCase(bot.getBotUsername())) {
+                    // Command not for this bot
+                    endSession(chatId);
+                    return;
+                }
+
+                String cmd = arr[0].substring(1);
+                logger.info("Income command: '" + cmd + "'");
+
+                State state = getBaseState(cmd);
+
+                if (state != null) {
+                    session.updateState(state);
+                    if (!state.hasNext())
+                        endSession(chatId);
+                } else {
+                    bot.sendMessage(session, "Undefined command");
+                }
                 return;
             }
-
-            String cmd = arr[0].substring(1);
-            logger.info("Income command: '" + cmd + "'");
-
-            State state = getBaseState(cmd);
-
-            if (state != null) {
-                session.updateState(state);
-            } else {
-                bot.sendMessage(session, "Undefined command");
-            }
-            return;
         }
 
         State state = session.getState();
@@ -109,5 +118,11 @@ public class ChatManager {
         else if (update.hasCallbackQuery())
             return update.getCallbackQuery().getMessage().getChatId().toString();
         return null;
+    }
+
+    private void registerStates() {
+        registerState(new StateTeacherList(bot.getLang()), "teachersubscribe", "tsub");
+        registerState(new StateTeacher(), "teacher");
+        registerState(new StateTeacherDeny(), "tdeny");
     }
 }

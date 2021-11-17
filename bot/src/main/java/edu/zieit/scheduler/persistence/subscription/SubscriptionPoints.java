@@ -36,11 +36,11 @@ public class SubscriptionPoints {
         this.telegramId = telegramId;
     }
 
-    public Person getTeacher() {
+    public Person getPerson() {
         return person;
     }
 
-    public void setTeacher(Person person) {
+    public void setPerson(Person person) {
         this.person = person;
     }
 }

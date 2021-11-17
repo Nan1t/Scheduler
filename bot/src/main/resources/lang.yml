@@ -14,6 +14,8 @@ consult.head.time: 'Час консулт.'
 cmd.unsupported: 'Невірний формат запиту. Для допомоги по командам, введіть /help'
 
 cmd.teacher.subs.list: 'Оберіть викладача'
+cmd.teacher.subscribed: 'Ви підписались на розклад викладача %s'
+cmd.teacher.caption: 'Розклад викладача %s'
 
 choice.prev: 'Назад'
 choice.next: 'Вперед'

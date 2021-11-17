@@ -28,12 +28,6 @@ jar {
 }
 
 shadowJar {
-//    minimize {
-//        exclude(dependency('org.apache.logging.log4j:.*:.*'))
-//        exclude(dependency('org.hibernate:.*:.*'))
-//        exclude(dependency('com.h2database:.*:.*'))
-//    }
-
     exclude '**/license/**'
 
     exclude '**/META-INF/maven/**'

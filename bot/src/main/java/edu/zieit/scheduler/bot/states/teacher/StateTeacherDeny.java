@@ -4,12 +4,15 @@ import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.chat.InputResult;
 import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.services.SubsService;
 
-public class StateTeacherOut extends State {
+public class StateTeacherDeny extends State {
 
     @Override
     public void activate(ChatSession session) {
-
+        SubsService subsService = session.getBot().getSubsService();
+        subsService.unsubscribeTeacher(session.getChatId());
+        session.getBot().sendMessage(session, "Unsubscribed!");
     }
 
     @Override

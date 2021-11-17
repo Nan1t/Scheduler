@@ -21,7 +21,7 @@ public class StateTeacherList extends ChoiceState {
     private final String nextPageText;
 
     public StateTeacherList(Language lang) {
-        super(new StateTeacherOut());
+        super(new StateTeacherSubs());
         this.lang = lang;
         prevPageText = lang.of("choice.prev");
         nextPageText = lang.of("choice.next");
