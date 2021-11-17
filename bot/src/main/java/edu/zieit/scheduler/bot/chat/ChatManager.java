@@ -1,6 +1,8 @@
 package edu.zieit.scheduler.bot.chat;
 
 import edu.zieit.scheduler.bot.SchedulerBot;
+import edu.zieit.scheduler.bot.states.students.StateStudentList;
+import edu.zieit.scheduler.bot.states.students.StateStudentShow;
 import edu.zieit.scheduler.bot.states.teacher.*;
 import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
@@ -123,5 +125,7 @@ public class ChatManager {
         registerState(new StateTeacher(), "teacher");
         registerState(new StateTeacherDeny(), "tdeny");
         registerState(new StateToggleNotices(), "notices");
+
+        registerState(new StateStudentList(bot.getLang(), new StateStudentShow()), "stshow");
     }
 }

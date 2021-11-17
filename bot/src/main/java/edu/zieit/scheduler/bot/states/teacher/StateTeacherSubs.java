@@ -12,6 +12,7 @@ import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class StateTeacherSubs extends State {
@@ -24,7 +25,7 @@ public class StateTeacherSubs extends State {
             SubsService subsService = session.getBot().getSubsService();
             ScheduleService service = session.getChatManager().getBot().getScheduleService();
             ScheduleRenderer renderer = service.getTeacherSchedule().getPersonalRenderer(person, service);
-            InputStream img = renderer.renderStream();
+            InputStream img = new ByteArrayInputStream(renderer.renderBytes());
             String caption = String.format(session.getLang().of("cmd.teacher.subscribed"), person);
 
             session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,

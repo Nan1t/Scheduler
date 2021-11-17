@@ -9,12 +9,10 @@ import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import java.awt.image.BufferedImage;
-
 public abstract class AbstractSchedule implements Schedule {
 
     private final NamespacedKey key;
-    private final BufferedImage documentImg;
+    private final byte[] documentImg;
     private final SheetRenderer renderer;
 
     public AbstractSchedule(ScheduleInfo info, Sheet sheet, SheetRenderer renderer) {
@@ -24,7 +22,7 @@ public abstract class AbstractSchedule implements Schedule {
     public AbstractSchedule(NamespacedKey key, Sheet sheet, SheetRenderer renderer) {
         this.key = key;
         this.renderer = renderer;
-        this.documentImg = renderer.render(sheet);
+        this.documentImg = renderer.renderBytes(sheet);
     }
 
     @Override
@@ -37,7 +35,7 @@ public abstract class AbstractSchedule implements Schedule {
     }
 
     @Override
-    public BufferedImage toImage() {
+    public byte[] toImage() {
         return documentImg;
     }
 

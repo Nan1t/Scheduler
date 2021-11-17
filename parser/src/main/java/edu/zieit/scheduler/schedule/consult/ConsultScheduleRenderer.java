@@ -37,9 +37,9 @@ public class ConsultScheduleRenderer implements ScheduleRenderer {
     }
 
     @Override
-    public InputStream renderStream() throws RenderException {
+    public byte[] renderBytes() throws RenderException {
         Sheet sheet = renderBase();
-        return schedule.getRenderer().renderStream(sheet);
+        return schedule.getRenderer().renderBytes(sheet);
     }
 
     private Sheet renderBase() {

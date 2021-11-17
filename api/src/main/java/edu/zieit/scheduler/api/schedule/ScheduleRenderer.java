@@ -20,6 +20,6 @@ public interface ScheduleRenderer {
      * Render associated schedule to stream
      * @return Rendered image
      */
-    InputStream renderStream() throws RenderException;
+    byte[] renderBytes() throws RenderException;
 
 }

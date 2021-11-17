@@ -38,7 +38,7 @@ public final class ScheduleConfig extends AbstractConfig {
 
         DocRenderOptions.Format renderFormat = DocRenderOptions.Format
                 .valueOf(conf.getNode("render", "format").getString("JPEG"));
-        int renderDpi = conf.getNode("render", "dpi").getInt(80);
+        int renderDpi = conf.getNode("render", "dpi").getInt(100);
 
         renderOptions = new DocRenderOptions(renderFormat, renderDpi);
     }

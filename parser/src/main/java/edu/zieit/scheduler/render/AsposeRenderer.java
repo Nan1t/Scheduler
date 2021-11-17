@@ -51,20 +51,20 @@ public class AsposeRenderer extends SheetRenderer {
     }
 
     @Override
-    public InputStream renderStream(Sheet sheet) throws RenderException {
+    public byte[] renderBytes(Sheet sheet) throws RenderException {
         Workbook workbook = toAsposeWorkbook(sheet.getWorkbook());
         Worksheet worksheet = workbook.getWorksheets().get(sheet.getWorkbook().getSheetIndex(sheet));
-        InputStream stream = renderStream(worksheet);
+        byte[] bytes = renderBytes(worksheet);
         worksheet.dispose();
-        return stream;
+        return bytes;
     }
 
-    private InputStream renderStream(Worksheet worksheet) throws RenderException {
+    private byte[] renderBytes(Worksheet worksheet) throws RenderException {
         try {
             SheetRender render = new SheetRender(worksheet, asposeOptions);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             render.toImage(0, output);
-            return new ByteArrayInputStream(output.toByteArray());
+            return output.toByteArray();
         } catch (Exception e) {
             throw new RenderException(e);
         }

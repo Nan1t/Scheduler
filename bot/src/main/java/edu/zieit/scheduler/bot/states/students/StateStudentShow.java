@@ -1,7 +1,8 @@
-package edu.zieit.scheduler.bot.states.teacher;
+package edu.zieit.scheduler.bot.states.students;
 
-import edu.zieit.scheduler.api.Person;
-import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
+import edu.zieit.scheduler.api.NamespacedKey;
+
+import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
@@ -13,17 +14,17 @@ import edu.zieit.scheduler.util.FilenameUtil;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class StateTeacherShow extends State {
+public class StateStudentShow extends State {
 
     @Override
     public void activate(ChatSession session) {
-        Person person = Person.teacher(session.getString("teacher"));
-        
-        if (person != null) {
-            ScheduleService service = session.getChatManager().getBot().getScheduleService();
-            ScheduleRenderer renderer = service.getTeacherSchedule().getPersonalRenderer(person, service);
-            InputStream img = new ByteArrayInputStream(renderer.renderBytes());
-            String caption = String.format(session.getLang().of("cmd.teacher.caption"), person);
+        ScheduleService service = session.getChatManager().getBot().getScheduleService();
+        NamespacedKey key = NamespacedKey.parse(session.getString("course"));
+        Schedule schedule = service.getStudentSchedule(key);
+
+        if (schedule != null) {
+            InputStream img = new ByteArrayInputStream(schedule.toImage());
+            String caption = session.getLang().of("cmd.teacher.caption");
 
             session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
                     FilenameUtil.getNameWithExt(service, "photo"), caption));

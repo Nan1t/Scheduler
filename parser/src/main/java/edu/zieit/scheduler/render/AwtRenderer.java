@@ -84,7 +84,7 @@ public class AwtRenderer extends SheetRenderer {
     }
 
     @Override
-    public InputStream renderStream(Sheet sheet) throws RenderException {
+    public byte[] renderBytes(Sheet sheet) throws RenderException {
         return null;
     }
 

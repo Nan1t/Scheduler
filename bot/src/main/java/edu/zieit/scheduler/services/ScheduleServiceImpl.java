@@ -71,6 +71,11 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public Collection<Schedule> getStudentsSchedule() {
+        return Collections.unmodifiableCollection(studentsSchedule.values());
+    }
+
+    @Override
     public Schedule getTeacherSchedule() {
         return teachersSchedule;
     }

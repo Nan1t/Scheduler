@@ -11,6 +11,7 @@ import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class StateTeacher extends State {
@@ -23,13 +24,13 @@ public class StateTeacher extends State {
         if (subs != null) {
             ScheduleService service = session.getChatManager().getBot().getScheduleService();
             ScheduleRenderer renderer = service.getTeacherSchedule().getPersonalRenderer(subs.getTeacher(), service);
-            InputStream img = renderer.renderStream();
+            InputStream img = new ByteArrayInputStream(renderer.renderBytes());
             String caption = String.format(session.getLang().of("cmd.teacher.caption"), subs.getTeacher());
 
             session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
         } else {
-            session.getBot().sendMessage(session, "No subscribe");
+            session.getBot().sendMessage(session, session.getLang().of("cmd.teacher.no.subs"));
         }
     }
 

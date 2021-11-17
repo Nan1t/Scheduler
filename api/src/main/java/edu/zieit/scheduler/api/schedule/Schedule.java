@@ -26,7 +26,7 @@ public interface Schedule {
      * Get rendered image
      * @return Rendered image
      */
-    BufferedImage toImage();
+    byte[] toImage();
 
     /**
      * Get personal schedule renderer

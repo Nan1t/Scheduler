@@ -24,6 +24,12 @@ public interface ScheduleService {
     Schedule getStudentSchedule(NamespacedKey key);
 
     /**
+     * Get all loaded students's schedule
+     * @return Collection of schedule
+     */
+    Collection<Schedule> getStudentsSchedule();
+
+    /**
      * Get teachers schedule
      * @return Teachers schedule instance
      */

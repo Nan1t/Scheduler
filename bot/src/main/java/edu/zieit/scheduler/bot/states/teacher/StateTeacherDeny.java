@@ -15,10 +15,10 @@ public class StateTeacherDeny extends State {
 
         if (res) {
             session.getBot().sendMessage(session,
-                    session.getLang().of("cmd.teacher.deny.success"));
+                    session.getLang().of("cmd.teacher.deny"));
         } else {
             session.getBot().sendMessage(session,
-                    session.getLang().of("cmd.teacher.deny.already"));
+                    session.getLang().of("cmd.teacher.no.subs"));
         }
     }
 

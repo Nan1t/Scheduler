@@ -56,6 +56,6 @@ public abstract class SheetRenderer {
      * @param sheet Sheet object
      * @return Rendered image
      */
-    public abstract InputStream renderStream(final Sheet sheet) throws RenderException;
+    public abstract byte[] renderBytes(final Sheet sheet) throws RenderException;
 
 }

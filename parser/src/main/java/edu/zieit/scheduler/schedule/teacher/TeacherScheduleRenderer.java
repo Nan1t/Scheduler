@@ -16,7 +16,6 @@ import org.apache.poi.ss.util.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.util.*;
 
 public class TeacherScheduleRenderer implements ScheduleRenderer {
@@ -42,9 +41,9 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
     }
 
     @Override
-    public InputStream renderStream() throws RenderException {
+    public byte[] renderBytes() throws RenderException {
         Sheet sheet = renderBase();
-        return schedule.getRenderer().renderStream(sheet);
+        return schedule.getRenderer().renderBytes(sheet);
     }
 
     private Sheet renderBase() {
