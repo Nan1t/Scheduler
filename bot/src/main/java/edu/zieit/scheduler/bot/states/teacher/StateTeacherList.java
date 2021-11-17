@@ -5,6 +5,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.chat.InputResult;
+import edu.zieit.scheduler.bot.chat.State;
 import edu.zieit.scheduler.bot.states.ChoiceState;
 import edu.zieit.scheduler.schedule.teacher.TeacherSchedule;
 import edu.zieit.scheduler.util.ChatUtil;
@@ -20,8 +21,8 @@ public class StateTeacherList extends ChoiceState {
     private final String prevPageText;
     private final String nextPageText;
 
-    public StateTeacherList(Language lang) {
-        super(new StateTeacherSubs());
+    public StateTeacherList(Language lang, State nextState) {
+        super(nextState);
         this.lang = lang;
         prevPageText = lang.of("choice.prev");
         nextPageText = lang.of("choice.next");

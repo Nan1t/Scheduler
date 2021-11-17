@@ -8,7 +8,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.util.HashUtil;
 import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.ScheduleHash;
-import edu.zieit.scheduler.persistence.dao.ScheduleHashesDao;
+import edu.zieit.scheduler.persistence.dao.HashesDao;
 import edu.zieit.scheduler.render.AsposeRenderer;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleLoader;
 import edu.zieit.scheduler.schedule.students.StudentScheduleInfo;
@@ -20,13 +20,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-public class ScheduleServiceImpl implements ScheduleService {
+public final class ScheduleServiceImpl implements ScheduleService {
 
     private static final Logger logger = LogManager.getLogger(ScheduleServiceImpl.class);
 
     private final Language lang;
     private final ScheduleConfig config;
-    private final ScheduleHashesDao hashesDao;
+    private final HashesDao hashesDao;
 
     private final SheetRenderer renderer;
 
@@ -40,7 +40,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private boolean firstLoad;
 
-    public ScheduleServiceImpl(Language lang, ScheduleConfig config, ScheduleHashesDao hashesDao) {
+    public ScheduleServiceImpl(Language lang, ScheduleConfig config, HashesDao hashesDao) {
         this.lang = lang;
         this.config = config;
         this.hashesDao = hashesDao;

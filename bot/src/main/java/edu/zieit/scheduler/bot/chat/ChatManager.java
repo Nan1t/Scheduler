@@ -1,10 +1,7 @@
 package edu.zieit.scheduler.bot.chat;
 
 import edu.zieit.scheduler.bot.SchedulerBot;
-import edu.zieit.scheduler.bot.states.teacher.StateTeacher;
-import edu.zieit.scheduler.bot.states.teacher.StateTeacherDeny;
-import edu.zieit.scheduler.bot.states.teacher.StateTeacherSubs;
-import edu.zieit.scheduler.bot.states.teacher.StateTeacherList;
+import edu.zieit.scheduler.bot.states.teacher.*;
 import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,7 +73,7 @@ public class ChatManager {
                     if (!state.hasNext())
                         endSession(chatId);
                 } else {
-                    bot.sendMessage(session, "Undefined command");
+                    bot.sendMessage(session, bot.getLang().of("cmd.unsupported"));
                 }
                 return;
             }
@@ -121,8 +118,10 @@ public class ChatManager {
     }
 
     private void registerStates() {
-        registerState(new StateTeacherList(bot.getLang()), "teachersubscribe", "tsub");
+        registerState(new StateTeacherList(bot.getLang(), new StateTeacherSubs()), "teachersubscribe", "tsub");
+        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow()), "tshow");
         registerState(new StateTeacher(), "teacher");
         registerState(new StateTeacherDeny(), "tdeny");
+        registerState(new StateToggleNotices(), "notices");
     }
 }

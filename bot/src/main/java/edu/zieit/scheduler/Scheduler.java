@@ -6,10 +6,8 @@ import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.ScheduleHash;
-import edu.zieit.scheduler.persistence.dao.PointsSubsDao;
-import edu.zieit.scheduler.persistence.dao.ScheduleHashesDao;
-import edu.zieit.scheduler.persistence.dao.StudentSubsDao;
-import edu.zieit.scheduler.persistence.dao.TeacherSubsDao;
+import edu.zieit.scheduler.persistence.TeacherNotice;
+import edu.zieit.scheduler.persistence.dao.*;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionStudent;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
@@ -57,9 +55,10 @@ public final class Scheduler {
         TeacherSubsDao teacherDao = new TeacherSubsDao(sessionFactory);
         StudentSubsDao studentDao = new StudentSubsDao(sessionFactory);
         PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
-        ScheduleHashesDao hashesDao = new ScheduleHashesDao(sessionFactory);
+        NoticesDao noticesDao = new NoticesDao(sessionFactory);
+        HashesDao hashesDao = new HashesDao(sessionFactory);
 
-        SubsService subsService = new SubsService(teacherDao, studentDao, pointsDao);
+        SubsService subsService = new SubsService(teacherDao, studentDao, pointsDao, noticesDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
 
         logger.info("Loading schedule ...");
@@ -94,6 +93,7 @@ public final class Scheduler {
         configuration.addAnnotatedClass(SubscriptionTeacher.class);
         configuration.addAnnotatedClass(SubscriptionStudent.class);
         configuration.addAnnotatedClass(ScheduleHash.class);
+        configuration.addAnnotatedClass(TeacherNotice.class);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());

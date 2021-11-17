@@ -3,9 +3,9 @@ package edu.zieit.scheduler.persistence.dao;
 import edu.zieit.scheduler.persistence.ScheduleHash;
 import org.hibernate.SessionFactory;
 
-public class ScheduleHashesDao extends Dao {
+public class HashesDao extends Dao {
 
-    public ScheduleHashesDao(SessionFactory factory) {
+    public HashesDao(SessionFactory factory) {
         super(factory);
     }
 

@@ -2,6 +2,7 @@ package edu.zieit.scheduler.persistence.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
@@ -24,6 +25,17 @@ public abstract class Dao {
             session.beginTransaction();
             consumer.accept(session);
             session.getTransaction().commit();
+        }
+    }
+
+    protected int execUpdate(String hql, Consumer<Query<?>> consumer) {
+        try (Session session = factory.openSession()){
+            session.beginTransaction();
+            Query<?> query = session.createQuery(hql);
+            consumer.accept(query);
+            int res = query.executeUpdate();
+            session.getTransaction().commit();
+            return res;
         }
     }
 

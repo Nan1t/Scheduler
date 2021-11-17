@@ -26,8 +26,6 @@ public class SubscriptionTeacher implements Serializable {
     })
     private Person teacher;
 
-    private boolean notices;
-
     public String getTelegramId() {
         return telegramId;
     }
@@ -42,13 +40,5 @@ public class SubscriptionTeacher implements Serializable {
 
     public void setTeacher(Person teacher) {
         this.teacher = teacher;
-    }
-
-    public boolean isNotices() {
-        return notices;
-    }
-
-    public void setNotices(boolean notices) {
-        this.notices = notices;
     }
 }
