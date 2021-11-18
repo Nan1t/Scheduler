@@ -9,7 +9,6 @@ public final class StyleUtil {
     private StyleUtil() { }
 
     public static Color toAwtColor(org.apache.poi.ss.usermodel.Color color) {
-        // TODO
         return new Color(0xFFFFFF);
     }
 

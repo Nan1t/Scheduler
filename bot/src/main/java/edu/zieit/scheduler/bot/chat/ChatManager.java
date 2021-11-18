@@ -6,6 +6,8 @@ import edu.zieit.scheduler.bot.states.course.StateCourse;
 import edu.zieit.scheduler.bot.states.course.StateCourseDeny;
 import edu.zieit.scheduler.bot.states.course.StateCourseList;
 import edu.zieit.scheduler.bot.states.course.StateCourseShow;
+import edu.zieit.scheduler.bot.states.group.StateGroup;
+import edu.zieit.scheduler.bot.states.group.StateGroupDeny;
 import edu.zieit.scheduler.bot.states.group.StateGroupList;
 import edu.zieit.scheduler.bot.states.group.StateGroupShow;
 import edu.zieit.scheduler.bot.states.teacher.*;
@@ -140,6 +142,9 @@ public class ChatManager {
         registerState(new StateCourseDeny(), "coursedeny");
         registerState(new StateCourse(), "course");
 
+        registerState(new StateGroupList(bot.getLang(), new StateGroupShow(true)), "groupsub");
         registerState(new StateGroupList(bot.getLang(), new StateGroupShow(false)), "groupshow");
+        registerState(new StateGroupDeny(), "groupdeny");
+        registerState(new StateGroup(), "group");
     }
 }

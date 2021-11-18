@@ -3,10 +3,8 @@ package edu.zieit.scheduler.services;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.persistence.TeacherNotice;
-import edu.zieit.scheduler.persistence.dao.NoticesDao;
-import edu.zieit.scheduler.persistence.dao.PointsSubsDao;
-import edu.zieit.scheduler.persistence.dao.CourseSubsDao;
-import edu.zieit.scheduler.persistence.dao.TeacherSubsDao;
+import edu.zieit.scheduler.persistence.dao.*;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionGroup;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
@@ -17,12 +15,15 @@ public final class SubsService {
     private final CourseSubsDao coursesDao;
     private final PointsSubsDao pointsDao;
     private final NoticesDao noticesDao;
+    private final GroupSubsDao groupsDao;
 
-    public SubsService(TeacherSubsDao teacherDao, CourseSubsDao coursesDao, PointsSubsDao pointsDao, NoticesDao noticesDao) {
+    public SubsService(TeacherSubsDao teacherDao, CourseSubsDao coursesDao, PointsSubsDao pointsDao,
+                       NoticesDao noticesDao, GroupSubsDao groupsDao) {
         this.teacherDao = teacherDao;
         this.coursesDao = coursesDao;
         this.pointsDao = pointsDao;
         this.noticesDao = noticesDao;
+        this.groupsDao = groupsDao;
     }
 
     public SubscriptionTeacher getTeacherSubs(String chatId) {
@@ -68,6 +69,21 @@ public final class SubsService {
 
     public boolean unsubscribeCourse(String chatId) {
         return coursesDao.delete(chatId);
+    }
+
+    public SubscriptionGroup getGroupSubs(String chatId) {
+        return groupsDao.find(chatId);
+    }
+
+    public void subscribeGroup(String chatId, String group) {
+        SubscriptionGroup sub = new SubscriptionGroup();
+        sub.setTelegramId(chatId);
+        sub.setGroup(group);
+        groupsDao.save(sub);
+    }
+
+    public boolean unsubscribeGroup(String chatId) {
+        return groupsDao.delete(chatId);
     }
 
     public SubscriptionPoints getPointsSubs(String chatId) {

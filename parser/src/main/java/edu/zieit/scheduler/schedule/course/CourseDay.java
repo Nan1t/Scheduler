@@ -33,14 +33,6 @@ public class CourseDay {
         return classes;
     }
 
-    public Collection<CourseClass> getAllClasses() {
-        Set<CourseClass> set = new LinkedHashSet<>();
-        for (List<CourseClass> list : classes.values()) {
-            set.addAll(list);
-        }
-        return set;
-    }
-
     /**
      * Get classes list relevant for specified index
      * @param classIndex Class index
@@ -61,6 +53,14 @@ public class CourseDay {
                 .stream()
                 .filter(cl -> cl.getTeacher().equals(teacher))
                 .collect(Collectors.toList());
+    }
+
+    public Collection<CourseClass> getAllClasses() {
+        Set<CourseClass> set = new LinkedHashSet<>();
+        for (List<CourseClass> list : classes.values()) {
+            set.addAll(list);
+        }
+        return set;
     }
 
     public Optional<CourseClass> getGroupClass(int classIndex, String group) {

@@ -182,14 +182,14 @@ public class AwtRenderer extends SheetRenderer {
         int pos = x;
 
         switch (cell.getCellStyle().getAlignment()) {
-            default:
-                break;
             case CENTER_SELECTION:
             case CENTER:
                 pos = x + width / 2 - lineWidth / 2;
                 break;
             case RIGHT:
                 pos = x + width - lineWidth;
+                break;
+            default:
                 break;
         }
 
