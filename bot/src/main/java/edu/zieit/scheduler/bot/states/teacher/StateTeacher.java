@@ -30,7 +30,7 @@ public class StateTeacher extends State {
             session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
         } else {
-            session.getBot().sendMessage(session, session.getLang().of("cmd.teacher.no.subs"));
+            session.getBot().sendMessage(session, session.getLang().of("cmd.teacher.nosubs"));
         }
     }
 

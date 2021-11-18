@@ -74,7 +74,7 @@ public class StateTeacherList extends ChoiceState {
         ScheduleService service = session.getChatManager().getBot().getScheduleService();
         List<Pair<String, String>> teachers = getTeachersList(service);
         return ChatUtil.editableMessage(session, buildKeyboard(page, teachers),
-                lang.of("cmd.teacher.subs.list"));
+                lang.of("cmd.teacher.list"));
     }
 
     private List<Pair<String, String>> getTeachersList(ScheduleService service) {

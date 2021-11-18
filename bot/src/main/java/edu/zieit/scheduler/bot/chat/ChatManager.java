@@ -1,13 +1,18 @@
 package edu.zieit.scheduler.bot.chat;
 
 import edu.zieit.scheduler.bot.SchedulerBot;
-import edu.zieit.scheduler.bot.states.students.StateStudentList;
-import edu.zieit.scheduler.bot.states.students.StateStudentShow;
+import edu.zieit.scheduler.bot.states.StateHelp;
+import edu.zieit.scheduler.bot.states.course.StateCourse;
+import edu.zieit.scheduler.bot.states.course.StateCourseDeny;
+import edu.zieit.scheduler.bot.states.course.StateCourseList;
+import edu.zieit.scheduler.bot.states.course.StateCourseShow;
 import edu.zieit.scheduler.bot.states.teacher.*;
 import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -120,12 +125,17 @@ public class ChatManager {
     }
 
     private void registerStates() {
-        registerState(new StateTeacherList(bot.getLang(), new StateTeacherSubs()), "teachersubscribe", "tsub");
-        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow()), "tshow");
+        registerState(new StateHelp(bot.getLang()), "help", "start");
+
+        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow(true)), "teachersub");
+        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow(false)), "teachershow");
+        registerState(new StateTeacherDeny(), "teacherdeny");
         registerState(new StateTeacher(), "teacher");
-        registerState(new StateTeacherDeny(), "tdeny");
         registerState(new StateToggleNotices(), "notices");
 
-        registerState(new StateStudentList(bot.getLang(), new StateStudentShow()), "stshow");
+        registerState(new StateCourseList(bot.getLang(), new StateCourseShow(true)), "coursesub");
+        registerState(new StateCourseList(bot.getLang(), new StateCourseShow(false)), "courseshow");
+        registerState(new StateCourseDeny(), "coursedeny");
+        registerState(new StateCourse(), "course");
     }
 }

@@ -66,8 +66,8 @@ public final class SubsService {
         studentDao.save(sub);
     }
 
-    public void unsubscribeStudent(String chatId) {
-        studentDao.delete(chatId);
+    public boolean unsubscribeStudent(String chatId) {
+        return studentDao.delete(chatId);
     }
 
     public SubscriptionPoints getPointsSubs(String chatId) {

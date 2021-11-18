@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.bot.states.students;
+package edu.zieit.scheduler.bot.states.course;
 
 import edu.zieit.scheduler.api.Pair;
 import edu.zieit.scheduler.api.schedule.Schedule;
@@ -9,22 +9,22 @@ import edu.zieit.scheduler.bot.chat.InputResult;
 import edu.zieit.scheduler.bot.chat.State;
 import edu.zieit.scheduler.bot.states.ChoiceState;
 import edu.zieit.scheduler.schedule.students.StudentSchedule;
-import edu.zieit.scheduler.schedule.teacher.TeacherSchedule;
 import edu.zieit.scheduler.util.ChatUtil;
 import napi.configurate.yaml.lang.Language;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class StateStudentList extends ChoiceState {
+public class StateCourseList extends ChoiceState {
 
     private final Language lang;
     private final String prevPageText;
     private final String nextPageText;
 
-    public StateStudentList(Language lang, State nextState) {
+    public StateCourseList(Language lang, State nextState) {
         super(nextState);
         this.lang = lang;
         prevPageText = lang.of("choice.prev");
@@ -77,7 +77,7 @@ public class StateStudentList extends ChoiceState {
         ScheduleService service = session.getChatManager().getBot().getScheduleService();
         List<Pair<String, String>> courses = getCoursesList(service);
         return ChatUtil.editableMessage(session, buildKeyboard(page, courses),
-                lang.of("cmd.teacher.subs.list"));
+                lang.of("cmd.course.list"));
     }
 
     private List<Pair<String, String>> getCoursesList(ScheduleService service) {
@@ -85,6 +85,7 @@ public class StateStudentList extends ChoiceState {
         return list.stream()
                 .map(schedule -> (StudentSchedule) schedule)
                 .map(schedule -> Pair.of(schedule.getDisplayName(), schedule.getKey().toString()))
+                .sorted(Comparator.comparing(Pair::key))
                 .collect(Collectors.toList());
     }
 }

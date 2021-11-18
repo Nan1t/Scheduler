@@ -2,24 +2,54 @@
 # Языковой файл
 #
 
-schedule.render.head.days: 'День'
+schedule.render.head.days: "День"
 
-teachers.head.class.num: '№'
-teachers.head.class.time: 'Час'
-teachers.head.classes: 'Пари'
-teachers.notfound: 'Не знайдено. Пошук у: %s'
+teachers.head.class.num: "№"
+teachers.head.class.time: "Час"
+teachers.head.classes: "Пари"
+teachers.notfound: "Не знайдено. Пошук у: %s"
 
-consult.head.time: 'Час консулт.'
+consult.head.time: "Час консулт."
 
-cmd.unsupported: 'Невірний формат запиту. Для допомоги по командам, введіть /help'
+cmd.unsupported: "Невірний формат запиту. Для допомоги по командам, введіть /help"
 
-cmd.teacher.subs.list: 'Оберіть викладача'
-cmd.teacher.subscribed: 'Ви підписались на розклад викладача %s'
-cmd.teacher.deny: 'Ви успішно відписались від розкладу викладача'
-cmd.teacher.no.subs: 'Ви не маєте підписки на розклад'
-cmd.teacher.caption: 'Розклад викладача %s'
-cmd.teacher.notice.on: 'Сповіщення про час пар увімкнено'
-cmd.teacher.notice.off: 'Сповіщення про час пар вимкнено'
+cmd.teacher.list: "Оберіть викладача"
+cmd.teacher.subscribed: "Ви підписались на розклад викладача %s"
+cmd.teacher.deny: "Ви успішно відписались від розкладу викладача"
+cmd.teacher.nosubs: "Ви не маєте підписки на розклад"
+cmd.teacher.caption: "Розклад викладача %s"
+cmd.teacher.notice.on: "Сповіщення про час пар увімкнено"
+cmd.teacher.notice.off: "Сповіщення про час пар вимкнено"
 
-choice.prev: 'Назад'
-choice.next: 'Вперед'
+cmd.course.list: "Оберіть курс"
+cmd.course.subscribed: "Вы успішно підписались на розклад курсу %s"
+cmd.course.caption: "Розклад курсу %s"
+cmd.course.deny: "Ви успішно відписались від розкладу курсу"
+cmd.course.nosubs: "Ви не маєте підписки на розклад курсу"
+cmd.course.notfound: "Розклад не знайдений. Можливо він був видалений або перейменований. Скористуйтесь командою /coursesub для пошуку."
+
+cmd.help:
+  - "Вітаю! Ось список команд, які я розумію:"
+  - ""
+  - "/help - Вивести це повідомлення"
+  - "/teachersub - Підписатись на розклад викладача"
+  - "/teachershow - Вивести розклад викладача без підписки"
+  - "/teacherdeny - Відписатись від розкладу викладача"
+  - "/teacher - Вивести розклад викладача, на який ви підписались"
+  - "/notices - Переключити повідомлення про початок пар"
+  - "/coursesub - Підписатись на розклад курсу"
+  - "/courseshow - Вивести розклад курсу без підписки"
+  - "/coursedeny - Відписатись від розкладу курсу"
+  - "/course - Вивести розклад курсу, на який ви підписались"
+  - "/groupsub - Підписатись на розклад групи"
+  - "/groupshow - Вивести розклад курсу без підписки"
+  - "/groupdey - Відписатись від розкладу групи"
+  - "/group - Вивести розклад групи, на який ви підписались"
+  - "/consult - Вивести консультації викладача, на розклад якого ви підписались"
+  - "/consall - Вивести повну таблицю розкладу"
+  - "/aud - Вивести зайнятість аудиторій"
+  - "/audcomp - Вивести зайнятість комп'ютерних аудиторій"
+  - "/points - Вивести оцінки поточного семестру" 
+
+choice.prev: "Назад"
+choice.next: "Вперед"
