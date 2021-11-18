@@ -34,8 +34,8 @@ public class ConsultSchedule extends AbstractSchedule {
     }
 
     @Override
-    public ScheduleRenderer getPersonalRenderer(Person teacher, ScheduleService manager) {
-        return new ConsultScheduleRenderer(this, teacher, manager);
+    public ScheduleRenderer getPersonalRenderer(Object data, ScheduleService manager) {
+        return new ConsultScheduleRenderer(this, (Person) data, manager);
     }
 
     @Override

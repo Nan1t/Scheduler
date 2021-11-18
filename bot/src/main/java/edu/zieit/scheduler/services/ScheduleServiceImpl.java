@@ -11,6 +11,7 @@ import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.dao.HashesDao;
 import edu.zieit.scheduler.render.AsposeRenderer;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleLoader;
+import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.schedule.course.CourseScheduleInfo;
 import edu.zieit.scheduler.schedule.course.CourseScheduleLoader;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class ScheduleServiceImpl implements ScheduleService {
 
@@ -35,6 +37,9 @@ public final class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleLoader consultLoader;
 
     private final Map<NamespacedKey, Schedule> coursesSchedule;
+    private final Map<String, Schedule> courseByGroup;
+    private List<String> groups;
+
     private Schedule teachersSchedule;
     private Schedule consultSchedule;
 
@@ -52,6 +57,8 @@ public final class ScheduleServiceImpl implements ScheduleService {
         this.consultLoader = new ConsultScheduleLoader(renderer);
 
         this.coursesSchedule = new HashMap<>();
+        this.courseByGroup = new HashMap<>();
+        this.groups = new LinkedList<>();
         this.firstLoad = true;
     }
 
@@ -76,6 +83,16 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public Collection<String> getGroups() {
+        return groups;
+    }
+
+    @Override
+    public Optional<Schedule> getCourseByGroup(String group) {
+        return Optional.ofNullable(courseByGroup.get(group.toLowerCase()));
+    }
+
+    @Override
     public Schedule getTeacherSchedule() {
         return teachersSchedule;
     }
@@ -89,6 +106,8 @@ public final class ScheduleServiceImpl implements ScheduleService {
     public Collection<Schedule> reloadCourseSchedule() {
         List<Schedule> updated = new LinkedList<>();
 
+        Set<String> groups = new HashSet<>();
+
         for (CourseScheduleInfo info : config.getCourses()) {
             ScheduleHash oldHash = hashesDao.find(info.getId());
             String newHash = HashUtil.getHash(info.getUrl());
@@ -97,6 +116,14 @@ public final class ScheduleServiceImpl implements ScheduleService {
                 for (Schedule schedule : coursesLoader.load(info)) {
                     coursesSchedule.put(schedule.getKey(), schedule);
                     updated.add(schedule);
+
+                    if (schedule instanceof CourseSchedule course) {
+                        for (String group : course.getGroupNames()) {
+                            courseByGroup.put(group.toLowerCase(), schedule);
+                            groups.add(group);
+                        }
+                    }
+
                     logger.info("Loaded schedule '{}'", schedule.getKey());
                 }
 
@@ -106,6 +133,10 @@ public final class ScheduleServiceImpl implements ScheduleService {
 
             logger.info("Skipping schedule {}", info.getId());
         }
+
+        this.groups = groups.stream()
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
 
         firstLoad = false;
 

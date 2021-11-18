@@ -2,6 +2,7 @@ package edu.zieit.scheduler.bot.states;
 
 import edu.zieit.scheduler.api.Pair;
 import edu.zieit.scheduler.bot.chat.State;
+import napi.configurate.yaml.lang.Language;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -10,21 +11,24 @@ import java.util.*;
 
 public abstract class ChoiceState extends State {
 
-    public ChoiceState(State next) {
-        super(next);
-    }
+    protected final Language lang;
+    private final String prevPageText;
+    private final String nextPageText;
+    private final String firstPageText;
+    private final String lastPageText;
 
-    public ChoiceState() {
-        super();
+    public ChoiceState(Language lang, State next) {
+        super(next);
+        this.lang = lang;
+        prevPageText = lang.of("choice.prev");
+        nextPageText = lang.of("choice.next");
+        firstPageText = lang.of("choice.first");
+        lastPageText = lang.of("choice.last");
     }
 
     private static final String SEPARATOR = "\00";
 
     protected abstract int elemOnPage();
-
-    protected abstract String prevPageText();
-
-    protected abstract String nextPageText();
 
     protected InlineKeyboardMarkup buildKeyboard(int page, List<Pair<String, String>> data) {
         var builder = InlineKeyboardMarkup.builder();
@@ -53,14 +57,22 @@ public abstract class ChoiceState extends State {
 
         if (page >= pages - 1) {
             // Last page
-            builder.keyboardRow(Collections.singletonList(getPageBtn(prevPageText(), page - 1)));
+            builder.keyboardRow(Arrays.asList(
+                    getPageBtn(firstPageText, 0),
+                    getPageBtn(prevPageText, page - 1)
+            ));
         } else if (page == 0) {
             // First page
-            builder.keyboardRow(Collections.singletonList(getPageBtn(nextPageText(), page + 1)));
+            builder.keyboardRow(Arrays.asList(
+                    getPageBtn(nextPageText, page + 1),
+                    getPageBtn(lastPageText, pages - 1)
+            ));
         } else {
             builder.keyboardRow(Arrays.asList(
-                    getPageBtn(prevPageText(), page - 1),
-                    getPageBtn(nextPageText(), page + 1)
+                    getPageBtn(firstPageText, 0),
+                    getPageBtn(prevPageText, page - 1),
+                    getPageBtn(nextPageText, page + 1),
+                    getPageBtn(lastPageText, pages - 1)
             ));
         }
 

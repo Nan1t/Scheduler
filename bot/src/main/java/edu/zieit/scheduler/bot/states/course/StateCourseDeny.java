@@ -11,7 +11,7 @@ public class StateCourseDeny extends State {
     @Override
     public void activate(ChatSession session) {
         SubsService subsService = session.getBot().getSubsService();
-        boolean res = subsService.unsubscribeStudent(session.getChatId());
+        boolean res = subsService.unsubscribeCourse(session.getChatId());
 
         if (res) {
             session.getBot().sendMessage(session,

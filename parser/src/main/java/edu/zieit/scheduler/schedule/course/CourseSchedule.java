@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
+import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -17,14 +19,19 @@ public class CourseSchedule extends AbstractSchedule {
 
     private final CourseScheduleInfo info;
     private final List<CourseDay> days;
+    private final Map<String, Collection<CourseDay>> daysByGroup;
+
     private String displayName;
-    private Collection<Schedule> group;
+    private Collection<Schedule> fileGroup;
 
     public CourseSchedule(CourseScheduleInfo info, NamespacedKey key, Sheet sheet, SheetRenderer sheetRenderer,
                           List<CourseDay> days) {
         super(key, sheet, sheetRenderer);
         this.info = info;
         this.days = days;
+        this.daysByGroup = new HashMap<>();
+
+        remapByGroup();
         setDisplayName(info.getDisplayName());
     }
 
@@ -47,16 +54,29 @@ public class CourseSchedule extends AbstractSchedule {
                 .findFirst();
     }
 
-    public Collection<Schedule> getGroup() {
-        return group != null ? group : Collections.emptyList();
+    public Collection<Schedule> getFileGroup() {
+        return fileGroup != null ? fileGroup : Collections.emptyList();
     }
 
-    public void setGroup(Collection<Schedule> group) {
-        this.group = group;
+    public void setFileGroup(Collection<Schedule> group) {
+        this.fileGroup = group;
     }
 
     public boolean hasGroup() {
-        return group != null && !group.isEmpty();
+        return fileGroup != null && !fileGroup.isEmpty();
+    }
+
+    public Collection<String> getGroupNames() {
+        return daysByGroup.keySet();
+    }
+
+    public Collection<CourseDay> getGroupDays(String group) {
+        return daysByGroup.getOrDefault(group.toLowerCase(), Collections.emptyList());
+    }
+
+    public void addGroupDay(String group, CourseDay day) {
+        daysByGroup.computeIfAbsent(group.toLowerCase(),
+                g -> new LinkedHashSet<>()).add(day);
     }
 
     @Override
@@ -66,7 +86,7 @@ public class CourseSchedule extends AbstractSchedule {
 
     @Override
     public String toString() {
-        Collection<String> groups = group != null ? group.stream()
+        Collection<String> groups = fileGroup != null ? fileGroup.stream()
                 .map(el -> ((CourseSchedule)el).getDisplayName())
                 .collect(Collectors.toList()) : Collections.emptyList();
 
@@ -75,5 +95,20 @@ public class CourseSchedule extends AbstractSchedule {
                 ", displayName='" + displayName + '\'' +
                 ", group=" + groups +
                 '}';
+    }
+
+    @Override
+    public ScheduleRenderer getPersonalRenderer(Object data, ScheduleService manager) {
+        return new GroupScheduleRenderer(data.toString(), this, manager);
+    }
+
+    private void remapByGroup() {
+        for (CourseDay day : days) {
+            for (CourseClass cl : day.getAllClasses()) {
+                for (String group : cl.getGroups()) {
+                    addGroupDay(group.replace(" ", ""), day);
+                }
+            }
+        }
     }
 }

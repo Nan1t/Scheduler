@@ -40,7 +40,7 @@ public abstract class AbstractSchedule implements Schedule {
     }
 
     @Override
-    public ScheduleRenderer getPersonalRenderer(Person person, ScheduleService manager) {
+    public ScheduleRenderer getPersonalRenderer(Object data, ScheduleService manager) {
         throw new RuntimeException("Renderer not implemented for this schedule type");
     }
 

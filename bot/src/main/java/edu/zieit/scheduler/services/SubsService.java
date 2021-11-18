@@ -14,13 +14,13 @@ import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 public final class SubsService {
 
     private final TeacherSubsDao teacherDao;
-    private final CourseSubsDao studentDao;
+    private final CourseSubsDao coursesDao;
     private final PointsSubsDao pointsDao;
     private final NoticesDao noticesDao;
 
-    public SubsService(TeacherSubsDao teacherDao, CourseSubsDao studentDao, PointsSubsDao pointsDao, NoticesDao noticesDao) {
+    public SubsService(TeacherSubsDao teacherDao, CourseSubsDao coursesDao, PointsSubsDao pointsDao, NoticesDao noticesDao) {
         this.teacherDao = teacherDao;
-        this.studentDao = studentDao;
+        this.coursesDao = coursesDao;
         this.pointsDao = pointsDao;
         this.noticesDao = noticesDao;
     }
@@ -55,19 +55,19 @@ public final class SubsService {
         }
     }
 
-    public SubscriptionCourse getStudentSubs(String chatId) {
-        return studentDao.find(chatId);
+    public SubscriptionCourse getCourseSubs(String chatId) {
+        return coursesDao.find(chatId);
     }
 
-    public void subscribeStudent(String chatId, NamespacedKey scheduleKey) {
+    public void subscribeCourse(String chatId, NamespacedKey scheduleKey) {
         SubscriptionCourse sub = new SubscriptionCourse();
         sub.setTelegramId(chatId);
         sub.setScheduleKey(scheduleKey);
-        studentDao.save(sub);
+        coursesDao.save(sub);
     }
 
-    public boolean unsubscribeStudent(String chatId) {
-        return studentDao.delete(chatId);
+    public boolean unsubscribeCourse(String chatId) {
+        return coursesDao.delete(chatId);
     }
 
     public SubscriptionPoints getPointsSubs(String chatId) {

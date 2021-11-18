@@ -20,7 +20,7 @@ public class StateCourse extends State {
     @Override
     public void activate(ChatSession session) {
         SubsService subsService = session.getBot().getSubsService();
-        SubscriptionCourse subs = subsService.getStudentSubs(session.getChatId());
+        SubscriptionCourse subs = subsService.getCourseSubs(session.getChatId());
 
         if (subs != null) {
             ScheduleService service = session.getChatManager().getBot().getScheduleService();

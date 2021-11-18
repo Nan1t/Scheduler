@@ -20,15 +20,8 @@ import java.util.stream.Collectors;
 
 public class StateCourseList extends ChoiceState {
 
-    private final Language lang;
-    private final String prevPageText;
-    private final String nextPageText;
-
     public StateCourseList(Language lang, State nextState) {
-        super(nextState);
-        this.lang = lang;
-        prevPageText = lang.of("choice.prev");
-        nextPageText = lang.of("choice.next");
+        super(lang, nextState);
     }
 
     @Override
@@ -61,16 +54,6 @@ public class StateCourseList extends ChoiceState {
     @Override
     protected int elemOnPage() {
         return 16;
-    }
-
-    @Override
-    protected String prevPageText() {
-        return prevPageText;
-    }
-
-    @Override
-    protected String nextPageText() {
-        return nextPageText;
     }
 
     private BotApiMethod buildListMessage(ChatSession session, int page) {

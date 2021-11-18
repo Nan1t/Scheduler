@@ -53,12 +53,12 @@ public final class Scheduler {
         initHibernate(conf);
 
         TeacherSubsDao teacherDao = new TeacherSubsDao(sessionFactory);
-        CourseSubsDao studentDao = new CourseSubsDao(sessionFactory);
+        CourseSubsDao coursesDao = new CourseSubsDao(sessionFactory);
         PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
         NoticesDao noticesDao = new NoticesDao(sessionFactory);
         HashesDao hashesDao = new HashesDao(sessionFactory);
 
-        SubsService subsService = new SubsService(teacherDao, studentDao, pointsDao, noticesDao);
+        SubsService subsService = new SubsService(teacherDao, coursesDao, pointsDao, noticesDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
 
         logger.info("Loading schedule ...");

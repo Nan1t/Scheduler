@@ -30,10 +30,10 @@ public interface Schedule {
 
     /**
      * Get personal schedule renderer
-     * @param person Person for who renderer will be created
+     * @param data Data with information to render schedule
      * @param manager Schedule manager
      * @return Created personal schedule renderer
      */
-    ScheduleRenderer getPersonalRenderer(Person person, ScheduleService manager);
+    ScheduleRenderer getPersonalRenderer(Object data, ScheduleService manager);
 
 }

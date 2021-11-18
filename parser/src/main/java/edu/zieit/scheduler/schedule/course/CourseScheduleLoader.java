@@ -53,7 +53,7 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
             }
 
             for (Schedule schedule : schedules) {
-                ((CourseSchedule)schedule).setGroup(schedules);
+                ((CourseSchedule)schedule).setFileGroup(schedules);
             }
 
             try {
@@ -117,11 +117,21 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
             row = classNumRange.getLastRow() + 1;
         }
 
-        builder.name(ExcelUtil.getCellValue(dayCell)
+        List<String> list = ExcelUtil.getCellValue(dayCell)
                 .lines()
-                .findFirst()
-                .orElse("day")
-                .strip());
+                .toList();
+
+        try {
+            builder.name(list.get(0).strip());
+        } catch (IndexOutOfBoundsException e) {
+            // Ignore
+        }
+
+        try {
+            builder.date(list.get(1).strip());
+        } catch (IndexOutOfBoundsException e) {
+            // Ignore
+        }
 
         return builder.build();
     }

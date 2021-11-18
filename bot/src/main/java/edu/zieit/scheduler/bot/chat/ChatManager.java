@@ -6,6 +6,8 @@ import edu.zieit.scheduler.bot.states.course.StateCourse;
 import edu.zieit.scheduler.bot.states.course.StateCourseDeny;
 import edu.zieit.scheduler.bot.states.course.StateCourseList;
 import edu.zieit.scheduler.bot.states.course.StateCourseShow;
+import edu.zieit.scheduler.bot.states.group.StateGroupList;
+import edu.zieit.scheduler.bot.states.group.StateGroupShow;
 import edu.zieit.scheduler.bot.states.teacher.*;
 import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
@@ -137,5 +139,7 @@ public class ChatManager {
         registerState(new StateCourseList(bot.getLang(), new StateCourseShow(false)), "courseshow");
         registerState(new StateCourseDeny(), "coursedeny");
         registerState(new StateCourse(), "course");
+
+        registerState(new StateGroupList(bot.getLang(), new StateGroupShow(false)), "groupshow");
     }
 }

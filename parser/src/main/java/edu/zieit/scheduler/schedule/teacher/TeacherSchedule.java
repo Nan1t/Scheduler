@@ -45,8 +45,8 @@ public class TeacherSchedule extends AbstractSchedule {
     }
 
     @Override
-    public ScheduleRenderer getPersonalRenderer(Person person, ScheduleService manager) {
-        return new TeacherScheduleRenderer(this, person, manager);
+    public ScheduleRenderer getPersonalRenderer(Object data, ScheduleService manager) {
+        return new TeacherScheduleRenderer(this, (Person) data, manager);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class StateCourseShow extends State {
 
             if (saveSubs) {
                 session.getBot().getSubsService()
-                        .subscribeStudent(session.getChatId(), key);
+                        .subscribeCourse(session.getChatId(), key);
             }
         }
     }

@@ -4,7 +4,7 @@ import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
-import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
+import edu.zieit.scheduler.schedule.AbstractScheduleRenderer;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.schedule.course.CourseClass;
 import edu.zieit.scheduler.schedule.course.CourseDay;
@@ -18,14 +18,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-public class TeacherScheduleRenderer implements ScheduleRenderer {
+public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
 
     private final TeacherSchedule schedule;
     private final Person person;
     private final ScheduleService manager;
     private final Language lang;
-
-    private Font boldFont;
 
     public TeacherScheduleRenderer(TeacherSchedule schedule, Person person, ScheduleService manager) {
         this.schedule = schedule;
@@ -62,17 +60,6 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         return sheet;
     }
 
-    private void initFonts(Sheet sheet) {
-        Workbook wb = sheet.getWorkbook();
-        Font defFont = wb.getFontAt(sheet.getColumnStyle(0).getFontIndex());
-        Font font = wb.createFont();
-        font.setFontHeightInPoints(defFont.getFontHeightInPoints());
-        font.setFontName(defFont.getFontName());
-        font.setBold(true);
-
-        this.boldFont = font;
-    }
-
     private void drawHeader(Sheet sheet) {
         Cell titleCell = getOrCreateCell(sheet, 0, 0);
         Cell nameCell = getOrCreateCell(sheet, 1, 0);
@@ -92,9 +79,9 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         titleCell.setCellValue(schedule.getTitle());
         nameCell.setCellValue(person.toString());
         dayTitleCell.setCellValue(lang.of("schedule.render.head.days"));
-        classNumTitleCell.setCellValue(lang.of("teachers.head.class.num"));
-        classTimeTitleCell.setCellValue(lang.of("teachers.head.class.time"));
-        classesTitleCell.setCellValue(lang.of("teachers.head.classes"));
+        classNumTitleCell.setCellValue(lang.of("schedule.render.head.classnum"));
+        classTimeTitleCell.setCellValue(lang.of("schedule.render.head.classtime"));
+        classesTitleCell.setCellValue(lang.of("schedule.render.head.classes"));
 
         centerCell(titleCell);
         centerCell(nameCell);
@@ -131,8 +118,11 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
             classRow += 4;
         }
 
-        sheet.addMergedRegion(new CellRangeAddress(lastRow, classRow-1, 0, 0));
+        if (classRow > lastRow) {
+            sheet.addMergedRegion(new CellRangeAddress(lastRow, classRow-1, 0, 0));
+        }
 
+        centerCell(dayCell);
         borderCell(dayCell);
         CellUtil.setFont(dayCell, boldFont);
 
@@ -149,9 +139,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         Cell groupsCell = getOrCreateCell(sheet, classRow+2, 3);
         Cell classroomCell = getOrCreateCell(sheet, classRow+3, 3);
 
-        CellStyle style = groupsCell.getCellStyle();
-        style.setWrapText(true);
-        groupsCell.setCellStyle(style);
+        setWrapText(groupsCell, true);
 
         sheet.addMergedRegion(new CellRangeAddress(classRow, classRow+3, 1, 1));
         sheet.addMergedRegion(new CellRangeAddress(classRow, classRow+3, 2, 2));
@@ -185,7 +173,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         classTimeCell.setCellValue(TimeTable.getTime(classNum));
 
         if (names.isEmpty() && groupsSet.isEmpty()) {
-            titleCell.setCellValue(String.format(lang.of("teachers.notfound"), teacherClass.raw()));
+            titleCell.setCellValue(String.format(lang.of("teachers.render.notfound"), teacherClass.raw()));
             sheet.addMergedRegion(new CellRangeAddress(classRow, classRow+3, 3, 3));
         } else {
             titleCell.setCellValue(title);
@@ -199,7 +187,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         }
 
         centerCell(titleCell);
-        centerCell(dayCell);
+        //centerCell(dayCell);
         centerCell(classNumCell);
         centerCell(classTimeCell);
 
@@ -229,28 +217,6 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         }
 
         return schedules;
-    }
-
-    private void borderCell(Cell cell) {
-        CellRangeAddress range = ExcelUtil.getCellRange(cell);
-
-        RegionUtil.setBorderBottom(BorderStyle.THIN, range, cell.getSheet());
-        RegionUtil.setBorderLeft(BorderStyle.THIN, range, cell.getSheet());
-        RegionUtil.setBorderRight(BorderStyle.THIN, range, cell.getSheet());
-        RegionUtil.setBorderTop(BorderStyle.THIN, range, cell.getSheet());
-    }
-
-    private void centerCell(Cell cell) {
-        CellUtil.setAlignment(cell, HorizontalAlignment.CENTER);
-        CellUtil.setVerticalAlignment(cell, VerticalAlignment.CENTER);
-    }
-
-    private Cell getOrCreateCell(Sheet sheet, int rowNum, int colNum) {
-        Row row = sheet.getRow(rowNum);
-        if (row == null) row = sheet.createRow(rowNum);
-        Cell cell = row.getCell(colNum);
-        if (cell == null) cell = row.createCell(colNum);
-        return cell;
     }
 
 }

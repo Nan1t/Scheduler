@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.bot.states.teacher;
+package edu.zieit.scheduler.bot.states.group;
 
 import edu.zieit.scheduler.api.Pair;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
@@ -7,7 +7,6 @@ import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.chat.InputResult;
 import edu.zieit.scheduler.bot.chat.State;
 import edu.zieit.scheduler.bot.states.ChoiceState;
-import edu.zieit.scheduler.schedule.teacher.TeacherSchedule;
 import edu.zieit.scheduler.util.ChatUtil;
 import napi.configurate.yaml.lang.Language;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -15,15 +14,10 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class StateTeacherList extends ChoiceState {
+public class StateGroupList extends ChoiceState {
 
-    public StateTeacherList(Language lang, State nextState) {
-        super(lang, nextState);
-    }
-
-    @Override
-    protected int elemOnPage() {
-        return 16;
+    public StateGroupList(Language lang, State next) {
+        super(lang, next);
     }
 
     @Override
@@ -45,7 +39,7 @@ public class StateTeacherList extends ChoiceState {
                 return InputResult.STAY;
             }
 
-            session.add("teacher", input.getUpdate()
+            session.add("group", input.getUpdate()
                     .getCallbackQuery().getData());
 
             return InputResult.NEXT;
@@ -53,17 +47,21 @@ public class StateTeacherList extends ChoiceState {
         return InputResult.WRONG;
     }
 
-    private BotApiMethod buildListMessage(ChatSession session, int page) {
-        ScheduleService service = session.getChatManager().getBot().getScheduleService();
-        List<Pair<String, String>> teachers = getTeachersList(service);
-        return ChatUtil.editableMessage(session, buildKeyboard(page, teachers),
-                lang.of("cmd.teacher.list"));
+    @Override
+    protected int elemOnPage() {
+        return 16;
     }
 
-    private List<Pair<String, String>> getTeachersList(ScheduleService service) {
-        var schedule = (TeacherSchedule) service.getTeacherSchedule();
-        return schedule.getTeachers().stream()
-                .map(str -> Pair.of(str, str))
+    private BotApiMethod buildListMessage(ChatSession session, int page) {
+        ScheduleService service = session.getChatManager().getBot().getScheduleService();
+        List<Pair<String, String>> groups = getGroupsList(service);
+        return ChatUtil.editableMessage(session, buildKeyboard(page, groups),
+                "Groups list");
+    }
+
+    private List<Pair<String, String>> getGroupsList(ScheduleService service) {
+        return service.getGroups().stream()
+                .map(str -> Pair.of(str.toUpperCase(), str))
                 .collect(Collectors.toList());
     }
 }
