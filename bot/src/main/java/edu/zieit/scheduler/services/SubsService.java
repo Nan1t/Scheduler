@@ -5,20 +5,20 @@ import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.NoticesDao;
 import edu.zieit.scheduler.persistence.dao.PointsSubsDao;
-import edu.zieit.scheduler.persistence.dao.StudentSubsDao;
+import edu.zieit.scheduler.persistence.dao.CourseSubsDao;
 import edu.zieit.scheduler.persistence.dao.TeacherSubsDao;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionStudent;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 
 public final class SubsService {
 
     private final TeacherSubsDao teacherDao;
-    private final StudentSubsDao studentDao;
+    private final CourseSubsDao studentDao;
     private final PointsSubsDao pointsDao;
     private final NoticesDao noticesDao;
 
-    public SubsService(TeacherSubsDao teacherDao, StudentSubsDao studentDao, PointsSubsDao pointsDao, NoticesDao noticesDao) {
+    public SubsService(TeacherSubsDao teacherDao, CourseSubsDao studentDao, PointsSubsDao pointsDao, NoticesDao noticesDao) {
         this.teacherDao = teacherDao;
         this.studentDao = studentDao;
         this.pointsDao = pointsDao;
@@ -55,12 +55,12 @@ public final class SubsService {
         }
     }
 
-    public SubscriptionStudent getStudentSubs(String chatId) {
+    public SubscriptionCourse getStudentSubs(String chatId) {
         return studentDao.find(chatId);
     }
 
     public void subscribeStudent(String chatId, NamespacedKey scheduleKey) {
-        SubscriptionStudent sub = new SubscriptionStudent();
+        SubscriptionCourse sub = new SubscriptionCourse();
         sub.setTelegramId(chatId);
         sub.setScheduleKey(scheduleKey);
         studentDao.save(sub);

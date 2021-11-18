@@ -11,8 +11,8 @@ import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.dao.HashesDao;
 import edu.zieit.scheduler.render.AsposeRenderer;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleLoader;
-import edu.zieit.scheduler.schedule.students.StudentScheduleInfo;
-import edu.zieit.scheduler.schedule.students.StudentScheduleLoader;
+import edu.zieit.scheduler.schedule.course.CourseScheduleInfo;
+import edu.zieit.scheduler.schedule.course.CourseScheduleLoader;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
 import napi.configurate.yaml.lang.Language;
 import org.apache.logging.log4j.LogManager;
@@ -30,11 +30,11 @@ public final class ScheduleServiceImpl implements ScheduleService {
 
     private final SheetRenderer renderer;
 
-    private final ScheduleLoader studentsLoader;
+    private final ScheduleLoader coursesLoader;
     private final ScheduleLoader teachersLoader;
     private final ScheduleLoader consultLoader;
 
-    private final Map<NamespacedKey, Schedule> studentsSchedule;
+    private final Map<NamespacedKey, Schedule> coursesSchedule;
     private Schedule teachersSchedule;
     private Schedule consultSchedule;
 
@@ -47,11 +47,11 @@ public final class ScheduleServiceImpl implements ScheduleService {
 
         this.renderer = new AsposeRenderer(config.getRenderOptions());
 
-        this.studentsLoader = new StudentScheduleLoader(renderer);
+        this.coursesLoader = new CourseScheduleLoader(renderer);
         this.teachersLoader = new TeacherScheduleLoader(renderer);
         this.consultLoader = new ConsultScheduleLoader(renderer);
 
-        this.studentsSchedule = new HashMap<>();
+        this.coursesSchedule = new HashMap<>();
         this.firstLoad = true;
     }
 
@@ -66,13 +66,13 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Schedule getStudentSchedule(NamespacedKey key) {
-        return studentsSchedule.get(key);
+    public Schedule getCourseSchedule(NamespacedKey key) {
+        return coursesSchedule.get(key);
     }
 
     @Override
-    public Collection<Schedule> getStudentsSchedule() {
-        return Collections.unmodifiableCollection(studentsSchedule.values());
+    public Collection<Schedule> getCoursesSchedule() {
+        return Collections.unmodifiableCollection(coursesSchedule.values());
     }
 
     @Override
@@ -86,16 +86,16 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Collection<Schedule> reloadStudentSchedule() {
+    public Collection<Schedule> reloadCourseSchedule() {
         List<Schedule> updated = new LinkedList<>();
 
-        for (StudentScheduleInfo info : config.getStudents()) {
+        for (CourseScheduleInfo info : config.getCourses()) {
             ScheduleHash oldHash = hashesDao.find(info.getId());
             String newHash = HashUtil.getHash(info.getUrl());
 
             if (firstLoad || oldHash == null || !oldHash.getHash().equals(newHash)) {
-                for (Schedule schedule : studentsLoader.load(info)) {
-                    studentsSchedule.put(schedule.getKey(), schedule);
+                for (Schedule schedule : coursesLoader.load(info)) {
+                    coursesSchedule.put(schedule.getKey(), schedule);
                     updated.add(schedule);
                     logger.info("Loaded schedule '{}'", schedule.getKey());
                 }

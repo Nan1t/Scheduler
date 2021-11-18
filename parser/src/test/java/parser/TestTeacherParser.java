@@ -5,8 +5,8 @@ import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.SheetPoint;
 import edu.zieit.scheduler.api.schedule.*;
 import edu.zieit.scheduler.render.AsposeRenderer;
-import edu.zieit.scheduler.schedule.students.StudentScheduleInfo;
-import edu.zieit.scheduler.schedule.students.StudentScheduleLoader;
+import edu.zieit.scheduler.schedule.course.CourseScheduleInfo;
+import edu.zieit.scheduler.schedule.course.CourseScheduleLoader;
 import edu.zieit.scheduler.schedule.teacher.TeacherSchedule;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleInfo;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
@@ -57,10 +57,10 @@ public class TestTeacherParser {
         for (String str : paths) {
             URL url = getClass().getResource("/" + str);
 
-            ScheduleInfo info = new StudentScheduleInfo(url, "Schedule " + str,
+            ScheduleInfo info = new CourseScheduleInfo(url, "Schedule " + str,
                     new SheetPoint(0, 7),
                     new SheetPoint(4, 5));
-            ScheduleLoader parser = new StudentScheduleLoader(new EmptyRenderer());
+            ScheduleLoader parser = new CourseScheduleLoader(new EmptyRenderer());
 
             for (Schedule schedule : parser.load(info)) {
                 scheduleMap.put(schedule.getKey(), schedule);

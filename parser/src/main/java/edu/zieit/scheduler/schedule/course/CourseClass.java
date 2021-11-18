@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.schedule.students;
+package edu.zieit.scheduler.schedule.course;
 
 import edu.zieit.scheduler.api.Person;
 
@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Schedule's class representation
  */
-public class ScheduleClass {
+public class CourseClass {
 
     private final String name;
     private final String type;
@@ -15,8 +15,8 @@ public class ScheduleClass {
     private final String classroom;
     private final Collection<String> groups;
 
-    private ScheduleClass(String name, String type, Person person,
-                          String classroom, Collection<String> groups) {
+    private CourseClass(String name, String type, Person person,
+                        String classroom, Collection<String> groups) {
         this.name = name;
         this.type = type != null ? type : "";
         this.person = person;
@@ -46,7 +46,7 @@ public class ScheduleClass {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ScheduleClass cl) {
+        if (obj instanceof CourseClass cl) {
             return this.name.equals(cl.name)
                     && this.type.equals(cl.type)
                     && this.classroom.equals(cl.classroom)
@@ -118,8 +118,8 @@ public class ScheduleClass {
             return this;
         }
 
-        public ScheduleClass build() {
-            return new ScheduleClass(name, type, teacher, classroom, groups);
+        public CourseClass build() {
+            return new CourseClass(name, type, teacher, classroom, groups);
         }
 
     }

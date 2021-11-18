@@ -9,7 +9,7 @@ import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionStudent;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
@@ -53,7 +53,7 @@ public final class Scheduler {
         initHibernate(conf);
 
         TeacherSubsDao teacherDao = new TeacherSubsDao(sessionFactory);
-        StudentSubsDao studentDao = new StudentSubsDao(sessionFactory);
+        CourseSubsDao studentDao = new CourseSubsDao(sessionFactory);
         PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
         NoticesDao noticesDao = new NoticesDao(sessionFactory);
         HashesDao hashesDao = new HashesDao(sessionFactory);
@@ -91,7 +91,7 @@ public final class Scheduler {
 
         configuration.addAnnotatedClass(SubscriptionPoints.class);
         configuration.addAnnotatedClass(SubscriptionTeacher.class);
-        configuration.addAnnotatedClass(SubscriptionStudent.class);
+        configuration.addAnnotatedClass(SubscriptionCourse.class);
         configuration.addAnnotatedClass(ScheduleHash.class);
         configuration.addAnnotatedClass(TeacherNotice.class);
 

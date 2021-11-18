@@ -21,7 +21,7 @@ public class TestScheduleService implements ScheduleService {
     }
 
     @Override
-    public Schedule getStudentSchedule(NamespacedKey key) {
+    public Schedule getCourseSchedule(NamespacedKey key) {
         return studentSchedule.get(key);
     }
 
@@ -52,7 +52,7 @@ public class TestScheduleService implements ScheduleService {
     }
 
     @Override
-    public Collection<Schedule> reloadStudentSchedule() {
+    public Collection<Schedule> reloadCourseSchedule() {
         return null;
     }
 

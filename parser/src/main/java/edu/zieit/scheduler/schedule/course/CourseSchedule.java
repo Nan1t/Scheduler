@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.schedule.students;
+package edu.zieit.scheduler.schedule.course;
 
 import com.google.common.base.Preconditions;
 import edu.zieit.scheduler.api.NamespacedKey;
@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 /**
  * Represents student's schedule
  */
-public class StudentSchedule extends AbstractSchedule {
+public class CourseSchedule extends AbstractSchedule {
 
-    private final StudentScheduleInfo info;
-    private final List<ScheduleDay> days;
+    private final CourseScheduleInfo info;
+    private final List<CourseDay> days;
     private String displayName;
     private Collection<Schedule> group;
 
-    public StudentSchedule(StudentScheduleInfo info, NamespacedKey key, Sheet sheet, SheetRenderer sheetRenderer,
-                           List<ScheduleDay> days) {
+    public CourseSchedule(CourseScheduleInfo info, NamespacedKey key, Sheet sheet, SheetRenderer sheetRenderer,
+                          List<CourseDay> days) {
         super(key, sheet, sheetRenderer);
         this.info = info;
         this.days = days;
@@ -37,11 +37,11 @@ public class StudentSchedule extends AbstractSchedule {
         this.displayName = displayName;
     }
 
-    public Collection<ScheduleDay> getDays() {
+    public Collection<CourseDay> getDays() {
         return days;
     }
 
-    public Optional<ScheduleDay> getDay(String dayName) {
+    public Optional<CourseDay> getDay(String dayName) {
         return days.stream()
                 .filter(day -> day.getName().equalsIgnoreCase(dayName))
                 .findFirst();
@@ -60,14 +60,14 @@ public class StudentSchedule extends AbstractSchedule {
     }
 
     @Override
-    public StudentScheduleInfo getInfo() {
+    public CourseScheduleInfo getInfo() {
         return info;
     }
 
     @Override
     public String toString() {
         Collection<String> groups = group != null ? group.stream()
-                .map(el -> ((StudentSchedule)el).getDisplayName())
+                .map(el -> ((CourseSchedule)el).getDisplayName())
                 .collect(Collectors.toList()) : Collections.emptyList();
 
         return "StudentSchedule{" +

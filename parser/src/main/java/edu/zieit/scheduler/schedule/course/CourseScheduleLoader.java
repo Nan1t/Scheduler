@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.schedule.students;
+package edu.zieit.scheduler.schedule.course;
 
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
@@ -21,15 +21,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class StudentScheduleLoader extends AbstractScheduleLoader {
+public class CourseScheduleLoader extends AbstractScheduleLoader {
 
-    public StudentScheduleLoader(SheetRenderer renderer) {
+    public CourseScheduleLoader(SheetRenderer renderer) {
         super(renderer);
     }
 
     @Override
     public Collection<Schedule> load(ScheduleInfo info) throws ScheduleParseException {
-        if (!(info instanceof StudentScheduleInfo sinfo))
+        if (!(info instanceof CourseScheduleInfo sinfo))
             return Collections.emptyList();
 
         Workbook workbook = loadWorkbook(info);
@@ -47,13 +47,13 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             List<Schedule> schedules = new LinkedList<>();
 
             for (Sheet sheet : workbook) {
-                StudentSchedule schedule = parseSchedule(sinfo, sheet);
+                CourseSchedule schedule = parseSchedule(sinfo, sheet);
                 schedule.setDisplayName(sinfo.getDisplayName() + " " + sheet.getSheetName());
                 schedules.add(schedule);
             }
 
             for (Schedule schedule : schedules) {
-                ((StudentSchedule)schedule).setGroup(schedules);
+                ((CourseSchedule)schedule).setGroup(schedules);
             }
 
             try {
@@ -66,8 +66,8 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
         }
     }
 
-    private StudentSchedule parseSchedule(StudentScheduleInfo info, Sheet sheet) throws ScheduleParseException {
-        List<ScheduleDay> days = new LinkedList<>();
+    private CourseSchedule parseSchedule(CourseScheduleInfo info, Sheet sheet) throws ScheduleParseException {
+        List<CourseDay> days = new LinkedList<>();
         int row = info.getDayPoint().row();
         Cell dayCell = getCell(sheet, row, info.getDayPoint().col());
 
@@ -88,11 +88,11 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
             key = NamespacedKey.of(info.getId());
         }
 
-        return new StudentSchedule(info, key, sheet, renderer, days);
+        return new CourseSchedule(info, key, sheet, renderer, days);
     }
 
-    private ScheduleDay parseDay(StudentScheduleInfo info, Sheet sheet, Cell dayCell, CellRangeAddress range) {
-        var builder = ScheduleDay.builder();
+    private CourseDay parseDay(CourseScheduleInfo info, Sheet sheet, Cell dayCell, CellRangeAddress range) {
+        var builder = CourseDay.builder();
         int classNumCol = range.getLastColumn() + 1;
         int classTimeCol = classNumCol + 1;
 
@@ -108,10 +108,10 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
 
             TimeTable.addClassTime(classIndex, classTime);
 
-            Collection<ScheduleClass> classes = parseClasses(info, sheet, row);
+            Collection<CourseClass> classes = parseClasses(info, sheet, row);
 
-            for (ScheduleClass scheduleClass : classes) {
-                builder.addClass(classIndex, scheduleClass);
+            for (CourseClass courseClass : classes) {
+                builder.addClass(classIndex, courseClass);
             }
 
             row = classNumRange.getLastRow() + 1;
@@ -126,8 +126,8 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
         return builder.build();
     }
 
-    private Collection<ScheduleClass> parseClasses(StudentScheduleInfo info, Sheet sheet, int classRow) {
-        List<ScheduleClass> classes = new LinkedList<>();
+    private Collection<CourseClass> parseClasses(CourseScheduleInfo info, Sheet sheet, int classRow) {
+        List<CourseClass> classes = new LinkedList<>();
         int col = info.getGroupPoint().col();
         Cell classCell = getCell(sheet, classRow, col);
 
@@ -162,7 +162,7 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
                     if (matcher.find()) {
                         String teacher = matcher.group(1);
                         String classroom = matcher.group(2);
-                        ScheduleClass.Builder builder = ScheduleClass.builder();
+                        CourseClass.Builder builder = CourseClass.builder();
 
                         builder.name(name)
                                 .type(type)
@@ -176,7 +176,7 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
                 }
             } else {
                 // Only one teacher
-                ScheduleClass.Builder builder = ScheduleClass.builder();
+                CourseClass.Builder builder = CourseClass.builder();
                 Person teacher = Person.empty();
 
                 if (Person.REGEX_TEACHER.matcher(teacherName).find()) {
@@ -199,7 +199,7 @@ public class StudentScheduleLoader extends AbstractScheduleLoader {
         return classes;
     }
 
-    private Collection<String> parseGroups(StudentScheduleInfo info, Sheet sheet, CellRangeAddress range) {
+    private Collection<String> parseGroups(CourseScheduleInfo info, Sheet sheet, CellRangeAddress range) {
         List<String> groups = new LinkedList<>();
         for (int col = range.getFirstColumn(); col <= range.getLastColumn(); col++) {
             Cell cell = getCell(sheet, info.getGroupPoint().row(), col);

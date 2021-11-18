@@ -8,7 +8,7 @@ import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.chat.InputResult;
 import edu.zieit.scheduler.bot.chat.State;
 import edu.zieit.scheduler.bot.states.ChoiceState;
-import edu.zieit.scheduler.schedule.students.StudentSchedule;
+import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.ChatUtil;
 import napi.configurate.yaml.lang.Language;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -81,9 +81,9 @@ public class StateCourseList extends ChoiceState {
     }
 
     private List<Pair<String, String>> getCoursesList(ScheduleService service) {
-        Collection<Schedule> list = service.getStudentsSchedule();
+        Collection<Schedule> list = service.getCoursesSchedule();
         return list.stream()
-                .map(schedule -> (StudentSchedule) schedule)
+                .map(schedule -> (CourseSchedule) schedule)
                 .map(schedule -> Pair.of(schedule.getDisplayName(), schedule.getKey().toString()))
                 .sorted(Comparator.comparing(Pair::key))
                 .collect(Collectors.toList());

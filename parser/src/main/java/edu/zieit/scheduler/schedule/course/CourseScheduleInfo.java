@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.schedule.students;
+package edu.zieit.scheduler.schedule.course;
 
 import com.google.common.reflect.TypeToken;
 import edu.zieit.scheduler.api.SheetPoint;
@@ -10,13 +10,13 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class StudentScheduleInfo extends AbstractScheduleInfo {
+public class CourseScheduleInfo extends AbstractScheduleInfo {
 
     private final String displayName;
     private final SheetPoint dayPoint;
     private final SheetPoint groupPoint;
 
-    public StudentScheduleInfo(URL url, String displayName, SheetPoint dayPoint, SheetPoint groupPoint) {
+    public CourseScheduleInfo(URL url, String displayName, SheetPoint dayPoint, SheetPoint groupPoint) {
         super(url);
         this.displayName = displayName;
         this.dayPoint = dayPoint;
@@ -35,10 +35,10 @@ public class StudentScheduleInfo extends AbstractScheduleInfo {
         return groupPoint;
     }
 
-    public static class Serializer implements TypeSerializer<StudentScheduleInfo> {
+    public static class Serializer implements TypeSerializer<CourseScheduleInfo> {
 
         @Override
-        public StudentScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
+        public CourseScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
                 throws ObjectMappingException {
             URL url;
 
@@ -52,11 +52,11 @@ public class StudentScheduleInfo extends AbstractScheduleInfo {
             SheetPoint dayPoint = node.getNode("day_point").getValue(TypeToken.of(SheetPoint.class));
             SheetPoint groupPoint = node.getNode("group_point").getValue(TypeToken.of(SheetPoint.class));
 
-            return new StudentScheduleInfo(url, displayName, dayPoint, groupPoint);
+            return new CourseScheduleInfo(url, displayName, dayPoint, groupPoint);
         }
 
         @Override
-        public void serialize(TypeToken<?> type, StudentScheduleInfo obj, ConfigurationNode value) {
+        public void serialize(TypeToken<?> type, CourseScheduleInfo obj, ConfigurationNode value) {
 
         }
 

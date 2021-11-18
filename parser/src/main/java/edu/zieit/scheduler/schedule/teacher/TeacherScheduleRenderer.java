@@ -6,9 +6,9 @@ import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.schedule.TimeTable;
-import edu.zieit.scheduler.schedule.students.ScheduleClass;
-import edu.zieit.scheduler.schedule.students.ScheduleDay;
-import edu.zieit.scheduler.schedule.students.StudentSchedule;
+import edu.zieit.scheduler.schedule.course.CourseClass;
+import edu.zieit.scheduler.schedule.course.CourseDay;
+import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.ExcelUtil;
 import napi.configurate.yaml.lang.Language;
 import org.apache.poi.ss.usermodel.*;
@@ -140,7 +140,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
     }
 
     private void drawClass(Sheet sheet, Cell dayCell, TeacherDay teacherDay, TeacherClass teacherClass, int classNum, int classRow) {
-        Collection<StudentSchedule> studentSchedules = getScheduleByCourses(teacherClass);
+        Collection<CourseSchedule> courseSchedules = getScheduleByCourses(teacherClass);
 
         Cell classNumCell = getOrCreateCell(sheet, classRow, 1);
         Cell classTimeCell = getOrCreateCell(sheet, classRow, 2);
@@ -161,13 +161,13 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         Set<String> groupsSet = new HashSet<>();
         Set<String> classrooms = new HashSet<>();
 
-        for (StudentSchedule schedule : studentSchedules) {
-            Optional<ScheduleDay> day = schedule.getDay(teacherDay.getName());
+        for (CourseSchedule schedule : courseSchedules) {
+            Optional<CourseDay> day = schedule.getDay(teacherDay.getName());
 
             if (day.isPresent()) {
-                Collection<ScheduleClass> classes = day.get().getClasses(classNum, person);
+                Collection<CourseClass> classes = day.get().getClasses(classNum, person);
 
-                for (ScheduleClass cl : classes) {
+                for (CourseClass cl : classes) {
                     names.add(cl.getName());
                     types.add(cl.getType());
                     groupsSet.addAll(cl.getGroups());
@@ -213,8 +213,8 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
         RegionUtil.setBorderBottom(BorderStyle.THIN, ExcelUtil.getCellRange(classroomCell), sheet);
     }
 
-    private Collection<StudentSchedule> getScheduleByCourses(TeacherClass teacherClass) {
-        List<StudentSchedule> schedules = new LinkedList<>();
+    private Collection<CourseSchedule> getScheduleByCourses(TeacherClass teacherClass) {
+        List<CourseSchedule> schedules = new LinkedList<>();
 
         for (String course : teacherClass.courses()) {
             NamespacedKey scheduleKey = this.schedule.getInfo().getAssociation(course);
@@ -223,7 +223,7 @@ public class TeacherScheduleRenderer implements ScheduleRenderer {
                 scheduleKey = this.schedule.getInfo().getAssociation(teacherClass.raw());
 
             if (scheduleKey != null) {
-                StudentSchedule sch = (StudentSchedule) manager.getStudentSchedule(scheduleKey);
+                CourseSchedule sch = (CourseSchedule) manager.getCourseSchedule(scheduleKey);
                 if (sch != null) schedules.add(sch);
             }
         }

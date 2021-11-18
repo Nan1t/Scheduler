@@ -39,8 +39,8 @@ consult:
     col: 0
     row: 0
 
-# Настройка расписания студентов
-students:
+# Настройка расписания курсов
+courses:
   - url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/1.xls"
     name: "Інститут 1 курс"
     day_point:

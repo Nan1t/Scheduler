@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.schedule.students;
+package edu.zieit.scheduler.schedule.course;
 
 import edu.zieit.scheduler.api.Person;
 
@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
  * Schedule's day representation.
  * Contains classes by their indexes.
  */
-public class ScheduleDay {
+public class CourseDay {
 
     private final String name;
-    private final Map<Integer, List<ScheduleClass>> classes;
+    private final Map<Integer, List<CourseClass>> classes;
 
-    private ScheduleDay(String name, Map<Integer, List<ScheduleClass>> classes) {
+    private CourseDay(String name, Map<Integer, List<CourseClass>> classes) {
         this.name = name;
         this.classes = classes;
     }
@@ -28,7 +28,7 @@ public class ScheduleDay {
      * @param classIndex Class index
      * @return List of schedule's classes
      */
-    public Collection<ScheduleClass> getClasses(int classIndex) {
+    public Collection<CourseClass> getClasses(int classIndex) {
         return classes.getOrDefault(classIndex, Collections.emptyList());
     }
 
@@ -38,7 +38,7 @@ public class ScheduleDay {
      * @param teacher Teacher person
      * @return Collection of classes
      */
-    public Collection<ScheduleClass> getClasses(int classIndex, Person teacher) {
+    public Collection<CourseClass> getClasses(int classIndex, Person teacher) {
         return getClasses(classIndex)
                 .stream()
                 .filter(cl -> cl.getTeacher().equals(teacher))
@@ -60,7 +60,7 @@ public class ScheduleDay {
     public static class Builder {
 
         private String name;
-        private final Map<Integer, List<ScheduleClass>> classes;
+        private final Map<Integer, List<CourseClass>> classes;
 
         private Builder() {
             this.classes = new HashMap<>();
@@ -71,14 +71,14 @@ public class ScheduleDay {
             return this;
         }
 
-        public Builder addClass(int classIndex, ScheduleClass scheduleClass) {
+        public Builder addClass(int classIndex, CourseClass courseClass) {
             classes.computeIfAbsent(classIndex, (e) -> new ArrayList<>())
-                    .add(scheduleClass);
+                    .add(courseClass);
             return this;
         }
 
-        public ScheduleDay build() {
-            return new ScheduleDay(name, classes);
+        public CourseDay build() {
+            return new CourseDay(name, classes);
         }
 
     }

@@ -21,13 +21,13 @@ public interface ScheduleService {
      * @param key Unique schedule key
      * @return Schedule instance or null if not found
      */
-    Schedule getStudentSchedule(NamespacedKey key);
+    Schedule getCourseSchedule(NamespacedKey key);
 
     /**
      * Get all loaded students's schedule
      * @return Collection of schedule
      */
-    Collection<Schedule> getStudentsSchedule();
+    Collection<Schedule> getCoursesSchedule();
 
     /**
      * Get teachers schedule
@@ -45,7 +45,7 @@ public interface ScheduleService {
      * Reload and reparse all updated students schedules
      * @return Collection of schedules which has been reloaded
      */
-    Collection<Schedule> reloadStudentSchedule();
+    Collection<Schedule> reloadCourseSchedule();
 
     /**
      * Reload and reparse teachers schedule
@@ -63,7 +63,7 @@ public interface ScheduleService {
      * Reload all schedules
      */
     default void reloadAll() {
-        reloadStudentSchedule();
+        reloadCourseSchedule();
         reloadTeacherSchedule();
         reloadConsultSchedule();
     }

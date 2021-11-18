@@ -11,9 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "subs_students")
+@Table(name = "subs_courses")
 @TypeDef(name = "NamespacedKeyDescriptor", typeClass = NamespacedKeyDescriptor.class)
-public class SubscriptionStudent {
+public class SubscriptionCourse {
 
     @Id
     @Column(name = "tg_id")
