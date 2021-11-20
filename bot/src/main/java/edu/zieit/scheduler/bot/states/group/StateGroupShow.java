@@ -33,14 +33,22 @@ public class StateGroupShow extends State {
             if (opt.isPresent()) {
                 ScheduleRenderer renderer = opt.get().getPersonalRenderer(group, service);
                 InputStream img = new ByteArrayInputStream(renderer.renderBytes());
+                String caption = saveSubs
+                        ? String.format(session.getLang().of("cmd.group.subscribed"), group)
+                        : String.format(session.getLang().of("cmd.group.caption"), group);
 
                 session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
-                        FilenameUtil.getNameWithExt(service, "photo"), "Group schedule photo"));
+                        FilenameUtil.getNameWithExt(service, "photo"), caption));
+
+                if (saveSubs) {
+                    session.getBot().getSubsService()
+                            .subscribeGroup(session.getChatId(), group);
+                }
             } else {
-                session.getBot().sendMessage(session, "Group not found");
+                session.getBot().sendMessage(session, session.getLang().of("cmd.group.notfound"));
             }
         } else {
-            session.getBot().sendMessage(session, "Group null");
+            session.getBot().sendMessage(session, session.getLang().of("cmd.group.notfound"));
         }
     }
 

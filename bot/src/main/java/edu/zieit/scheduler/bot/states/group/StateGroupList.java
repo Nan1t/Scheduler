@@ -56,7 +56,7 @@ public class StateGroupList extends ChoiceState {
         ScheduleService service = session.getChatManager().getBot().getScheduleService();
         List<Pair<String, String>> groups = getGroupsList(service);
         return ChatUtil.editableMessage(session, buildKeyboard(page, groups),
-                "Groups list");
+                lang.of("cmd.group.list"));
     }
 
     private List<Pair<String, String>> getGroupsList(ScheduleService service) {

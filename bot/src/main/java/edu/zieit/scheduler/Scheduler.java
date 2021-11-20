@@ -8,6 +8,7 @@ import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionGroup;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
@@ -93,6 +94,7 @@ public final class Scheduler {
         configuration.addAnnotatedClass(SubscriptionPoints.class);
         configuration.addAnnotatedClass(SubscriptionTeacher.class);
         configuration.addAnnotatedClass(SubscriptionCourse.class);
+        configuration.addAnnotatedClass(SubscriptionGroup.class);
         configuration.addAnnotatedClass(ScheduleHash.class);
         configuration.addAnnotatedClass(TeacherNotice.class);
 

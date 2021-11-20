@@ -12,7 +12,7 @@ public class SubscriptionGroup {
     @Id
     @Column(name = "tg_id")
     private String telegramId;
-    private String group;
+    private String groupName;
 
     public String getTelegramId() {
         return telegramId;
@@ -22,11 +22,11 @@ public class SubscriptionGroup {
         this.telegramId = telegramId;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

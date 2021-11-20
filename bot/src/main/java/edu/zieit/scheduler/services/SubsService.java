@@ -78,7 +78,7 @@ public final class SubsService {
     public void subscribeGroup(String chatId, String group) {
         SubscriptionGroup sub = new SubscriptionGroup();
         sub.setTelegramId(chatId);
-        sub.setGroup(group);
+        sub.setGroupName(group);
         groupsDao.save(sub);
     }
 

@@ -15,10 +15,10 @@ public class StateGroupDeny extends State {
 
         if (res) {
             session.getBot().sendMessage(session,
-                    session.getLang().of("cmd.teacher.deny"));
+                    session.getLang().of("cmd.group.deny"));
         } else {
             session.getBot().sendMessage(session,
-                    session.getLang().of("cmd.teacher.nosubs"));
+                    session.getLang().of("cmd.group.nosubs"));
         }
     }
 
