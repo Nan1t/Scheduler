@@ -30,7 +30,12 @@ public class ConsultSchedule extends AbstractSchedule {
     }
 
     public Collection<ConsultDay> getWeek(Person teacher) {
-        return weekMap.getOrDefault(teacher, Collections.emptyList());
+        for (var entry : weekMap.entrySet()) {
+            if (entry.getKey().isSimilar(teacher))
+                return entry.getValue();
+        }
+        return Collections.emptyList();
+        //return weekMap.getOrDefault(teacher, Collections.emptyList());
     }
 
     @Override
@@ -77,7 +82,8 @@ public class ConsultSchedule extends AbstractSchedule {
         }
 
         public Builder withWeek(Person teacher, List<ConsultDay> week) {
-            this.weekMap.put(teacher, week);
+            if (teacher != null)
+                this.weekMap.put(teacher, week);
             return this;
         }
 

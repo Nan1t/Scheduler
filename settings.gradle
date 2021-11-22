@@ -3,4 +3,5 @@ include 'api'
 include 'bot'
 include 'parser'
 include 'adminpanel'
+include 'webpanel'
 

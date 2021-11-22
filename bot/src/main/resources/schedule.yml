@@ -2,8 +2,8 @@
 # Настройка расписания
 #
 
-# Период проверки расписания в миллисекундах
-check_rate: 10000
+# Период проверки расписания в секундах
+check_rate: 10
 
 # Настройка таблицы занятости преподавателей
 teachers:
@@ -33,11 +33,11 @@ teachers:
 consult:
   url: "https://www.zieit.edu.ua/wp-content/uploads/Rozklad/consultation.xls"
   day_point:
-    col: 0
-    row: 0
+    col: 1
+    row: 2
   teacher_point:
     col: 0
-    row: 0
+    row: 3
 
 # Настройка расписания курсов
 courses:

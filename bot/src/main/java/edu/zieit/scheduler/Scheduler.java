@@ -14,6 +14,7 @@ import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
+import edu.zieit.scheduler.services.TimerService;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,7 @@ public final class Scheduler {
 
     private SessionFactory sessionFactory;
     private SchedulerBot bot;
+    private TimerService timer;
 
     public void start() throws Exception {
         Path rootDir = Paths.get("./");
@@ -62,6 +64,7 @@ public final class Scheduler {
 
         SubsService subsService = new SubsService(teacherDao, coursesDao, pointsDao, noticesDao, groupsDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
+        timer = new TimerService(scheduleConf, bot, scheduleService, subsService);
 
         logger.info("Loading schedule ...");
         scheduleService.reloadAll();
@@ -73,12 +76,17 @@ public final class Scheduler {
         logger.info("Starting long polling bot ...");
         botsApi.registerBot(bot);
 
+        timer.start();
+        logger.info("Started timer");
+
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Safe shutdown thread"));
 
         logger.info("Done! Scheduler ready to work");
     }
 
     public void shutdown() {
+        logger.info("Stopping timer ...");
+        timer.stop();
         logger.info("Closing connections ...");
         sessionFactory.close();
         logger.info("Closing long polling bot ...");

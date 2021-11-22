@@ -5,7 +5,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public abstract class Dao {
 
@@ -21,15 +23,21 @@ public abstract class Dao {
      * @param consumer Session callback
      */
     protected void withSession(Consumer<Session> consumer) {
-        try (Session session = factory.openSession()){
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             consumer.accept(session);
             session.getTransaction().commit();
         }
     }
 
+    protected <T> T useSession(Function<Session, T> func) {
+        try (Session session = factory.openSession()) {
+            return func.apply(session);
+        }
+    }
+
     protected int execUpdate(String hql, Consumer<Query<?>> consumer) {
-        try (Session session = factory.openSession()){
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             Query<?> query = session.createQuery(hql);
             consumer.accept(query);
@@ -47,9 +55,18 @@ public abstract class Dao {
      * @return A persistent instance or null
      */
     protected <T> T findValue(Class<?> type, Serializable key) {
-        try (Session session = factory.openSession()){
+        try (Session session = factory.openSession()) {
             return (T) session.get(type, key);
         }
+    }
+
+    protected <T> List<T> getList(Class<T> table, int from, int count) {
+        return useSession(session -> {
+            Query<?> q = session.createQuery("from " + table.getSimpleName());
+            q.setFirstResult(from);
+            q.setMaxResults(count);
+            return (List<T>) q.list();
+        });
     }
 
 }

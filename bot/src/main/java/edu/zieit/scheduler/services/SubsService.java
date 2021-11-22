@@ -9,6 +9,8 @@ import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 
+import java.util.Collection;
+
 public final class SubsService {
 
     private final TeacherSubsDao teacherDao;
@@ -28,6 +30,10 @@ public final class SubsService {
 
     public SubscriptionTeacher getTeacherSubs(String chatId) {
         return teacherDao.find(chatId);
+    }
+
+    public Collection<SubscriptionTeacher> getTeacherSubs(int from, int count) {
+        return teacherDao.getWithLimit(from, count);
     }
 
     public void subscribeTeacher(String chatId, Person teacher) {

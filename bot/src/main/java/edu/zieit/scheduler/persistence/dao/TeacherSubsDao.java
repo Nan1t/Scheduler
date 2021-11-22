@@ -3,6 +3,8 @@ package edu.zieit.scheduler.persistence.dao;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import org.hibernate.SessionFactory;
 
+import java.util.Collection;
+
 public class TeacherSubsDao extends Dao {
 
     public TeacherSubsDao(SessionFactory factory) {
@@ -11,6 +13,10 @@ public class TeacherSubsDao extends Dao {
 
     public SubscriptionTeacher find(String tgId) {
         return findValue(SubscriptionTeacher.class, tgId);
+    }
+
+    public Collection<SubscriptionTeacher> getWithLimit(int from, int count) {
+        return getList(SubscriptionTeacher.class, from, count);
     }
 
     public void save(SubscriptionTeacher sub) {

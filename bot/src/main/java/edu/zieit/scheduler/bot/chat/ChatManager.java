@@ -2,6 +2,9 @@ package edu.zieit.scheduler.bot.chat;
 
 import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.bot.states.StateHelp;
+import edu.zieit.scheduler.bot.states.consult.StateConsult;
+import edu.zieit.scheduler.bot.states.consult.StateConsultAll;
+import edu.zieit.scheduler.bot.states.consult.StateConsultShow;
 import edu.zieit.scheduler.bot.states.course.StateCourse;
 import edu.zieit.scheduler.bot.states.course.StateCourseDeny;
 import edu.zieit.scheduler.bot.states.course.StateCourseList;
@@ -146,5 +149,9 @@ public class ChatManager {
         registerState(new StateGroupList(bot.getLang(), new StateGroupShow(false)), "groupshow");
         registerState(new StateGroupDeny(), "groupdeny");
         registerState(new StateGroup(), "group");
+
+        registerState(new StateConsultAll(), "consall");
+        registerState(new StateConsult(), "consult");
+        registerState(new StateTeacherList(bot.getLang(), new StateConsultShow()), "consultshow");
     }
 }

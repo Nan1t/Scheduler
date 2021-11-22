@@ -128,15 +128,14 @@ public final class ScheduleServiceImpl implements ScheduleService {
                 }
 
                 saveHash(info.getId(), newHash);
-                continue;
             }
-
-            logger.info("Skipping schedule {}", info.getId());
         }
 
-        this.groups = groups.stream()
-                .sorted(Comparator.naturalOrder())
-                .collect(Collectors.toList());
+        if (!groups.isEmpty()) {
+            this.groups = groups.stream()
+                    .sorted(Comparator.naturalOrder())
+                    .collect(Collectors.toList());
+        }
 
         firstLoad = false;
 
