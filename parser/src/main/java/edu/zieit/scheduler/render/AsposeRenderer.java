@@ -50,6 +50,17 @@ public class AsposeRenderer extends SheetRenderer {
         return img;
     }
 
+    private BufferedImage render(Worksheet worksheet) throws RenderException {
+        try {
+            SheetRender render = new SheetRender(worksheet, asposeOptions);
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            render.toImage(0, output);
+            return ImageIO.read(new ByteArrayInputStream(output.toByteArray()));
+        } catch (Exception e) {
+            throw new RenderException(e);
+        }
+    }
+
     @Override
     public byte[] renderBytes(Sheet sheet) throws RenderException {
         Workbook workbook = toAsposeWorkbook(sheet.getWorkbook());
@@ -65,17 +76,6 @@ public class AsposeRenderer extends SheetRenderer {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             render.toImage(0, output);
             return output.toByteArray();
-        } catch (Exception e) {
-            throw new RenderException(e);
-        }
-    }
-
-    private BufferedImage render(Worksheet worksheet) throws RenderException {
-        try {
-            SheetRender render = new SheetRender(worksheet, asposeOptions);
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            render.toImage(0, output);
-            return ImageIO.read(new ByteArrayInputStream(output.toByteArray()));
         } catch (Exception e) {
             throw new RenderException(e);
         }
