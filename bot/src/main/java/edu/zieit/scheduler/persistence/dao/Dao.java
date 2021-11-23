@@ -60,13 +60,4 @@ public abstract class Dao {
         }
     }
 
-    protected <T> List<T> getList(Class<T> table, int from, int count) {
-        return useSession(session -> {
-            Query<?> q = session.createQuery("from " + table.getSimpleName());
-            q.setFirstResult(from);
-            q.setMaxResults(count);
-            return (List<T>) q.list();
-        });
-    }
-
 }

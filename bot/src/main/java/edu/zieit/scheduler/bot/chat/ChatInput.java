@@ -5,23 +5,17 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class ChatInput {
 
     private final ChatSession session;
-    private final ChatManager manager;
     private final Update update;
     private final String chatId;
 
-    public ChatInput(String chatId, ChatSession session, ChatManager manager, Update update) {
+    public ChatInput(String chatId, ChatSession session, Update update) {
         this.session = session;
-        this.manager = manager;
         this.update = update;
         this.chatId = chatId;
     }
 
     public ChatSession getSession() {
         return session;
-    }
-
-    public ChatManager getManager() {
-        return manager;
     }
 
     public Update getUpdate() {

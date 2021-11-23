@@ -16,10 +16,6 @@ public class GroupSubsDao extends Dao {
         return findValue(SubscriptionGroup.class, tgId);
     }
 
-    public Collection<SubscriptionGroup> getWithLimit(int from, int count) {
-        return getList(SubscriptionGroup.class, from, count);
-    }
-
     public void save(SubscriptionGroup sub) {
         withSession(session -> session.saveOrUpdate(sub));
     }

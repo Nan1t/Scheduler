@@ -64,7 +64,6 @@ public final class Scheduler {
 
         SubsService subsService = new SubsService(teacherDao, coursesDao, pointsDao, noticesDao, groupsDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
-        timer = new TimerService(scheduleConf, bot, scheduleService, subsService);
 
         logger.info("Loading schedule ...");
         scheduleService.reloadAll();
@@ -76,6 +75,7 @@ public final class Scheduler {
         logger.info("Starting long polling bot ...");
         botsApi.registerBot(bot);
 
+        timer = new TimerService(scheduleConf, bot, scheduleService, subsService);
         timer.start();
         logger.info("Started timer");
 

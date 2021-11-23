@@ -26,6 +26,9 @@ public class SubscriptionTeacher implements Serializable {
     })
     private Person teacher;
 
+    @Column(name = "received_mailing")
+    private boolean receivedMailing = true;
+
     public String getTelegramId() {
         return telegramId;
     }
@@ -40,5 +43,13 @@ public class SubscriptionTeacher implements Serializable {
 
     public void setTeacher(Person teacher) {
         this.teacher = teacher;
+    }
+
+    public boolean isReceivedMailing() {
+        return receivedMailing;
+    }
+
+    public void setReceivedMailing(boolean receivedMailing) {
+        this.receivedMailing = receivedMailing;
     }
 }

@@ -11,6 +11,11 @@ teachers.render.notfound: "Не знайдено. Пошук у: %s"
 
 consult.head.time: "Час консулт."
 
+mailing.teacher: "З'явився новий розклад зайнятості"
+mailing.course: "З'явився новий розклад курсу"
+mailing.group: "З'явився новий розклад групи"
+mailing.consult: "З'явився новий розклад консультацій"
+
 cmd.unsupported: "Невірний формат запиту. Для допомоги по командам, введіть /help"
 
 cmd.teacher.list: "Оберіть викладача"

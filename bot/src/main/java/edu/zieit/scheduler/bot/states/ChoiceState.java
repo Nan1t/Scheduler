@@ -11,7 +11,10 @@ import java.util.*;
 
 public abstract class ChoiceState extends State {
 
+    private static final String SEPARATOR = "\00";
+
     protected final Language lang;
+
     private final String prevPageText;
     private final String nextPageText;
     private final String firstPageText;
@@ -25,8 +28,6 @@ public abstract class ChoiceState extends State {
         firstPageText = lang.of("choice.first");
         lastPageText = lang.of("choice.last");
     }
-
-    private static final String SEPARATOR = "\00";
 
     protected abstract int elemOnPage();
 

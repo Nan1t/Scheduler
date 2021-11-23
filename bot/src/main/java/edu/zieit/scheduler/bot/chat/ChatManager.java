@@ -17,9 +17,7 @@ import edu.zieit.scheduler.bot.states.teacher.*;
 import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +60,7 @@ public class ChatManager {
         if (chatId == null) return;
 
         ChatSession session = getOrCreateSession(chatId);
-        ChatInput input = new ChatInput(chatId, session, this, update);
+        ChatInput input = new ChatInput(chatId, session, update);
 
         if (update.hasMessage()) {
             session.resetLastMsgId();

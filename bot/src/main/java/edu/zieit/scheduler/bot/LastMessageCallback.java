@@ -16,7 +16,8 @@ public record LastMessageCallback(ChatSession session)
 
     @Override
     public void onResult(BotApiMethod<Message> botApiMethod, Message message) {
-        session.setLastMsgId(message.getMessageId());
+        if (session != null)
+            session.setLastMsgId(message.getMessageId());
     }
 
     @Override

@@ -16,10 +16,6 @@ public class CourseSubsDao extends Dao {
         return findValue(SubscriptionCourse.class, tgId);
     }
 
-    public Collection<SubscriptionCourse> getWithLimit(int from, int count) {
-        return getList(SubscriptionCourse.class, from, count);
-    }
-
     public void save(SubscriptionCourse sub) {
         withSession(session -> session.saveOrUpdate(sub));
     }

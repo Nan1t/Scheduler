@@ -32,8 +32,8 @@ public final class SubsService {
         return teacherDao.find(chatId);
     }
 
-    public Collection<SubscriptionTeacher> getTeacherSubs(int from, int count) {
-        return teacherDao.getWithLimit(from, count);
+    public Collection<SubscriptionTeacher> getNotMailedTeacherSubs() {
+        return teacherDao.findNotMailed(30);
     }
 
     public void subscribeTeacher(String chatId, Person teacher) {
@@ -45,6 +45,14 @@ public final class SubsService {
 
     public boolean unsubscribeTeacher(String chatId) {
         return teacherDao.delete(chatId);
+    }
+
+    public void resetTeacherMailing() {
+        teacherDao.resetMailing();
+    }
+
+    public void saveTeacherSubs(Collection<SubscriptionTeacher> subs) {
+        teacherDao.save(subs);
     }
 
     public boolean toggleNotices(String chatId) {

@@ -88,6 +88,10 @@ public class SchedulerBot extends TelegramLongPollingBot {
         sendQueue.offer(new SendMethod(session, method));
     }
 
+    public void send(Object method) {
+        send(null, method);
+    }
+
     public void sendMessage(ChatSession session, String msg) {
         send(session, SendMessage.builder()
                 .chatId(session.getChatId())
