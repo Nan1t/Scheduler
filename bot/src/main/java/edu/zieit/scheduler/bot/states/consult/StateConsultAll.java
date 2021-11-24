@@ -27,7 +27,7 @@ public class StateConsultAll extends State {
 
     @Override
     public InputResult input(ChatInput input, ChatSession session) {
-        return null;
+        return InputResult.WRONG;
     }
 
 }

@@ -1,20 +1,23 @@
 package edu.zieit.scheduler.services;
 
+import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.config.ScheduleConfig;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionConsult;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionGroup;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
+import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.FilenameUtil;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -57,7 +60,20 @@ public final class TimerService {
         Collection<Schedule> reloaded = scheduleService.reloadCourseSchedule();
 
         if (!reloaded.isEmpty()) {
-            // TODO reset who subscribed on these schedule
+            List<NamespacedKey> keys = reloaded.stream()
+                    .map(Schedule::getKey)
+                    .toList();
+
+            Set<String> groups = new HashSet<>();
+
+            for (Schedule schedule : reloaded) {
+                if (schedule instanceof CourseSchedule course) {
+                    groups.addAll(course.getGroupNames());
+                }
+            }
+
+            subsService.resetCourseMailing(keys);
+            subsService.resetGroupMailing(groups);
         }
 
         if (scheduleService.reloadTeacherSchedule()) {
@@ -65,39 +81,92 @@ public final class TimerService {
         }
 
         if (scheduleService.reloadConsultSchedule()) {
-            // TODO reset consult mailing status
+            subsService.resetConsultMailing();
         }
     }
 
     private void mailSubscribers() {
         sendTeachers();
+        sendCourses();
+        sendGroups();
+        sendConsult();
     }
 
     private void sendTeachers() {
         Collection<SubscriptionTeacher> notMailed = subsService.getNotMailedTeacherSubs();
-        List<SubscriptionTeacher> updated = new LinkedList<>();
 
         for (SubscriptionTeacher sub : notMailed) {
             ScheduleRenderer renderer = scheduleService.getTeacherSchedule()
                     .getPersonalRenderer(sub.getTeacher(), scheduleService);
 
-            send(sub.getTelegramId(), renderer,
+            sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
                     bot.getLang().of("mailing.teacher"));
 
             sub.setReceivedMailing(true);
-            updated.add(sub);
         }
 
-        if (updated.size() > 0)
-            subsService.saveTeacherSubs(updated);
+        subsService.updateTeacherSubs(notMailed);
     }
 
-    private void send(String tgId, ScheduleRenderer renderer, String message) {
-        InputStream img = new ByteArrayInputStream(renderer.renderBytes());
+    private void sendCourses() {
+        Collection<SubscriptionCourse> notMailed = subsService.getNotMailedCourseSubs();
+
+        for (SubscriptionCourse sub : notMailed) {
+            Schedule schedule = scheduleService.getCourseSchedule(sub.getScheduleKey());
+
+            if (schedule != null) {
+                sendPhoto(sub.getTelegramId(), schedule.toImage(),
+                        bot.getLang().of("mailing.course"));
+            }
+
+            sub.setReceivedMailing(true);
+        }
+
+        subsService.updateCourseSubs(notMailed);
+    }
+
+    private void sendGroups() {
+        Collection<SubscriptionGroup> notMailed = subsService.getNotMailedGroupSubs();
+
+        for (SubscriptionGroup sub : notMailed) {
+            Optional<Schedule> schedule = scheduleService.getCourseByGroup(sub.getGroupName());
+
+            if (schedule.isPresent()) {
+                ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroupName(), scheduleService);
+
+                sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                        bot.getLang().of("mailing.group"));
+            }
+
+            sub.setReceivedMailing(true);
+        }
+
+        subsService.updateGroupSubs(notMailed);
+    }
+
+    private void sendConsult() {
+        Collection<SubscriptionConsult> notMailed = subsService.getNotMailedConsultSubs();
+
+        for (SubscriptionConsult sub : notMailed) {
+            ScheduleRenderer renderer = scheduleService.getConsultSchedule()
+                    .getPersonalRenderer(sub.getTeacher(), scheduleService);
+
+            sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                    bot.getLang().of("mailing.consult"));
+
+            sub.setReceivedMailing(true);
+        }
+
+        subsService.updateConsultSubs(notMailed);
+    }
+
+    private void sendPhoto(String tgId, byte[] bytes, String message) {
+        InputStream img = new ByteArrayInputStream(bytes);
+        String filename = FilenameUtil.getNameWithExt(scheduleService, "photo");
 
         bot.send(SendPhoto.builder()
                 .chatId(tgId)
-                .photo(new InputFile(img, FilenameUtil.getNameWithExt(scheduleService, "photo")))
+                .photo(new InputFile(img, filename))
                 .caption(message)
                 .build());
     }

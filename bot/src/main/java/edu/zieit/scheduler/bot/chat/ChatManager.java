@@ -1,9 +1,13 @@
 package edu.zieit.scheduler.bot.chat;
 
 import edu.zieit.scheduler.bot.SchedulerBot;
+import edu.zieit.scheduler.bot.states.StateDenyAll;
 import edu.zieit.scheduler.bot.states.StateHelp;
+import edu.zieit.scheduler.bot.states.aud.StateAudList;
+import edu.zieit.scheduler.bot.states.aud.StateAudShow;
 import edu.zieit.scheduler.bot.states.consult.StateConsult;
 import edu.zieit.scheduler.bot.states.consult.StateConsultAll;
+import edu.zieit.scheduler.bot.states.consult.StateConsultDeny;
 import edu.zieit.scheduler.bot.states.consult.StateConsultShow;
 import edu.zieit.scheduler.bot.states.course.StateCourse;
 import edu.zieit.scheduler.bot.states.course.StateCourseDeny;
@@ -105,7 +109,7 @@ public class ChatManager {
             }
         }
 
-        bot.sendMessage(session, "Invalid request");
+        bot.sendMessage(session, bot.getLang().of("cmd.unsupported"));
     }
 
     public void shutdownThreads() {
@@ -148,8 +152,14 @@ public class ChatManager {
         registerState(new StateGroupDeny(), "groupdeny");
         registerState(new StateGroup(), "group");
 
+        registerState(new StateTeacherList(bot.getLang(), new StateConsultShow(true)), "consultsub");
+        registerState(new StateTeacherList(bot.getLang(), new StateConsultShow(false)), "consultshow");
+        registerState(new StateConsultDeny(), "consultdeny");
         registerState(new StateConsultAll(), "consall");
         registerState(new StateConsult(), "consult");
-        registerState(new StateTeacherList(bot.getLang(), new StateConsultShow()), "consultshow");
+
+        registerState(new StateAudList(bot.getLang(), new StateAudShow()), "aud");
+
+        registerState(new StateDenyAll(), "denyall");
     }
 }

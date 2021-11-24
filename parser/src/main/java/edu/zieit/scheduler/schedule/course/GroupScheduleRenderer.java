@@ -73,7 +73,7 @@ public class GroupScheduleRenderer extends AbstractScheduleRenderer {
 
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 3));
 
-        nameCell.setCellValue(group.toUpperCase());
+        nameCell.setCellValue(group);
         dayTitleCell.setCellValue(lang.of("schedule.render.head.days"));
         classNumTitleCell.setCellValue(lang.of("schedule.render.head.classnum"));
         classTimeTitleCell.setCellValue(lang.of("schedule.render.head.classtime"));

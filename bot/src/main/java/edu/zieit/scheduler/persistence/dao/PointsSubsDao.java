@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.persistence.dao;
 
+import edu.zieit.scheduler.persistence.Dao;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
 import org.hibernate.SessionFactory;
 

@@ -6,7 +6,7 @@ import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.chat.InputResult;
 import edu.zieit.scheduler.bot.chat.State;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionConsult;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;
@@ -19,7 +19,7 @@ public class StateConsult extends State {
     @Override
     public void activate(ChatSession session) {
         SubsService subsService = session.getBot().getSubsService();
-        SubscriptionTeacher subs = subsService.getTeacherSubs(session.getChatId());
+        SubscriptionConsult subs = subsService.getConsultSubs(session.getChatId());
 
         if (subs != null) {
             ScheduleService service = session.getChatManager().getBot().getScheduleService();
@@ -30,13 +30,13 @@ public class StateConsult extends State {
             session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
         } else {
-            session.getBot().sendMessage(session, session.getLang().of("cmd.teacher.nosubs"));
+            session.getBot().sendMessage(session, session.getLang().of("cmd.consult.nosubs"));
         }
     }
 
     @Override
     public InputResult input(ChatInput input, ChatSession session) {
-        return null;
+        return InputResult.WRONG;
     }
 
 }

@@ -214,9 +214,12 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
         for (int col = range.getFirstColumn(); col <= range.getLastColumn(); col++) {
             Cell cell = getCell(sheet, info.getGroupPoint().row(), col);
             String group = ExcelUtil.getCellValue(cell);
-            groups.add(group);
+            groups.add(clearGroup(group));
         }
         return groups;
     }
 
+    private String clearGroup(String group) {
+        return group.replace(" ", "").toUpperCase();
+    }
 }

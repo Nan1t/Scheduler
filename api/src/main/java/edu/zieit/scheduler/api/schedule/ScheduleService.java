@@ -5,6 +5,7 @@ import edu.zieit.scheduler.api.render.SheetRenderer;
 import napi.configurate.yaml.lang.Language;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 public interface ScheduleService {
@@ -35,6 +36,12 @@ public interface ScheduleService {
      * @return Collections of group names
      */
     Collection<String> getGroups();
+
+    /**
+     * Get collection of all classrooms parsed from courses schedule
+     * @return Collection of classrooms
+     */
+    Collection<String> getClassrooms();
 
     /**
      * Get course schedule by group name

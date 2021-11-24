@@ -15,6 +15,12 @@ import java.io.InputStream;
 
 public class StateConsultShow extends State {
 
+    private final boolean saveSubs;
+
+    public StateConsultShow(boolean saveSubs) {
+        this.saveSubs = saveSubs;
+    }
+
     @Override
     public void activate(ChatSession session) {
         Person person = Person.teacher(session.getString("teacher"));
@@ -23,10 +29,17 @@ public class StateConsultShow extends State {
             ScheduleService service = session.getChatManager().getBot().getScheduleService();
             ScheduleRenderer renderer = service.getConsultSchedule().getPersonalRenderer(person, service);
             InputStream img = new ByteArrayInputStream(renderer.renderBytes());
-            String caption = String.format(session.getLang().of("cmd.consult.caption"), person);
+            String caption = saveSubs
+                    ? String.format(session.getLang().of("cmd.consult.subscribed"), person)
+                    : String.format(session.getLang().of("cmd.consult.caption"), person);
 
             session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
+
+            if (saveSubs) {
+                session.getBot().getSubsService()
+                        .subscribeConsult(session.getChatId(), person);
+            }
         }
     }
 

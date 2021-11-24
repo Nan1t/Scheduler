@@ -8,10 +8,7 @@ import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionGroup;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
+import edu.zieit.scheduler.persistence.subscription.*;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
@@ -56,13 +53,14 @@ public final class Scheduler {
         initHibernate(conf);
 
         TeacherSubsDao teacherDao = new TeacherSubsDao(sessionFactory);
+        ConsultSubsDao consultDao = new ConsultSubsDao(sessionFactory);
         CourseSubsDao coursesDao = new CourseSubsDao(sessionFactory);
         GroupSubsDao groupsDao = new GroupSubsDao(sessionFactory);
         PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
         NoticesDao noticesDao = new NoticesDao(sessionFactory);
         HashesDao hashesDao = new HashesDao(sessionFactory);
 
-        SubsService subsService = new SubsService(teacherDao, coursesDao, pointsDao, noticesDao, groupsDao);
+        SubsService subsService = new SubsService(teacherDao, consultDao, coursesDao, pointsDao, noticesDao, groupsDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
 
         logger.info("Loading schedule ...");
@@ -101,6 +99,7 @@ public final class Scheduler {
 
         configuration.addAnnotatedClass(SubscriptionPoints.class);
         configuration.addAnnotatedClass(SubscriptionTeacher.class);
+        configuration.addAnnotatedClass(SubscriptionConsult.class);
         configuration.addAnnotatedClass(SubscriptionCourse.class);
         configuration.addAnnotatedClass(SubscriptionGroup.class);
         configuration.addAnnotatedClass(ScheduleHash.class);

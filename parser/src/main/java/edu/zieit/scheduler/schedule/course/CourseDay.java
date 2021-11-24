@@ -66,7 +66,7 @@ public class CourseDay {
     public Optional<CourseClass> getGroupClass(int classIndex, String group) {
         return getClasses(classIndex)
                 .stream()
-                .filter(cl -> cl.getGroups().stream().anyMatch(group::equalsIgnoreCase))
+                .filter(cl -> cl.getGroups().stream().anyMatch(group::equals))
                 .findFirst();
     }
 

@@ -20,6 +20,7 @@ public class CourseSchedule extends AbstractSchedule {
     private final CourseScheduleInfo info;
     private final List<CourseDay> days;
     private final Map<String, Collection<CourseDay>> daysByGroup;
+    private final Map<String, Collection<CourseDay>> daysByClassroom;
 
     private String displayName;
     private Collection<Schedule> fileGroup;
@@ -30,8 +31,11 @@ public class CourseSchedule extends AbstractSchedule {
         this.info = info;
         this.days = days;
         this.daysByGroup = new HashMap<>();
+        this.daysByClassroom = new HashMap<>();
 
         remapByGroup();
+        remapByClassroom();
+
         setDisplayName(info.getDisplayName());
     }
 
@@ -71,12 +75,23 @@ public class CourseSchedule extends AbstractSchedule {
     }
 
     public Collection<CourseDay> getGroupDays(String group) {
-        return daysByGroup.getOrDefault(group.toLowerCase(), Collections.emptyList());
+        return daysByGroup.getOrDefault(group, Collections.emptyList());
     }
 
     public void addGroupDay(String group, CourseDay day) {
-        daysByGroup.computeIfAbsent(group.toLowerCase(),
-                g -> new LinkedHashSet<>()).add(day);
+        daysByGroup.computeIfAbsent(group, g -> new LinkedHashSet<>()).add(day);
+    }
+
+    public Collection<String> getClassrooms() {
+        return daysByClassroom.keySet();
+    }
+
+    public Collection<CourseDay> getClassroomDays(String classroom) {
+        return daysByClassroom.getOrDefault(classroom, Collections.emptyList());
+    }
+
+    public void addClassroomDay(String classroom, CourseDay day) {
+        daysByClassroom.computeIfAbsent(classroom, c -> new LinkedHashSet<>()).add(day);
     }
 
     @Override
@@ -106,8 +121,19 @@ public class CourseSchedule extends AbstractSchedule {
         for (CourseDay day : days) {
             for (CourseClass cl : day.getAllClasses()) {
                 for (String group : cl.getGroups()) {
-                    addGroupDay(group.replace(" ", ""), day);
+                    addGroupDay(group, day);
                 }
+            }
+        }
+    }
+
+    private void remapByClassroom() {
+        for (CourseDay day : days) {
+            for (CourseClass cl : day.getAllClasses()) {
+                String classroom = cl.getClassroom().replace(" ", "");
+
+                if (!classroom.isEmpty())
+                    addClassroomDay(classroom, day);
             }
         }
     }

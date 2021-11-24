@@ -94,7 +94,7 @@ public class ConsultScheduleRenderer implements ScheduleRenderer {
 
         teacherNameCell.setCellValue(teacher.toString());
         dayTitleCell.setCellValue(lang.of("schedule.render.head.days"));
-        timeTitleCell.setCellValue(lang.of("consult.head.time"));
+        timeTitleCell.setCellValue(lang.of("consult.render.head.time"));
 
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 1));
 

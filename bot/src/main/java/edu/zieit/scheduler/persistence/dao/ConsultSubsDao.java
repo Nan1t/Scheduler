@@ -1,38 +1,39 @@
 package edu.zieit.scheduler.persistence.dao;
 
 import edu.zieit.scheduler.persistence.Dao;
+import edu.zieit.scheduler.persistence.subscription.SubscriptionConsult;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import java.util.Collection;
 
-public class TeacherSubsDao extends Dao {
+public class ConsultSubsDao extends Dao {
 
-    public TeacherSubsDao(SessionFactory factory) {
+    public ConsultSubsDao(SessionFactory factory) {
         super(factory);
     }
 
-    public SubscriptionTeacher find(String tgId) {
+    public SubscriptionConsult find(String tgId) {
         return findValue(SubscriptionTeacher.class, tgId);
     }
 
-    public Collection<SubscriptionTeacher> findNotMailed(int limit) {
+    public Collection<SubscriptionConsult> findNotMailed(int limit) {
         return useSession(session -> {
-            Query<?> q = session.createQuery("from SubscriptionTeacher where received_mailing = false");
+            Query<?> q = session.createQuery("from SubscriptionConsult where received_mailing = false");
             q.setMaxResults(limit);
-            return (Collection<SubscriptionTeacher>) q.list();
+            return (Collection<SubscriptionConsult>) q.list();
         });
     }
 
-    public void save(SubscriptionTeacher sub) {
+    public void save(SubscriptionConsult sub) {
         withSession(session -> session.saveOrUpdate(sub));
     }
 
-    public void update(Collection<SubscriptionTeacher> subs) {
+    public void update(Collection<SubscriptionConsult> subs) {
         withSession(session -> {
             int i = 0;
-            for (SubscriptionTeacher sub : subs) {
+            for (SubscriptionConsult sub : subs) {
                 session.update(sub);
 
                 if (i % 50 == 0) {
@@ -46,12 +47,12 @@ public class TeacherSubsDao extends Dao {
     }
 
     public void resetMailing() {
-        withSession(session -> session.createQuery("update SubscriptionTeacher set received_mailing = false")
+        withSession(session -> session.createQuery("update SubscriptionConsult set received_mailing = false")
                 .executeUpdate());
     }
 
     public boolean delete(String tgId) {
-        int res = execUpdate("delete from SubscriptionTeacher where tg_id = :tg_id", q -> q.setParameter("tg_id", tgId));
+        int res = execUpdate("delete from SubscriptionConsult where tg_id = :tg_id", q -> q.setParameter("tg_id", tgId));
         return res > 0;
     }
 

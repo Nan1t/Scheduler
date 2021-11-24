@@ -1,7 +1,8 @@
-package edu.zieit.scheduler.persistence.dao;
+package edu.zieit.scheduler.persistence;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.io.Serializable;
@@ -24,9 +25,9 @@ public abstract class Dao {
      */
     protected void withSession(Consumer<Session> consumer) {
         try (Session session = factory.openSession()) {
-            session.beginTransaction();
+            Transaction t = session.beginTransaction();
             consumer.accept(session);
-            session.getTransaction().commit();
+            t.commit();
         }
     }
 
