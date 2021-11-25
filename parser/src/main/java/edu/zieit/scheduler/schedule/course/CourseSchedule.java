@@ -22,7 +22,7 @@ public class CourseSchedule extends AbstractSchedule {
     private final Map<String, Collection<CourseDay>> daysByGroup;
 
     private String displayName;
-    private Collection<Schedule> fileGroup;
+    private Collection<CourseSchedule> fileGroup;
 
     public CourseSchedule(CourseScheduleInfo info, NamespacedKey key, Sheet sheet, SheetRenderer sheetRenderer,
                           Map<Integer, CourseDay> days) {
@@ -52,12 +52,17 @@ public class CourseSchedule extends AbstractSchedule {
         return Optional.ofNullable(days.get(index));
     }
 
-    public Collection<Schedule> getFileGroup() {
+    public Collection<CourseSchedule> getFileGroup() {
         return fileGroup != null ? fileGroup : Collections.emptyList();
     }
 
     public void setFileGroup(Collection<Schedule> group) {
-        this.fileGroup = group;
+        if (this.fileGroup == null)
+            fileGroup = new LinkedList<>();
+
+        for (Schedule member : group) {
+            fileGroup.add((CourseSchedule) member);
+        }
     }
 
     public boolean hasFileGroup() {

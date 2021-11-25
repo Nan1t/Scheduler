@@ -36,15 +36,15 @@ public record NamespacedKey(String namespace, String key) implements Serializabl
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o instanceof NamespacedKey key) {
-            return this.namespace.equals(key.namespace)
-                    && this.key.equals(key.key);
+            return this.namespace.equalsIgnoreCase(key.namespace)
+                    && this.key.equalsIgnoreCase(key.key);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(namespace, key);
+        return Objects.hash(namespace.toLowerCase(), key.toLowerCase());
     }
 
     /**

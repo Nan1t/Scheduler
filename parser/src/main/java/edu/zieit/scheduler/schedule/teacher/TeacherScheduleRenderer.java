@@ -4,6 +4,7 @@ import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
+import edu.zieit.scheduler.schedule.AbstractSchedule;
 import edu.zieit.scheduler.schedule.AbstractScheduleRenderer;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.schedule.course.CourseClass;
@@ -150,18 +151,13 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         Set<String> classrooms = new HashSet<>();
 
         for (CourseSchedule schedule : courseSchedules) {
-            int dayIndex = TimeTable.getDayIndex(teacherDay.getName());
-            Optional<CourseDay> day = schedule.getDay(dayIndex);
+            Collection<CourseClass> classes = findClasses(schedule, teacherDay, classNum, person, true);
 
-            if (day.isPresent()) {
-                Collection<CourseClass> classes = day.get().getClasses(classNum, person);
-
-                for (CourseClass cl : classes) {
-                    names.add(cl.getName());
-                    types.add(cl.getType());
-                    groupsSet.addAll(cl.getGroups());
-                    classrooms.add(cl.getClassroom());
-                }
+            for (CourseClass cl : classes) {
+                names.add(cl.getName());
+                types.add(cl.getType());
+                groupsSet.addAll(cl.getGroups());
+                classrooms.add(cl.getClassroom());
             }
         }
 
@@ -199,6 +195,34 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         RegionUtil.setBorderRight(BorderStyle.THIN, ExcelUtil.getCellRange(groupsCell), sheet);
         RegionUtil.setBorderRight(BorderStyle.THIN, ExcelUtil.getCellRange(classroomCell), sheet);
         RegionUtil.setBorderBottom(BorderStyle.THIN, ExcelUtil.getCellRange(classroomCell), sheet);
+    }
+
+    private Collection<CourseClass> findClasses(CourseSchedule schedule, TeacherDay day,
+                                                int classNum, Person teacher, boolean retAlternate) {
+        int dayIndex = TimeTable.getDayIndex(day.getName());
+        Optional<CourseDay> dayOpt = schedule.getDay(dayIndex);
+
+        if (dayOpt.isPresent()) {
+            Collection<CourseClass> classes = dayOpt.get().getClasses(classNum, person);
+
+            if (!classes.isEmpty())
+                return classes;
+        }
+
+        return retAlternate
+                ? getAlternateClasses(schedule, day, classNum, teacher)
+                : Collections.emptyList();
+    }
+
+    private Collection<CourseClass> getAlternateClasses(CourseSchedule schedule, TeacherDay day, int classNum, Person teacher) {
+        for (CourseSchedule member : schedule.getFileGroup()) {
+            Collection<CourseClass> classes = findClasses(member, day, classNum, teacher, false);
+
+            if (!classes.isEmpty())
+                return classes;
+        }
+
+        return Collections.emptyList();
     }
 
     private Collection<CourseSchedule> getScheduleByCourses(TeacherClass teacherClass) {
