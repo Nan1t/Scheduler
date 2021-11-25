@@ -5,7 +5,6 @@ import edu.zieit.scheduler.api.render.SheetRenderer;
 import napi.configurate.yaml.lang.Language;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 public interface ScheduleService {
@@ -19,17 +18,17 @@ public interface ScheduleService {
     SheetRenderer renderer();
 
     /**
+     * Get all loaded courses schedule
+     * @return Collection of schedule
+     */
+    Collection<Schedule> getCoursesSchedule();
+
+    /**
      * Get students schedule by key
      * @param key Unique schedule key
      * @return Schedule instance or null if not found
      */
     Schedule getCourseSchedule(NamespacedKey key);
-
-    /**
-     * Get all loaded students's schedule
-     * @return Collection of schedule
-     */
-    Collection<Schedule> getCoursesSchedule();
 
     /**
      * Get collection of all groups parsed from courses schedule
@@ -38,17 +37,24 @@ public interface ScheduleService {
     Collection<String> getGroups();
 
     /**
+     * Get course schedule by group name
+     * @param group Group name
+     * @return Found schedule or Optional.EMPTY if not found
+     */
+    Optional<Schedule> getCourseByGroup(String group);
+
+    /**
      * Get collection of all classrooms parsed from courses schedule
      * @return Collection of classrooms
      */
     Collection<String> getClassrooms();
 
     /**
-     * Get course schedule by group name
-     * @param group Group name
-     * @return Found schedule or Optional.EMPTY of not found
+     * Get classroom schedule
+     * @param classroom Classroom name
+     * @return Schedule or Optional.EMPTY if not found
      */
-    Optional<Schedule> getCourseByGroup(String group);
+    Optional<Schedule> getClassroomSchedule(String classroom);
 
     /**
      * Get teachers schedule

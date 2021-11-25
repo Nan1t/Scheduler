@@ -114,7 +114,7 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         for (var entry : teacherDay.getClasses().entrySet()) {
             int classNum = entry.getKey();
             TeacherClass teacherClass = entry.getValue();
-            drawClass(sheet, dayCell, teacherDay, teacherClass, classNum, classRow);
+            drawClass(sheet, teacherDay, teacherClass, classNum, classRow);
             classRow += 4;
         }
 
@@ -129,7 +129,7 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         return classRow;
     }
 
-    private void drawClass(Sheet sheet, Cell dayCell, TeacherDay teacherDay, TeacherClass teacherClass, int classNum, int classRow) {
+    private void drawClass(Sheet sheet, TeacherDay teacherDay, TeacherClass teacherClass, int classNum, int classRow) {
         Collection<CourseSchedule> courseSchedules = getScheduleByCourses(teacherClass);
 
         Cell classNumCell = getOrCreateCell(sheet, classRow, 1);
@@ -150,7 +150,8 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         Set<String> classrooms = new HashSet<>();
 
         for (CourseSchedule schedule : courseSchedules) {
-            Optional<CourseDay> day = schedule.getDay(teacherDay.getName());
+            int dayIndex = TimeTable.getDayIndex(teacherDay.getName());
+            Optional<CourseDay> day = schedule.getDay(dayIndex);
 
             if (day.isPresent()) {
                 Collection<CourseClass> classes = day.get().getClasses(classNum, person);
@@ -187,7 +188,6 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         }
 
         centerCell(titleCell);
-        //centerCell(dayCell);
         centerCell(classNumCell);
         centerCell(classTimeCell);
 

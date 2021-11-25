@@ -1,15 +1,23 @@
 package edu.zieit.scheduler.schedule.teacher;
 
+import edu.zieit.scheduler.schedule.TimeTable;
+
 import java.util.*;
 
 public class TeacherDay {
 
+    private final int index;
     private final String name;
     private final Map<Integer, TeacherClass> classes;
 
-    public TeacherDay(String name, Map<Integer, TeacherClass> classes) {
+    public TeacherDay(String name) {
+        this.index = TimeTable.getDayIndex(name);
         this.name = name;
-        this.classes = classes;
+        this.classes = new HashMap<>();
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public String getName() {
@@ -18,6 +26,10 @@ public class TeacherDay {
 
     public Map<Integer, TeacherClass> getClasses() {
         return classes;
+    }
+
+    public void addClass(int classNum, TeacherClass cl) {
+        this.classes.putIfAbsent(classNum, cl);
     }
 
     public boolean isEmpty() {
@@ -30,34 +42,5 @@ public class TeacherDay {
                 "name='" + name + '\'' +
                 ", classes=" + classes +
                 '}';
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-
-        private String name;
-        private final Map<Integer, TeacherClass> classes;
-
-        private Builder() {
-            this.classes = new HashMap<>();
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder addCourses(int classNumber, TeacherClass teacherClass) {
-            this.classes.putIfAbsent(classNumber, teacherClass);
-            return this;
-        }
-
-        public TeacherDay build() {
-            return new TeacherDay(name, classes);
-        }
-
     }
 }

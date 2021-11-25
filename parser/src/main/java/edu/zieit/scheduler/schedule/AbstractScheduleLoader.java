@@ -30,7 +30,6 @@ public abstract class AbstractScheduleLoader implements ScheduleLoader {
                 workbook = new HSSFWorkbook(in);
             }
 
-            //return WorkbookFactory.create(in);
             return workbook;
         } catch (IOException e) {
             throw new ScheduleParseException("Cannot load " + info.getUrl().toString(), e);

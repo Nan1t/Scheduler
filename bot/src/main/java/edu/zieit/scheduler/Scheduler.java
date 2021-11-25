@@ -9,6 +9,7 @@ import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
 import edu.zieit.scheduler.persistence.subscription.*;
+import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
@@ -49,6 +50,8 @@ public final class Scheduler {
 
         Person.REGEX_TEACHER = conf.getRegexTeacherDefault();
         Person.REGEX_TEACHER_INLINE = conf.getRegexTeacherInline();
+
+        TimeTable.setDayIndexes(scheduleConf.getDayIndexes());
 
         initHibernate(conf);
 

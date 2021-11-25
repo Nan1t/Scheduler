@@ -25,6 +25,12 @@ public abstract class AbstractSchedule implements Schedule {
         this.documentImg = renderer.renderBytes(sheet);
     }
 
+    public AbstractSchedule(SheetRenderer renderer) {
+        this.key = null;
+        this.documentImg = null;
+        this.renderer = renderer;
+    }
+
     @Override
     public NamespacedKey getKey() {
         return key;

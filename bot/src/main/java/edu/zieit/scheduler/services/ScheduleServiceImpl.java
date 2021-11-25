@@ -10,10 +10,10 @@ import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.dao.HashesDao;
 import edu.zieit.scheduler.render.AsposeRenderer;
+import edu.zieit.scheduler.schedule.TimeTable;
+import edu.zieit.scheduler.schedule.classroom.ClassroomSchedule;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleLoader;
-import edu.zieit.scheduler.schedule.course.CourseSchedule;
-import edu.zieit.scheduler.schedule.course.CourseScheduleInfo;
-import edu.zieit.scheduler.schedule.course.CourseScheduleLoader;
+import edu.zieit.scheduler.schedule.course.*;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
 import napi.configurate.yaml.lang.Language;
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +38,7 @@ public final class ScheduleServiceImpl implements ScheduleService {
 
     private final Map<NamespacedKey, Schedule> coursesSchedule;
     private final Map<String, Schedule> courseByGroup;
+    private final Map<String, ClassroomSchedule> classroomSchedule;
 
     private List<String> groups;
     private List<String> classrooms;
@@ -60,8 +61,11 @@ public final class ScheduleServiceImpl implements ScheduleService {
 
         this.coursesSchedule = new HashMap<>();
         this.courseByGroup = new HashMap<>();
+        this.classroomSchedule = new HashMap<>();
+
         this.groups = new LinkedList<>();
         this.classrooms = new LinkedList<>();
+
         this.firstLoad = true;
     }
 
@@ -101,6 +105,11 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public Optional<Schedule> getClassroomSchedule(String classroom) {
+        return Optional.ofNullable(classroomSchedule.get(classroom));
+    }
+
+    @Override
     public Schedule getTeacherSchedule() {
         return teachersSchedule;
     }
@@ -113,33 +122,40 @@ public final class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Collection<Schedule> reloadCourseSchedule() {
         List<Schedule> updated = new LinkedList<>();
-
         Set<String> groups = new HashSet<>();
-        Set<String> classrooms = new HashSet<>();
+
+        boolean cleared = false;
 
         for (CourseScheduleInfo info : config.getCourses()) {
             ScheduleHash oldHash = hashesDao.find(info.getId());
             String newHash = HashUtil.getHash(info.getUrl());
 
             if (firstLoad || oldHash == null || !oldHash.getHash().equals(newHash)) {
-                for (Schedule schedule : coursesLoader.load(info)) {
-                    coursesSchedule.put(schedule.getKey(), schedule);
-                    updated.add(schedule);
+                if (!cleared) {
+                    coursesSchedule.clear();
+                    courseByGroup.clear();
+                    cleared = true;
+                }
 
-                    if (schedule instanceof CourseSchedule course) {
-                        for (String group : course.getGroupNames()) {
-                            courseByGroup.put(group, schedule);
-                            groups.add(group);
-                        }
-                        classrooms.addAll(course.getClassrooms());
+                for (Schedule schedule : coursesLoader.load(info)) {
+                    CourseSchedule course = (CourseSchedule) schedule;
+
+                    coursesSchedule.put(course.getKey(), course);
+                    updated.add(course);
+
+                    for (String group : course.getGroupNames()) {
+                        courseByGroup.put(group, course);
+                        groups.add(group);
                     }
 
-                    logger.info("Loaded schedule '{}'", schedule.getKey());
+                    logger.info("Loaded schedule '{}'", course.getKey());
                 }
 
                 saveHash(info.getId(), newHash);
             }
         }
+
+        firstLoad = false;
 
         if (!groups.isEmpty()) {
             this.groups = groups.stream()
@@ -147,15 +163,51 @@ public final class ScheduleServiceImpl implements ScheduleService {
                     .collect(Collectors.toList());
         }
 
-        if (!classrooms.isEmpty()) {
-            this.classrooms = classrooms.stream()
-                    .sorted(Comparator.naturalOrder())
-                    .collect(Collectors.toList());
+        if (!updated.isEmpty()) {
+            logger.info("Building classroom schedule ...");
+            buildClassroomSchedule();
+            logger.info("Classroom schedule has been built");
         }
 
-        firstLoad = false;
-
         return updated;
+    }
+
+    private void buildClassroomSchedule() {
+        classroomSchedule.clear();
+
+        Set<String> classrooms = new HashSet<>();
+
+        for (Schedule schedule : coursesSchedule.values()) {
+            CourseSchedule course = (CourseSchedule) schedule;
+
+            for (CourseDay day : course.getDays()) {
+                int dayIndex = TimeTable.getDayIndex(day.getName());
+
+                for (var classes : day.getClasses().entrySet()) {
+                    for (CourseClass cl : classes.getValue()) {
+                        if (!cl.getClassroom().isEmpty()) {
+                            ClassroomSchedule days = classroomSchedule.computeIfAbsent(cl.getClassroom(),
+                                    cr -> new ClassroomSchedule());
+
+                            CourseDay cday = days.getDays().computeIfAbsent(dayIndex, i -> {
+                                CourseDay courseDay = new CourseDay();
+                                courseDay.setName(day.getName());
+                                courseDay.setDate(day.getDate());
+                                return courseDay;
+                            });
+
+                            cday.addClass(cl.getIndex(), cl);
+
+                            classrooms.add(cl.getClassroom());
+                        }
+                    }
+                }
+            }
+        }
+
+        this.classrooms = classrooms.stream()
+                .sorted(Comparator.naturalOrder())
+                .toList();
     }
 
     @Override

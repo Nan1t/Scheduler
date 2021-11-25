@@ -58,10 +58,8 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
 
             if (range == null) continue;
 
-            var dayBuilder = TeacherDay.builder();
             String dayName = ExcelUtil.getCellValue(dayCell);
-
-            dayBuilder.name(dayName);
+            TeacherDay day = new TeacherDay(dayName);
 
             for (int col = range.getFirstColumn(); col < range.getLastColumn(); col++) {
                 Cell classNumCell = getCell(sheet, classNumRow, col);
@@ -74,13 +72,12 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
                             .map(s->s.trim().toLowerCase())
                             .collect(Collectors.toList());
 
-                    dayBuilder.addCourses(classNum, new TeacherClass(coursesRaw, courses));
+                    day.addClass(classNum, new TeacherClass(coursesRaw, courses));
                 }
             }
 
-            TeacherDay day = dayBuilder.build();
-
-            if (!day.isEmpty()) days.add(day);
+            if (!day.isEmpty())
+                days.add(day);
 
             dayCell = getCell(sheet, POINT_DAY.row(), range.getLastColumn() + 1);
         }

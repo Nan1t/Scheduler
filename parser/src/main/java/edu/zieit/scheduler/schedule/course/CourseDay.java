@@ -11,43 +11,45 @@ import java.util.stream.Collectors;
  */
 public class CourseDay {
 
-    private final String name;
-    private final String date;
+    private String name;
+    private String date;
     private final Map<Integer, List<CourseClass>> classes;
 
-    private CourseDay(String name, String date, Map<Integer, List<CourseClass>> classes) {
-        this.name = name;
-        this.date = date;
-        this.classes = classes;
+    public CourseDay() {
+        this.name = "";
+        this.date = "";
+        this.classes = new HashMap<>();
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDate() {
         return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date == null ? "" : date;
     }
 
     public Map<Integer, List<CourseClass>> getClasses() {
         return classes;
     }
 
-    /**
-     * Get classes list relevant for specified index
-     * @param classIndex Class index
-     * @return List of schedule's classes
-     */
+    public void addClass(int classIndex, CourseClass courseClass) {
+        classes.computeIfAbsent(classIndex, (e) -> new ArrayList<>())
+                .add(courseClass);
+    }
+
     public Collection<CourseClass> getClasses(int classIndex) {
         return classes.getOrDefault(classIndex, Collections.emptyList());
     }
 
-    /**
-     * Get classes list relevant for index and teacher
-     * @param classIndex Class index
-     * @param teacher Teacher person
-     * @return Collection of classes
-     */
     public Collection<CourseClass> getClasses(int classIndex, Person teacher) {
         return getClasses(classIndex)
                 .stream()
@@ -76,43 +78,6 @@ public class CourseDay {
                 "name='" + name + '\'' +
                 ", classes=" + classes +
                 '}';
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-
-        private String name;
-        private String date;
-        private final Map<Integer, List<CourseClass>> classes;
-
-        private Builder() {
-            this.classes = new HashMap<>();
-            date = "";
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder date(String date) {
-            this.date = date;
-            return this;
-        }
-
-        public Builder addClass(int classIndex, CourseClass courseClass) {
-            classes.computeIfAbsent(classIndex, (e) -> new ArrayList<>())
-                    .add(courseClass);
-            return this;
-        }
-
-        public CourseDay build() {
-            return new CourseDay(name, date, classes);
-        }
-
     }
 
 }

@@ -18,24 +18,20 @@ import java.util.stream.Collectors;
 public class CourseSchedule extends AbstractSchedule {
 
     private final CourseScheduleInfo info;
-    private final List<CourseDay> days;
+    private final Map<Integer, CourseDay> days;
     private final Map<String, Collection<CourseDay>> daysByGroup;
-    private final Map<String, Collection<CourseDay>> daysByClassroom;
 
     private String displayName;
     private Collection<Schedule> fileGroup;
 
     public CourseSchedule(CourseScheduleInfo info, NamespacedKey key, Sheet sheet, SheetRenderer sheetRenderer,
-                          List<CourseDay> days) {
+                          Map<Integer, CourseDay> days) {
         super(key, sheet, sheetRenderer);
         this.info = info;
         this.days = days;
         this.daysByGroup = new HashMap<>();
-        this.daysByClassroom = new HashMap<>();
 
         remapByGroup();
-        remapByClassroom();
-
         setDisplayName(info.getDisplayName());
     }
 
@@ -49,13 +45,11 @@ public class CourseSchedule extends AbstractSchedule {
     }
 
     public Collection<CourseDay> getDays() {
-        return days;
+        return days.values();
     }
 
-    public Optional<CourseDay> getDay(String dayName) {
-        return days.stream()
-                .filter(day -> day.getName().equalsIgnoreCase(dayName))
-                .findFirst();
+    public Optional<CourseDay> getDay(int index) {
+        return Optional.ofNullable(days.get(index));
     }
 
     public Collection<Schedule> getFileGroup() {
@@ -66,7 +60,7 @@ public class CourseSchedule extends AbstractSchedule {
         this.fileGroup = group;
     }
 
-    public boolean hasGroup() {
+    public boolean hasFileGroup() {
         return fileGroup != null && !fileGroup.isEmpty();
     }
 
@@ -80,18 +74,6 @@ public class CourseSchedule extends AbstractSchedule {
 
     public void addGroupDay(String group, CourseDay day) {
         daysByGroup.computeIfAbsent(group, g -> new LinkedHashSet<>()).add(day);
-    }
-
-    public Collection<String> getClassrooms() {
-        return daysByClassroom.keySet();
-    }
-
-    public Collection<CourseDay> getClassroomDays(String classroom) {
-        return daysByClassroom.getOrDefault(classroom, Collections.emptyList());
-    }
-
-    public void addClassroomDay(String classroom, CourseDay day) {
-        daysByClassroom.computeIfAbsent(classroom, c -> new LinkedHashSet<>()).add(day);
     }
 
     @Override
@@ -118,22 +100,11 @@ public class CourseSchedule extends AbstractSchedule {
     }
 
     private void remapByGroup() {
-        for (CourseDay day : days) {
+        for (CourseDay day : getDays()) {
             for (CourseClass cl : day.getAllClasses()) {
                 for (String group : cl.getGroups()) {
                     addGroupDay(group, day);
                 }
-            }
-        }
-    }
-
-    private void remapByClassroom() {
-        for (CourseDay day : days) {
-            for (CourseClass cl : day.getAllClasses()) {
-                String classroom = cl.getClassroom().replace(" ", "");
-
-                if (!classroom.isEmpty())
-                    addClassroomDay(classroom, day);
             }
         }
     }

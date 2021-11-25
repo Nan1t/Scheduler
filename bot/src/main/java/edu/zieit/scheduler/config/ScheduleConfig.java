@@ -10,11 +10,14 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class ScheduleConfig extends AbstractConfig {
 
     private long checkRate;
+    private Collection<String> compAuds;
+    private final Map<String, Integer> dayIndexes = new HashMap<>();
     private TeacherScheduleInfo teachers;
     private ConsultScheduleInfo consult;
     private Collection<CourseScheduleInfo> courses;
@@ -32,6 +35,7 @@ public final class ScheduleConfig extends AbstractConfig {
     @Override
     protected void load() throws ObjectMappingException {
         checkRate = conf.getNode("check_rate").getLong();
+        compAuds = conf.getNode("comp_auds").getList(TypeToken.of(String.class));
         teachers = conf.getNode("teachers").getValue(TypeToken.of(TeacherScheduleInfo.class));
         consult = conf.getNode("consult").getValue(TypeToken.of(ConsultScheduleInfo.class));
         courses = conf.getNode("courses").getList(TypeToken.of(CourseScheduleInfo.class));
@@ -41,10 +45,24 @@ public final class ScheduleConfig extends AbstractConfig {
         int renderDpi = conf.getNode("render", "dpi").getInt(150);
 
         renderOptions = new DocRenderOptions(renderFormat, renderDpi);
+
+        for (var entry : conf.getNode("day_indexes").getChildrenMap().entrySet()) {
+            String day = entry.getKey().toString();
+            int index = entry.getValue().getInt();
+            dayIndexes.put(day, index);
+        }
     }
 
     public long getCheckRate() {
         return checkRate;
+    }
+
+    public Collection<String> getCompAuds() {
+        return compAuds;
+    }
+
+    public Map<String, Integer> getDayIndexes() {
+        return dayIndexes;
     }
 
     public TeacherScheduleInfo getTeachers() {

@@ -15,10 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class CourseScheduleLoader extends AbstractScheduleLoader {
@@ -67,15 +64,16 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
     }
 
     private CourseSchedule parseSchedule(CourseScheduleInfo info, Sheet sheet) throws ScheduleParseException {
-        List<CourseDay> days = new LinkedList<>();
+        Map<Integer, CourseDay> days = new HashMap<>();
         int row = info.getDayPoint().row();
         Cell dayCell = getCell(sheet, row, info.getDayPoint().col());
 
         while (!ExcelUtil.isEmptyCell(dayCell)) {
             CellRangeAddress range = ExcelUtil.getCellRange(dayCell);
+            CourseDay day = parseDay(info, sheet, dayCell, range);
+            int dayIndex = TimeTable.getDayIndex(day.getName());
 
-            days.add(parseDay(info, sheet, dayCell, range));
-
+            days.put(dayIndex, day);
             row = range.getLastRow() + 1;
             dayCell = getCell(sheet, row, info.getDayPoint().col());
         }
@@ -92,7 +90,7 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
     }
 
     private CourseDay parseDay(CourseScheduleInfo info, Sheet sheet, Cell dayCell, CellRangeAddress range) {
-        var builder = CourseDay.builder();
+        CourseDay day = new CourseDay();
         int classNumCol = range.getLastColumn() + 1;
         int classTimeCol = classNumCol + 1;
 
@@ -108,10 +106,10 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
 
             TimeTable.addClassTime(classIndex, classTime);
 
-            Collection<CourseClass> classes = parseClasses(info, sheet, row);
+            Collection<CourseClass> classes = parseClasses(info, sheet, row, classIndex);
 
             for (CourseClass courseClass : classes) {
-                builder.addClass(classIndex, courseClass);
+                day.addClass(classIndex, courseClass);
             }
 
             row = classNumRange.getLastRow() + 1;
@@ -122,21 +120,21 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
                 .toList();
 
         try {
-            builder.name(list.get(0).strip());
+            day.setName(list.get(0).strip());
         } catch (IndexOutOfBoundsException e) {
             // Ignore
         }
 
         try {
-            builder.date(list.get(1).strip());
+            day.setDate(list.get(1).strip());
         } catch (IndexOutOfBoundsException e) {
             // Ignore
         }
 
-        return builder.build();
+        return day;
     }
 
-    private Collection<CourseClass> parseClasses(CourseScheduleInfo info, Sheet sheet, int classRow) {
+    private Collection<CourseClass> parseClasses(CourseScheduleInfo info, Sheet sheet, int classRow, int classIndex) {
         List<CourseClass> classes = new LinkedList<>();
         int col = info.getGroupPoint().col();
         Cell classCell = getCell(sheet, classRow, col);
@@ -172,34 +170,33 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
                     if (matcher.find()) {
                         String teacher = matcher.group(1);
                         String classroom = matcher.group(2);
-                        CourseClass.Builder builder = CourseClass.builder();
+                        CourseClass courseClass = new CourseClass(classIndex, name);
 
-                        builder.name(name)
-                                .type(type)
-                                .teacher(teacher)
-                                .classroom(classroom);
+                        courseClass.setType(type);
+                        courseClass.setTeacher(Person.teacher(teacher));
+                        courseClass.setClassroom(classroom);
 
-                        groups.forEach(builder::withGroup);
+                        groups.forEach(courseClass::addGroup);
 
-                        classes.add(builder.build());
+                        classes.add(courseClass);
                     }
                 }
             } else {
                 // Only one teacher
-                CourseClass.Builder builder = CourseClass.builder();
+                CourseClass courseClass = new CourseClass(classIndex, name);
                 Person teacher = Person.empty();
 
                 if (Person.REGEX_TEACHER.matcher(teacherName).find()) {
                     teacher = Person.teacher(teacherName);
                 }
 
-                builder.name(name)
-                        .type(type)
-                        .teacher(teacher)
-                        .classroom(classrooms);
+                courseClass.setType(type);
+                courseClass.setTeacher(teacher);
+                courseClass.setClassroom(classrooms);
 
-                groups.forEach(builder::withGroup);
-                classes.add(builder.build());
+                groups.forEach(courseClass::addGroup);
+
+                classes.add(courseClass);
             }
 
             col = range.getLastColumn() + 1;

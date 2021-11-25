@@ -22,12 +22,12 @@ public class StateAudShow extends State {
         String classroom = session.getString("aud");
 
         if (classroom != null) {
-            Optional<Schedule> opt = service.getCourseByGroup(group);
+            Optional<Schedule> schedule = service.getClassroomSchedule(classroom);
 
-            if (opt.isPresent()) {
-                ScheduleRenderer renderer = opt.get().getPersonalRenderer(group, service);
+            if (schedule.isPresent()) {
+                ScheduleRenderer renderer = schedule.get().getPersonalRenderer(classroom, service);
                 InputStream img = new ByteArrayInputStream(renderer.renderBytes());
-                String caption = String.format(session.getLang().of("cmd.aud.caption"), group);
+                String caption = String.format(session.getLang().of("cmd.aud.caption"), classroom);
 
                 session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
                         FilenameUtil.getNameWithExt(service, "photo"), caption));
