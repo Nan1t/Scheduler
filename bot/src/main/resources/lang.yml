@@ -6,7 +6,6 @@ schedule.render.head.days: "День"
 schedule.render.head.classnum: "№"
 schedule.render.head.classtime: "Час"
 schedule.render.head.classes: "Пари"
-teachers.render.notfound: "Не знайдено. Пошук у: %s"
 consult.render.head.time: "Час консулт."
 
 mailing.teacher: "З'явився новий розклад зайнятості"
@@ -50,6 +49,14 @@ cmd.aud.notfound: "Аудиторія не знайдена"
 
 cmd.denyall: "Ви успішно відписались від всіх видів розкладу, на які були підписані"
 
+cmd.points.caption: "Оцінки поточного семестру"
+cmd.points.error: "Помилка. Не вдалось отримати оцінки. Перевірте правильність ПІБ та паролю"
+cmd.points.login.name: "Введіть ПІБ в чат у форматі Прізвище І Б"
+cmd.points.login.name.wrong: "Введений текст не є правильним ПІБ у форматі Прізвище І Б. Спробуйте ще раз"
+cmd.points.login.password: "Тепер введіть код пропускної картки"
+cmd.points.logout.success: "Ваші дані були забуті"
+cmd.points.logout.nologin: "Ви не авторизувались для перегляду оцінок"
+
 cmd.help:
   - "Вітаю! Ось список команд, які я розумію:"
   - ""
@@ -82,7 +89,8 @@ cmd.help:
   - "/aud - Вивести зайнятість аудиторій"
   - "/audcomp - Вивести зайнятість комп'ютерних аудиторій"
   - ""
-  - "/points - Вивести оцінки поточного семестру" 
+  - "/points - Вивести оцінки поточного семестру"
+  - "/pointsdeny - Забути ваші дані для перегляду оцінок"
 
 choice.prev: "Назад"
 choice.next: "Вперед"

@@ -164,15 +164,16 @@ public final class SubsService {
         return pointsDao.find(chatId);
     }
 
-    public void subscribePoints(String chatId, Person student) {
+    public void subscribePoints(String chatId, Person student, String password) {
         SubscriptionPoints sub = new SubscriptionPoints();
         sub.setTelegramId(chatId);
         sub.setPerson(student);
+        sub.setPassword(password);
         pointsDao.save(sub);
     }
 
-    public void unsubscribePoints(String chatId) {
-        pointsDao.delete(chatId);
+    public boolean unsubscribePoints(String chatId) {
+        return pointsDao.delete(chatId);
     }
 
 }

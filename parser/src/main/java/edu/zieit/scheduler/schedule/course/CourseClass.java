@@ -1,8 +1,10 @@
 package edu.zieit.scheduler.schedule.course;
 
 import edu.zieit.scheduler.api.Person;
+import edu.zieit.scheduler.api.Regexs;
 
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * Schedule's class representation
@@ -54,7 +56,22 @@ public class CourseClass {
     }
 
     public void setClassroom(String classroom) {
-        this.classroom = classroom == null ? "" : classroom
+        String res = "";
+
+        if (classroom != null) {
+            try {
+                Matcher matcher = Regexs.CLASSROOM.matcher(classroom);
+
+
+                if (matcher.matches()) {
+                    res = matcher.group(1);
+                }
+            } catch (Exception e) {
+                // Something wrong, ignore
+            }
+        }
+
+        this.classroom = res
                 .replace(" ", "")
                 .toLowerCase();
     }

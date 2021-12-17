@@ -42,8 +42,8 @@ public class ChatSession {
     }
 
     public void updateState(State state) {
-        state.activate(this);
         this.state = state.hasNext() ? state : null;
+        state.activate(this);
     }
 
     public int getLastMsgId() {
@@ -70,6 +70,10 @@ public class ChatSession {
         return (T) getRaw(key, def);
     }
 
+    public boolean has(String key) {
+        return args.containsKey(key);
+    }
+
     public String getString(String key) {
         return getString(key, null);
     }
@@ -88,6 +92,10 @@ public class ChatSession {
 
     public void add(String key, Object value) {
         args.put(key, value);
+    }
+
+    public void reply(String message) {
+        getBot().sendMessage(this, message);
     }
 
 }

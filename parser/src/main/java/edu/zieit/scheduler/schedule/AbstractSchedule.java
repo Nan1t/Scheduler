@@ -1,7 +1,6 @@
 package edu.zieit.scheduler.schedule;
 
 import edu.zieit.scheduler.api.NamespacedKey;
-import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;

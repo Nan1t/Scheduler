@@ -27,6 +27,7 @@ public class SubscriptionPoints {
             @Column(name = "patronymic")
     })
     private Person person;
+    private String password;
 
     public String getTelegramId() {
         return telegramId;
@@ -42,5 +43,13 @@ public class SubscriptionPoints {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

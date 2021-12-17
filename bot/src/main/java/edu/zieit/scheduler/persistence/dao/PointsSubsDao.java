@@ -18,11 +18,10 @@ public class PointsSubsDao extends Dao {
         withSession(session -> session.saveOrUpdate(sub));
     }
 
-    public void delete(String tgId) {
-        withSession(session -> session.createQuery(
-                "delete from SubscriptionPoints where tg_id = :tg_id")
-                .setParameter("tg_id", tgId)
-                .executeUpdate());
+    public boolean delete(String tgId) {
+        int res = execUpdate("delete from SubscriptionPoints where tg_id = :tg_id",
+                q -> q.setParameter("tg_id", tgId));
+        return res > 0;
     }
 
 }

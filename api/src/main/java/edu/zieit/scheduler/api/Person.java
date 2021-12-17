@@ -5,16 +5,12 @@ import edu.zieit.scheduler.api.util.Levenshtein;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public record Person(String firstName, String lastName, String patronymic) implements Serializable {
 
     private static final Person EMPTY = simple(null, null, null);
 
     public static final int MAX_SIMILARITY = 1;
-
-    public static Pattern REGEX_TEACHER = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{0,32})\\s*([А-ЯЁЇІЄҐ])\\.\\s*([А-ЯЁЇІЄҐ])\\.*");
-    public static Pattern REGEX_TEACHER_INLINE = Pattern.compile("([А-ЯЁЇІЄҐ][а-яёїієґ']{1,32}\\s*[А-ЯЁЇІЄҐ]\\.\\s*[А-ЯЁЇІЄҐ]\\.*)\\s*(ауд\\..{1,3})");
 
     /**
      * Check is this person similar to another.
@@ -39,7 +35,7 @@ public record Person(String firstName, String lastName, String patronymic) imple
 
     @Override
     public String toString() {
-        return isEmpty() ? "NONE" : String.format("%s %s.%s.", lastName, firstName, patronymic);
+        return isEmpty() ? "" : String.format("%s %s.%s.", lastName, firstName, patronymic);
     }
 
     @Override
@@ -67,7 +63,7 @@ public record Person(String firstName, String lastName, String patronymic) imple
 
     public static Person teacher(String source) {
         if (source == null) return null;
-        Matcher matcher = REGEX_TEACHER.matcher(source);
+        Matcher matcher = Regexs.TEACHER.matcher(source);
         return (matcher.find()) ? new Person(matcher.group(2), matcher.group(1), matcher.group(3)) : null;
     }
 }

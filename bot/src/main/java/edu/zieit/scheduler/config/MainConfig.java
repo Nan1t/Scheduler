@@ -1,6 +1,5 @@
 package edu.zieit.scheduler.config;
 
-import napi.configurate.yaml.conf.Configuration;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
@@ -15,6 +14,12 @@ public final class MainConfig extends AbstractConfig {
 
     private Pattern regexTeacherDefault;
     private Pattern regexTeacherInline;
+    private Pattern regexClassroom;
+
+    private String pointsUrl;
+    private String pointsLoginQuery;
+    private int pointsLoginSuccessCode;
+    private int pointsTimeout;
 
     private int threadPoolSize;
 
@@ -28,14 +33,16 @@ public final class MainConfig extends AbstractConfig {
         tgBotName = conf.getNode("telegram", "bot_name").getString();
         tgToken = conf.getNode("telegram", "token").getString();
 
-        regexTeacherDefault = Pattern.compile(conf.getNode("expressions", "teacher_default").getString(""));
-        regexTeacherInline = Pattern.compile(conf.getNode("expressions", "teacher_inline").getString(""));
+        regexTeacherDefault = Pattern.compile(conf.getNode("regex", "teacher_default").getString(""));
+        regexTeacherInline = Pattern.compile(conf.getNode("regex", "teacher_inline").getString(""));
+        regexClassroom = Pattern.compile(conf.getNode("regex", "classroom").getString(""));
+
+        pointsUrl = conf.getNode("points", "url").getString();
+        pointsLoginQuery = conf.getNode("points", "login_query").getString();
+        pointsLoginSuccessCode = conf.getNode("points", "login_success").getInt();
+        pointsTimeout = conf.getNode("points", "timeout").getInt() * 1000;
 
         threadPoolSize = conf.getNode("thread_pool_size").getInt(4);
-    }
-
-    public Configuration getConf() {
-        return conf;
     }
 
     public Properties getDbProperties() {
@@ -56,6 +63,26 @@ public final class MainConfig extends AbstractConfig {
 
     public Pattern getRegexTeacherInline() {
         return regexTeacherInline;
+    }
+
+    public Pattern getRegexClassroom() {
+        return regexClassroom;
+    }
+
+    public String getPointsUrl() {
+        return pointsUrl;
+    }
+
+    public String getPointsLoginQuery() {
+        return pointsLoginQuery;
+    }
+
+    public int getPointsLoginSuccessCode() {
+        return pointsLoginSuccessCode;
+    }
+
+    public int getPointsTimeout() {
+        return pointsTimeout;
     }
 
     public int getThreadPoolSize() {

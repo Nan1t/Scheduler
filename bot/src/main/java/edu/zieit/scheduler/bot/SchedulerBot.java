@@ -4,6 +4,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatManager;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.config.MainConfig;
+import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.SubsService;
 import napi.configurate.yaml.lang.Language;
 import org.apache.logging.log4j.LogManager;
@@ -33,18 +34,21 @@ public class SchedulerBot extends TelegramLongPollingBot {
 
     private final ScheduleService scheduleService;
     private final SubsService subsService;
+    private final PointsService pointsService;
     private final Queue<SendMethod> sendQueue = new LinkedList<>();
 
     private final ScheduledExecutorService timer;
     private final ScheduledFuture<?> sendTask;
 
-    public SchedulerBot(MainConfig conf, Language lang, ScheduleService scheduleService, SubsService subsService) {
+    public SchedulerBot(MainConfig conf, Language lang, ScheduleService scheduleService,
+                        SubsService subsService, PointsService pointsService) {
         this.username = conf.getTgBotName();
         this.token = conf.getTgToken();
         this.lang = lang;
         this.chatManager = new ChatManager(this, conf);
         this.scheduleService = scheduleService;
         this.subsService = subsService;
+        this.pointsService = pointsService;
 
         this.timer = Executors.newScheduledThreadPool(1);
         this.sendTask = timer.scheduleAtFixedRate(this::sendFromQueue,
@@ -61,6 +65,10 @@ public class SchedulerBot extends TelegramLongPollingBot {
 
     public SubsService getSubsService() {
         return subsService;
+    }
+
+    public PointsService getPointsService() {
+        return pointsService;
     }
 
     @Override

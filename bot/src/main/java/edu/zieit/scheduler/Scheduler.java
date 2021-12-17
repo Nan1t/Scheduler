@@ -1,6 +1,7 @@
 package edu.zieit.scheduler;
 
 import edu.zieit.scheduler.api.Person;
+import edu.zieit.scheduler.api.Regexs;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.config.MainConfig;
@@ -10,6 +11,7 @@ import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
 import edu.zieit.scheduler.persistence.subscription.*;
 import edu.zieit.scheduler.schedule.TimeTable;
+import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
@@ -48,8 +50,9 @@ public final class Scheduler {
         scheduleConf.reload();
         lang.reload();
 
-        Person.REGEX_TEACHER = conf.getRegexTeacherDefault();
-        Person.REGEX_TEACHER_INLINE = conf.getRegexTeacherInline();
+        Regexs.TEACHER = conf.getRegexTeacherDefault();
+        Regexs.TEACHER_INLINE = conf.getRegexTeacherInline();
+        Regexs.CLASSROOM = conf.getRegexClassroom();
 
         TimeTable.setDayIndexes(scheduleConf.getDayIndexes());
 
@@ -65,12 +68,13 @@ public final class Scheduler {
 
         SubsService subsService = new SubsService(teacherDao, consultDao, coursesDao, pointsDao, noticesDao, groupsDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
+        PointsService pointsService = new PointsService(conf);
 
         logger.info("Loading schedule ...");
         scheduleService.reloadAll();
         logger.info("All schedule loaded");
 
-        bot = new SchedulerBot(conf, lang, scheduleService, subsService);
+        bot = new SchedulerBot(conf, lang, scheduleService, subsService, pointsService);
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
 
         logger.info("Starting long polling bot ...");

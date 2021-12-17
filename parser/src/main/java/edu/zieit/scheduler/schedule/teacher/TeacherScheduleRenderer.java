@@ -4,7 +4,6 @@ import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.RenderException;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
-import edu.zieit.scheduler.schedule.AbstractSchedule;
 import edu.zieit.scheduler.schedule.AbstractScheduleRenderer;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.schedule.course.CourseClass;
@@ -170,7 +169,7 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         classTimeCell.setCellValue(TimeTable.getTime(classNum));
 
         if (names.isEmpty() && groupsSet.isEmpty()) {
-            titleCell.setCellValue(String.format(lang.of("teachers.render.notfound"), teacherClass.raw()));
+            titleCell.setCellValue(teacherClass.raw());
             sheet.addMergedRegion(new CellRangeAddress(classRow, classRow+3, 3, 3));
         } else {
             titleCell.setCellValue(title);

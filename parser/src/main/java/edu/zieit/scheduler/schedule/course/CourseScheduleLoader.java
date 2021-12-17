@@ -2,6 +2,7 @@ package edu.zieit.scheduler.schedule.course;
 
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
+import edu.zieit.scheduler.api.Regexs;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleInfo;
@@ -159,13 +160,13 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
             String classrooms = ExcelUtil.getCellValue(classroomCell).strip();
             Collection<String> groups = parseGroups(info, sheet, range);
 
-            if (Person.REGEX_TEACHER_INLINE.matcher(teacherName).find()) {
+            if (Regexs.TEACHER_INLINE.matcher(teacherName).find()) {
                 // Teachers and classrooms in one line
                 teacherName += "," + classrooms;
                 String[] parts = teacherName.split(",");
 
                 for (String part : parts) {
-                    Matcher matcher = Person.REGEX_TEACHER_INLINE.matcher(part);
+                    Matcher matcher = Regexs.TEACHER_INLINE.matcher(part);
 
                     if (matcher.find()) {
                         String teacher = matcher.group(1);
@@ -186,7 +187,7 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
                 CourseClass courseClass = new CourseClass(classIndex, name);
                 Person teacher = Person.empty();
 
-                if (Person.REGEX_TEACHER.matcher(teacherName).find()) {
+                if (Regexs.TEACHER.matcher(teacherName).find()) {
                     teacher = Person.teacher(teacherName);
                 }
 

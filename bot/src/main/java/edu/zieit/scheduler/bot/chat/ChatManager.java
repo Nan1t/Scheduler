@@ -3,6 +3,7 @@ package edu.zieit.scheduler.bot.chat;
 import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.bot.states.StateDenyAll;
 import edu.zieit.scheduler.bot.states.StateHelp;
+import edu.zieit.scheduler.bot.states.aud.StateAudComp;
 import edu.zieit.scheduler.bot.states.aud.StateAudList;
 import edu.zieit.scheduler.bot.states.aud.StateAudShow;
 import edu.zieit.scheduler.bot.states.consult.StateConsult;
@@ -17,6 +18,8 @@ import edu.zieit.scheduler.bot.states.group.StateGroup;
 import edu.zieit.scheduler.bot.states.group.StateGroupDeny;
 import edu.zieit.scheduler.bot.states.group.StateGroupList;
 import edu.zieit.scheduler.bot.states.group.StateGroupShow;
+import edu.zieit.scheduler.bot.states.points.StatePoints;
+import edu.zieit.scheduler.bot.states.points.StatePointsDeny;
 import edu.zieit.scheduler.bot.states.teacher.*;
 import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
@@ -86,6 +89,7 @@ public class ChatManager {
 
                 if (state != null) {
                     session.updateState(state);
+
                     if (!state.hasNext())
                         endSession(chatId);
                 } else {
@@ -107,6 +111,9 @@ public class ChatManager {
                 session.updateState(state.getNext());
                 return;
             }
+
+            if (!state.hasNext())
+                endSession(chatId);
         }
 
         bot.sendMessage(session, bot.getLang().of("cmd.unsupported"));
@@ -159,7 +166,11 @@ public class ChatManager {
         registerState(new StateConsult(), "consult");
 
         registerState(new StateAudList(bot.getLang(), new StateAudShow()), "aud");
+        //registerState(new StateAudComp(), "audcomp");
 
         registerState(new StateDenyAll(), "denyall");
+
+        registerState(new StatePoints(), "points");
+        registerState(new StatePointsDeny(), "pointsdeny");
     }
 }
