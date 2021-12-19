@@ -1,6 +1,5 @@
 package edu.zieit.scheduler;
 
-import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.Regexs;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.SchedulerBot;
