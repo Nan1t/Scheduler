@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
 
@@ -24,6 +25,8 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
     private final Person person;
     private final ScheduleService manager;
     private final Language lang;
+
+    private boolean useVariants = false;
 
     public TeacherScheduleRenderer(TeacherSchedule schedule, Person person, ScheduleService manager) {
         this.schedule = schedule;
@@ -55,6 +58,11 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         int lastRow = 3;
         for (TeacherDay day : days) {
             lastRow = drawDay(sheet, day, lastRow);
+        }
+
+        if (useVariants) {
+            Cell cell = getOrCreateCell(sheet, lastRow + 1, 0);
+            cell.setCellValue(lang.of("schedule.render.teacher.var.info"));
         }
 
         return sheet;
@@ -169,7 +177,18 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         classTimeCell.setCellValue(TimeTable.getTime(classNum));
 
         if (names.isEmpty() && groupsSet.isEmpty()) {
-            titleCell.setCellValue(teacherClass.raw());
+            String value = getClassVariants(teacherDay.getIndex(), teacherClass.index(), courseSchedules);
+
+            if (value == null) {
+                value = String.format(lang.of("schedule.render.teacher.notfound"), teacherClass.raw());
+            } else {
+                useVariants = true;
+                String variants = lang.of("schedule.render.teacher.variants");
+                value = variants + " " + value;
+                CellUtil.setFont(titleCell, littleFont);
+            }
+
+            titleCell.setCellValue(value);
             sheet.addMergedRegion(new CellRangeAddress(classRow, classRow+3, 3, 3));
         } else {
             titleCell.setCellValue(title);
@@ -179,7 +198,7 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
 
             centerCell(typeCell);
             centerCell(groupsCell);
-            centerCell(classroomCell);
+            //centerCell(classroomCell);
         }
 
         centerCell(titleCell);
@@ -194,6 +213,20 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
         RegionUtil.setBorderRight(BorderStyle.THIN, ExcelUtil.getCellRange(groupsCell), sheet);
         RegionUtil.setBorderRight(BorderStyle.THIN, ExcelUtil.getCellRange(classroomCell), sheet);
         RegionUtil.setBorderBottom(BorderStyle.THIN, ExcelUtil.getCellRange(classroomCell), sheet);
+    }
+
+    private String getClassVariants(int tday, int tclass, Collection<CourseSchedule> courseSchedules) {
+        List<CourseClass> variants = new LinkedList<>();
+
+        for (CourseSchedule schedule : courseSchedules) {
+            schedule.getDay(tday).ifPresent(courseDay ->
+                    variants.addAll(courseDay.getClasses(tclass)));
+        }
+
+        return variants.size() > 0 ? variants.stream()
+                .distinct()
+                .map(cl -> cl.getName() + " ("+ cl.getClassroom() +")")
+                .collect(Collectors.joining(lang.of("schedule.render.teacher.or"))) : null;
     }
 
     private Collection<CourseClass> findClasses(CourseSchedule schedule, TeacherDay day,

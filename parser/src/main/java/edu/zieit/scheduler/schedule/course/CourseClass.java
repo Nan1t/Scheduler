@@ -62,7 +62,6 @@ public class CourseClass {
             try {
                 Matcher matcher = Regexs.CLASSROOM.matcher(classroom);
 
-
                 if (matcher.matches()) {
                     res = matcher.group(1);
                 }
@@ -87,18 +86,15 @@ public class CourseClass {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof CourseClass cl) {
-            return this.name.equals(cl.name)
-                    && this.type.equals(cl.type)
-                    && this.classroom.equals(cl.classroom)
-                    && this.person.equals(cl.person)
-                    && this.groups.equals(cl.groups);
+            return this.name.equalsIgnoreCase(cl.name)
+                    && this.classroom.equalsIgnoreCase(cl.classroom);
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, type, person, classroom, groups);
+        return Objects.hash(name, classroom);
     }
 
     @Override

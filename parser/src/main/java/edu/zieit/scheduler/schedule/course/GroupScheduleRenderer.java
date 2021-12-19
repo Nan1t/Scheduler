@@ -153,7 +153,7 @@ public class GroupScheduleRenderer extends AbstractScheduleRenderer {
         centerCell(titleCell);
         centerCell(typeCell);
         centerCell(teacherCell);
-        centerCell(classroomCell);
+        //centerCell(classroomCell);
 
         borderCell(classNumCell);
         borderCell(classTimeCell);

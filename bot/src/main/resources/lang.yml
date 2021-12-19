@@ -8,6 +8,11 @@ schedule.render.head.classtime: "Час"
 schedule.render.head.classes: "Пари"
 consult.render.head.time: "Час консулт."
 
+schedule.render.teacher.notfound: "Не знайдено (%s)"
+schedule.render.teacher.variants: "Варіанти: "
+schedule.render.teacher.or: " АБО "
+schedule.render.teacher.var.info: "* Варіанти надаються у випадку, коли для пари не вказаний викладач"
+
 mailing.teacher: "З'явився новий розклад зайнятості"
 mailing.course: "З'явився новий розклад курсу"
 mailing.group: "З'явився новий розклад групи"

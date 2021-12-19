@@ -72,7 +72,7 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
                             .map(s->s.trim().toLowerCase())
                             .collect(Collectors.toList());
 
-                    day.addClass(classNum, new TeacherClass(coursesRaw, courses));
+                    day.addClass(classNum, new TeacherClass(classNum, coursesRaw, courses));
                 }
             }
 

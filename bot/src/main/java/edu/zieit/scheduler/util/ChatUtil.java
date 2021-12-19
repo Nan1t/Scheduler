@@ -3,6 +3,7 @@ package edu.zieit.scheduler.util;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -54,18 +55,23 @@ public final class ChatUtil {
                             .chatId(session.getChatId())
                             .messageId(session.getLastMsgId())
                             .build(),
-                    SendPhoto.builder()
+                    /*SendPhoto.builder()
                             .chatId(session.getChatId())
                             .caption(text)
                             .photo(new InputFile(is, filename))
+                            .build()*/
+                    SendDocument.builder()
+                            .chatId(session.getChatId())
+                            .caption(text)
+                            .document(new InputFile(is, filename))
                             .build()
             };
         } else {
             return new PartialBotApiMethod[] {
-                    SendPhoto.builder()
+                    SendDocument.builder()
                             .chatId(session.getChatId())
                             .caption(text)
-                            .photo(new InputFile(is, filename))
+                            .document(new InputFile(is, filename))
                             .build()
             };
         }

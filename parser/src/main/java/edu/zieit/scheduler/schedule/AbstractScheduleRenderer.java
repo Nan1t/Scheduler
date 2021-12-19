@@ -10,16 +10,25 @@ import org.apache.poi.ss.util.RegionUtil;
 public abstract class AbstractScheduleRenderer implements ScheduleRenderer {
 
     protected Font boldFont;
+    protected Font littleFont;
 
     protected void initFonts(Sheet sheet) {
         Workbook wb = sheet.getWorkbook();
         Font defFont = wb.getFontAt(sheet.getColumnStyle(0).getFontIndex());
+
         Font font = wb.createFont();
         font.setFontHeightInPoints(defFont.getFontHeightInPoints());
         font.setFontName(defFont.getFontName());
         font.setBold(true);
 
         this.boldFont = font;
+
+        font = wb.createFont();
+        font.setFontHeightInPoints((short) 8);
+        font.setFontName(defFont.getFontName());
+        font.setBold(false);
+
+        this.littleFont = font;
     }
 
     protected void setWrapText(Cell cell, boolean val) {
