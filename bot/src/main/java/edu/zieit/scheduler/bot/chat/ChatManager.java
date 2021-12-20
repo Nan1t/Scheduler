@@ -20,7 +20,6 @@ import edu.zieit.scheduler.bot.states.group.StateGroupShow;
 import edu.zieit.scheduler.bot.states.points.StatePoints;
 import edu.zieit.scheduler.bot.states.points.StatePointsDeny;
 import edu.zieit.scheduler.bot.states.teacher.*;
-import edu.zieit.scheduler.config.MainConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;
