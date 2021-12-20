@@ -41,6 +41,6 @@ public final class ConversionUtil {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ImageIO.write(bi, format, out);
         return out.toByteArray();
-
     }
+
 }

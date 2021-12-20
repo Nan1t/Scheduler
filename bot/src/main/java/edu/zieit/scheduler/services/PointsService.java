@@ -89,8 +89,6 @@ public final class PointsService {
 
         HttpResponse response = client.execute(post);
 
-        System.out.println(response);
-
         return response.getStatusLine().getStatusCode() == conf.getPointsLoginSuccessCode();
     }
 
