@@ -15,7 +15,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 
@@ -35,11 +34,7 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
         if (workbook.getNumberOfSheets() == 1) {
             Sheet sheet = workbook.getSheetAt(0);
             Schedule schedule = parseSchedule(sinfo, sheet);
-            try {
-                workbook.close();
-            } catch (IOException e) {
-                // Ignore
-            }
+
             return Collections.singletonList(schedule);
         } else {
             List<Schedule> schedules = new LinkedList<>();
@@ -52,12 +47,6 @@ public class CourseScheduleLoader extends AbstractScheduleLoader {
 
             for (Schedule schedule : schedules) {
                 ((CourseSchedule)schedule).setFileGroup(schedules);
-            }
-
-            try {
-                workbook.close();
-            } catch (IOException e) {
-                // Ignore
             }
 
             return schedules;

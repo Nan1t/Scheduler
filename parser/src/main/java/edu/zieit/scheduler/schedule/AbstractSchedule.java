@@ -10,8 +10,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 public abstract class AbstractSchedule implements Schedule {
 
+    private final Sheet sheet;
     private final NamespacedKey key;
-    private final byte[] documentImg;
     private final SheetRenderer renderer;
 
     public AbstractSchedule(ScheduleInfo info, Sheet sheet, SheetRenderer renderer) {
@@ -19,14 +19,14 @@ public abstract class AbstractSchedule implements Schedule {
     }
 
     public AbstractSchedule(NamespacedKey key, Sheet sheet, SheetRenderer renderer) {
+        this.sheet = sheet;
         this.key = key;
         this.renderer = renderer;
-        this.documentImg = renderer.renderBytes(sheet);
     }
 
     public AbstractSchedule(SheetRenderer renderer) {
         this.key = null;
-        this.documentImg = null;
+        this.sheet = null;
         this.renderer = renderer;
     }
 
@@ -41,7 +41,7 @@ public abstract class AbstractSchedule implements Schedule {
 
     @Override
     public byte[] toImage() {
-        return documentImg;
+        return renderer.renderBytes(sheet);
     }
 
     @Override
