@@ -32,6 +32,8 @@ public class SchedulerBot extends TelegramLongPollingBot {
     private final Language lang;
     private final ChatManager chatManager;
 
+    private final ExecutorService threadPool;
+
     private final ScheduleService scheduleService;
     private final SubsService subsService;
     private final PointsService pointsService;
@@ -45,10 +47,12 @@ public class SchedulerBot extends TelegramLongPollingBot {
         this.username = conf.getTgBotName();
         this.token = conf.getTgToken();
         this.lang = lang;
-        this.chatManager = new ChatManager(this, conf);
+        this.chatManager = new ChatManager(this);
         this.scheduleService = scheduleService;
         this.subsService = subsService;
         this.pointsService = pointsService;
+
+        threadPool = Executors.newFixedThreadPool(conf.getThreadPoolSize());
 
         this.timer = Executors.newScheduledThreadPool(1);
         this.sendTask = timer.scheduleAtFixedRate(this::sendFromQueue,
@@ -83,7 +87,8 @@ public class SchedulerBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        chatManager.handleUpdate(update);
+        CompletableFuture.runAsync(() ->
+                chatManager.handleUpdate(update), threadPool);
     }
 
     public void send(ChatSession session, Object[] methods) {
@@ -141,7 +146,8 @@ public class SchedulerBot extends TelegramLongPollingBot {
     public void shutdown() {
         sendTask.cancel(false);
         timer.shutdown();
-        chatManager.shutdownThreads();
+        if (threadPool != null)
+            threadPool.shutdown();
         onClosing();
     }
 }
