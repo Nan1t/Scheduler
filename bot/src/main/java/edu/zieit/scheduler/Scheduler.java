@@ -14,6 +14,7 @@ import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
+import edu.zieit.webpanel.WebPanel;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
 import org.apache.logging.log4j.LogManager;
@@ -82,6 +83,10 @@ public final class Scheduler {
         timer = new TimerService(scheduleConf, bot, scheduleService, subsService);
         timer.start();
         logger.info("Started timer");
+
+        logger.info("Starting web panel ...");
+        new WebPanel().start();
+        logger.info("Web panel started");
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Safe shutdown thread"));
 

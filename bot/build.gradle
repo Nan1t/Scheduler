@@ -13,6 +13,7 @@ dependencies {
 
     implementation project(':api')
     implementation project(':parser')
+    implementation project(':webpanel')
 
     implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
     implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}"
