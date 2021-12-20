@@ -34,6 +34,10 @@ jar {
 }
 
 shadowJar {
+    archiveBaseName.set('scheduler')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+
     exclude '**/license/**'
 
     exclude '**/META-INF/maven/**'
