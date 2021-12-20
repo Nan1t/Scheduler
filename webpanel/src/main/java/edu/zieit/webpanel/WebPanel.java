@@ -12,7 +12,7 @@ public class WebPanel {
     private Javalin app;
 
     public void start() {
-        app = Javalin.create(this::configure).start(8080);
+        app = Javalin.create(this::configure).start(getPort());
 
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver(getClass().getClassLoader());
         TemplateEngine engine = new TemplateEngine();
@@ -31,6 +31,14 @@ public class WebPanel {
     public void stop() {
         if (app != null)
             app.stop();
+    }
+
+    private int getPort() {
+        try {
+            return Integer.parseInt(System.getenv("PORT"));
+        } catch (Throwable t) {
+            return 8080;
+        }
     }
 
     private void configure(JavalinConfig conf) {
