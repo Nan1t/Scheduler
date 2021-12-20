@@ -83,7 +83,7 @@ public class ChatManager {
                 }
 
                 String cmd = arr[0].substring(1);
-                logger.info("Income command: '" + cmd + "'");
+                logger.info("Income command: '" + cmd + "' from " + getUser(update));
 
                 State state = getBaseState(cmd);
 
@@ -138,6 +138,24 @@ public class ChatManager {
         else if (update.hasCallbackQuery())
             return update.getCallbackQuery().getMessage().getChatId().toString();
         return null;
+    }
+
+    private String getUser(Update update) {
+        String username = update.getMessage().getFrom().getUserName();
+        String firstName = update.getMessage().getFrom().getFirstName();
+        String lastName = update.getMessage().getFrom().getLastName();
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(String.format("[%s %s", firstName, lastName));
+
+        if (username != null)
+            builder.append("(")
+                    .append(username)
+                    .append(")");
+
+        builder.append("]");
+
+        return builder.toString();
     }
 
     private void registerStates() {
