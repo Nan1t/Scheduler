@@ -84,9 +84,11 @@ public final class Scheduler {
         timer.start();
         logger.info("Started timer");
 
-        logger.info("Starting web panel ...");
-        new WebPanel().start();
-        logger.info("Web panel started");
+        if (conf.isUsePanel()) {
+            logger.info("Starting web panel ...");
+            new WebPanel().start();
+            logger.info("Web panel started");
+        }
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Safe shutdown thread"));
 
