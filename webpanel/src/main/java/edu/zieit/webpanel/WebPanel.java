@@ -12,7 +12,7 @@ public class WebPanel {
     private Javalin app;
 
     public void start() {
-        app = Javalin.create(this::configure).start(8080);
+        app = Javalin.create(this::configure).start(80);
 
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver(getClass().getClassLoader());
         TemplateEngine engine = new TemplateEngine();
