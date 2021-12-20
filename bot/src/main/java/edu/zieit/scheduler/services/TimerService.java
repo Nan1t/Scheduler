@@ -12,7 +12,9 @@ import edu.zieit.scheduler.persistence.subscription.SubscriptionGroup;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.FilenameUtil;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 
 import java.io.ByteArrayInputStream;
@@ -24,6 +26,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public final class TimerService {
+
+    private static final Logger logger = LogManager.getLogger(TimerService.class);
 
     private final ScheduleConfig conf;
     private final SchedulerBot bot;
@@ -74,14 +78,18 @@ public final class TimerService {
 
             subsService.resetCourseMailing(keys);
             subsService.resetGroupMailing(groups);
+
+            logger.info("Course schedule reloaded. Users marked for mailing");
         }
 
         if (scheduleService.reloadTeacherSchedule()) {
             subsService.resetTeacherMailing();
+            logger.info("Teacher schedule reloaded. Marked everyone for mailing");
         }
 
         if (scheduleService.reloadConsultSchedule()) {
             subsService.resetConsultMailing();
+            logger.info("Consult schedule reloaded. Marked everyone for mailing");
         }
     }
 
@@ -106,6 +114,8 @@ public final class TimerService {
         }
 
         subsService.updateTeacherSubs(notMailed);
+
+        logger.info("Sent " + notMailed.size() + " messages during teachers mailing");
     }
 
     private void sendCourses() {
@@ -123,6 +133,7 @@ public final class TimerService {
         }
 
         subsService.updateCourseSubs(notMailed);
+        logger.info("Sent " + notMailed.size() + " messages during courses mailing");
     }
 
     private void sendGroups() {
@@ -142,6 +153,7 @@ public final class TimerService {
         }
 
         subsService.updateGroupSubs(notMailed);
+        logger.info("Sent " + notMailed.size() + " messages groups mailing");
     }
 
     private void sendConsult() {
@@ -158,15 +170,16 @@ public final class TimerService {
         }
 
         subsService.updateConsultSubs(notMailed);
+        logger.info("Sent " + notMailed.size() + " messages consult mailing");
     }
 
     private void sendPhoto(String tgId, byte[] bytes, String message) {
         InputStream img = new ByteArrayInputStream(bytes);
         String filename = FilenameUtil.getNameWithExt(scheduleService, "photo");
 
-        bot.send(SendPhoto.builder()
+        bot.send(SendDocument.builder()
                 .chatId(tgId)
-                .photo(new InputFile(img, filename))
+                .document(new InputFile(img, filename))
                 .caption(message)
                 .build());
     }
