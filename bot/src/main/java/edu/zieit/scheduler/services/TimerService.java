@@ -103,74 +103,82 @@ public final class TimerService {
     private void sendTeachers() {
         Collection<SubscriptionTeacher> notMailed = subsService.getNotMailedTeacherSubs();
 
-        for (SubscriptionTeacher sub : notMailed) {
-            ScheduleRenderer renderer = scheduleService.getTeacherSchedule()
-                    .getPersonalRenderer(sub.getTeacher(), scheduleService);
+        if (!notMailed.isEmpty()) {
+            for (SubscriptionTeacher sub : notMailed) {
+                ScheduleRenderer renderer = scheduleService.getTeacherSchedule()
+                        .getPersonalRenderer(sub.getTeacher(), scheduleService);
 
-            sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
-                    bot.getLang().of("mailing.teacher"));
+                sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                        bot.getLang().of("mailing.teacher"));
 
-            sub.setReceivedMailing(true);
+                sub.setReceivedMailing(true);
+            }
+
+            subsService.updateTeacherSubs(notMailed);
+
+            logger.info("Sent " + notMailed.size() + " messages during teachers mailing");
         }
-
-        subsService.updateTeacherSubs(notMailed);
-
-        logger.info("Sent " + notMailed.size() + " messages during teachers mailing");
     }
 
     private void sendCourses() {
         Collection<SubscriptionCourse> notMailed = subsService.getNotMailedCourseSubs();
 
-        for (SubscriptionCourse sub : notMailed) {
-            Schedule schedule = scheduleService.getCourseSchedule(sub.getScheduleKey());
+        if (!notMailed.isEmpty()) {
+            for (SubscriptionCourse sub : notMailed) {
+                Schedule schedule = scheduleService.getCourseSchedule(sub.getScheduleKey());
 
-            if (schedule != null) {
-                sendPhoto(sub.getTelegramId(), schedule.toImage(),
-                        bot.getLang().of("mailing.course"));
+                if (schedule != null) {
+                    sendPhoto(sub.getTelegramId(), schedule.toImage(),
+                            bot.getLang().of("mailing.course"));
+                }
+
+                sub.setReceivedMailing(true);
             }
 
-            sub.setReceivedMailing(true);
+            subsService.updateCourseSubs(notMailed);
+            logger.info("Sent " + notMailed.size() + " messages during courses mailing");
         }
-
-        subsService.updateCourseSubs(notMailed);
-        logger.info("Sent " + notMailed.size() + " messages during courses mailing");
     }
 
     private void sendGroups() {
         Collection<SubscriptionGroup> notMailed = subsService.getNotMailedGroupSubs();
 
-        for (SubscriptionGroup sub : notMailed) {
-            Optional<Schedule> schedule = scheduleService.getCourseByGroup(sub.getGroupName());
+        if (!notMailed.isEmpty()) {
+            for (SubscriptionGroup sub : notMailed) {
+                Optional<Schedule> schedule = scheduleService.getCourseByGroup(sub.getGroupName());
 
-            if (schedule.isPresent()) {
-                ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroupName(), scheduleService);
+                if (schedule.isPresent()) {
+                    ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroupName(), scheduleService);
 
-                sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
-                        bot.getLang().of("mailing.group"));
+                    sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                            bot.getLang().of("mailing.group"));
+                }
+
+                sub.setReceivedMailing(true);
             }
 
-            sub.setReceivedMailing(true);
+            subsService.updateGroupSubs(notMailed);
+            logger.info("Sent " + notMailed.size() + " messages groups mailing");
         }
-
-        subsService.updateGroupSubs(notMailed);
-        logger.info("Sent " + notMailed.size() + " messages groups mailing");
     }
 
     private void sendConsult() {
         Collection<SubscriptionConsult> notMailed = subsService.getNotMailedConsultSubs();
 
-        for (SubscriptionConsult sub : notMailed) {
-            ScheduleRenderer renderer = scheduleService.getConsultSchedule()
-                    .getPersonalRenderer(sub.getTeacher(), scheduleService);
+        if (!notMailed.isEmpty()) {
+            for (SubscriptionConsult sub : notMailed) {
+                ScheduleRenderer renderer = scheduleService.getConsultSchedule()
+                        .getPersonalRenderer(sub.getTeacher(), scheduleService);
 
-            sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
-                    bot.getLang().of("mailing.consult"));
+                sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                        bot.getLang().of("mailing.consult"));
 
-            sub.setReceivedMailing(true);
+                sub.setReceivedMailing(true);
+            }
+
+            subsService.updateConsultSubs(notMailed);
+            logger.info("Sent " + notMailed.size() + " messages consult mailing");
         }
-
-        subsService.updateConsultSubs(notMailed);
-        logger.info("Sent " + notMailed.size() + " messages consult mailing");
     }
 
     private void sendPhoto(String tgId, byte[] bytes, String message) {
