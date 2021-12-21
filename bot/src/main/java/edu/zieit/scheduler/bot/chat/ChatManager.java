@@ -150,13 +150,13 @@ public class ChatManager {
     private void registerStates() {
         registerState(new StateHelp(bot.getLang()), "help", "start");
 
-        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow(true)), "teachersub");
+        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow(true)), "teachersub", "teachersubscribe");
         registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow(false)), "teachershow");
         registerState(new StateTeacherDeny(), "teacherdeny");
         registerState(new StateTeacher(), "teacher");
         registerState(new StateToggleNotices(), "notices");
 
-        registerState(new StateCourseList(bot.getLang(), new StateCourseShow(true)), "coursesub");
+        registerState(new StateCourseList(bot.getLang(), new StateCourseShow(true)), "coursesub", "studentsubscribe");
         registerState(new StateCourseList(bot.getLang(), new StateCourseShow(false)), "courseshow");
         registerState(new StateCourseDeny(), "coursedeny");
         registerState(new StateCourse(), "course");
