@@ -15,7 +15,7 @@ public class ConsultSubsDao extends Dao {
     }
 
     public SubscriptionConsult find(String tgId) {
-        return findValue(SubscriptionTeacher.class, tgId);
+        return findValue(SubscriptionConsult.class, tgId);
     }
 
     public Collection<SubscriptionConsult> findNotMailed(int limit) {
