@@ -1,7 +1,7 @@
 package edu.zieit.scheduler.persistence.dao;
 
 import edu.zieit.scheduler.api.NamespacedKey;
-import edu.zieit.scheduler.persistence.Dao;
+import edu.zieit.scheduler.api.persistence.Dao;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

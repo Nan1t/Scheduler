@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.persistence;
+package edu.zieit.scheduler.api.persistence;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,7 +6,6 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 

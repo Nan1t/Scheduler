@@ -9,8 +9,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     api 'com.github.NanitApi:napi-yaml:1a48442125'
-    //api 'org.spongepowered:configurate-yaml:4.1.1'
     api 'org.apache.poi:poi:5.0.0'
+    api 'org.hibernate:hibernate-core:5.3.7.Final'
 }
 
 test {

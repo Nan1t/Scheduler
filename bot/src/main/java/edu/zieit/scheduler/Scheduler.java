@@ -86,7 +86,7 @@ public final class Scheduler {
 
         if (conf.isUsePanel()) {
             logger.info("Starting web panel ...");
-            new WebPanel().start();
+            new WebPanel(scheduleService).start();
             logger.info("Web panel started");
         }
 
