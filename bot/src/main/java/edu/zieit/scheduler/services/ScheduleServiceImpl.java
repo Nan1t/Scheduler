@@ -40,11 +40,14 @@ public final class ScheduleServiceImpl implements ScheduleService {
     private final Map<String, Schedule> courseByGroup;
     private final Map<String, ClassroomSchedule> classroomSchedule;
 
-    private List<String> groups;
-    private List<String> classrooms;
-
     private Schedule teachersSchedule;
     private Schedule consultSchedule;
+
+    private boolean teacherLoaded;
+    private boolean consultLoaded;
+
+    private List<String> groups;
+    private List<String> classrooms;
 
     private boolean firstLoad;
 
@@ -123,7 +126,6 @@ public final class ScheduleServiceImpl implements ScheduleService {
     public Collection<Schedule> reloadCourseSchedule() {
         List<Schedule> updated = new LinkedList<>();
         Set<String> groups = new HashSet<>();
-
         boolean cleared = false;
 
         for (CourseScheduleInfo info : config.getCourses()) {
@@ -137,21 +139,26 @@ public final class ScheduleServiceImpl implements ScheduleService {
                     cleared = true;
                 }
 
-                for (Schedule schedule : coursesLoader.load(info)) {
-                    CourseSchedule course = (CourseSchedule) schedule;
+                try {
+                    for (Schedule schedule : coursesLoader.load(info)) {
+                        CourseSchedule course = (CourseSchedule) schedule;
 
-                    coursesSchedule.put(course.getKey(), course);
-                    updated.add(course);
+                        coursesSchedule.put(course.getKey(), course);
+                        updated.add(course);
 
-                    for (String group : course.getGroupNames()) {
-                        courseByGroup.put(group, course);
-                        groups.add(group);
+                        for (String group : course.getGroupNames()) {
+                            courseByGroup.put(group, course);
+                            groups.add(group);
+                        }
+
+                        logger.info("Loaded schedule '{}'", course.getKey());
                     }
-
-                    logger.info("Loaded schedule '{}'", course.getKey());
+                } catch (Exception e) {
+                    logger.error("Course schedule '{}' cannot be loaded: {}", info.getId(), e.getMessage());
                 }
 
-                saveHash(info.getId(), newHash);
+                if (newHash != null)
+                    saveHash(info.getId(), newHash);
             }
         }
 
@@ -215,14 +222,20 @@ public final class ScheduleServiceImpl implements ScheduleService {
         ScheduleHash oldHash = hashesDao.find(config.getTeachers().getId());
         String newHash = HashUtil.getHash(config.getTeachers().getUrl());
 
-        if (teachersSchedule == null || oldHash == null || !oldHash.getHash().equals(newHash)) {
-            Optional<Schedule> opt = teachersLoader.loadSingle(config.getTeachers());
+        if ((teachersSchedule == null && !teacherLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
+            teacherLoaded = true;
 
-            if (opt.isPresent()) {
-                teachersSchedule = opt.get();
-                saveHash(config.getTeachers().getId(), newHash);
-                logger.info("Loaded teachers schedule");
-                return true;
+            try {
+                Optional<Schedule> opt = teachersLoader.loadSingle(config.getTeachers());
+
+                if (opt.isPresent()) {
+                    teachersSchedule = opt.get();
+                    saveHash(config.getTeachers().getId(), newHash);
+                    logger.info("Loaded teachers schedule");
+                    return true;
+                }
+            } catch (Exception e) {
+                logger.error("Teacher schedule cannot be loaded", e);
             }
         }
 
@@ -234,14 +247,20 @@ public final class ScheduleServiceImpl implements ScheduleService {
         ScheduleHash oldHash = hashesDao.find(config.getConsult().getId());
         String newHash = HashUtil.getHash(config.getConsult().getUrl());
 
-        if (consultSchedule == null || oldHash == null || !oldHash.getHash().equals(newHash)) {
-            Optional<Schedule> opt = consultLoader.loadSingle(config.getConsult());
+        if ((consultSchedule == null && !consultLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
+            consultLoaded = true;
 
-            if (opt.isPresent()) {
-                consultSchedule = opt.get();
-                saveHash(config.getConsult().getId(), newHash);
-                logger.info("Loaded consultations schedule");
-                return true;
+            try {
+                Optional<Schedule> opt = consultLoader.loadSingle(config.getConsult());
+
+                if (opt.isPresent()) {
+                    consultSchedule = opt.get();
+                    saveHash(config.getConsult().getId(), newHash);
+                    logger.info("Loaded consultations schedule");
+                    return true;
+                }
+            } catch (Exception e) {
+                logger.error("Consultations schedule cannot be loaded", e);
             }
         }
 
