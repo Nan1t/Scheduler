@@ -132,33 +132,34 @@ public final class ScheduleServiceImpl implements ScheduleService {
             ScheduleHash oldHash = hashesDao.find(info.getId());
             String newHash = HashUtil.getHash(info.getUrl());
 
-            if (firstLoad || oldHash == null || !oldHash.getHash().equals(newHash)) {
-                if (!cleared) {
-                    coursesSchedule.clear();
-                    courseByGroup.clear();
-                    cleared = true;
-                }
-
-                try {
-                    for (Schedule schedule : coursesLoader.load(info)) {
-                        CourseSchedule course = (CourseSchedule) schedule;
-
-                        coursesSchedule.put(course.getKey(), course);
-                        updated.add(course);
-
-                        for (String group : course.getGroupNames()) {
-                            courseByGroup.put(group, course);
-                            groups.add(group);
-                        }
-
-                        logger.info("Loaded schedule '{}'", course.getKey());
+            if (newHash != null) {
+                if (firstLoad || oldHash == null || !oldHash.getHash().equals(newHash)) {
+                    if (!cleared) {
+                        coursesSchedule.clear();
+                        courseByGroup.clear();
+                        cleared = true;
                     }
-                } catch (Exception e) {
-                    logger.error("Course schedule '{}' cannot be loaded: {}", info.getId(), e.getMessage());
-                }
 
-                if (newHash != null)
+                    try {
+                        for (Schedule schedule : coursesLoader.load(info)) {
+                            CourseSchedule course = (CourseSchedule) schedule;
+
+                            coursesSchedule.put(course.getKey(), course);
+                            updated.add(course);
+
+                            for (String group : course.getGroupNames()) {
+                                courseByGroup.put(group, course);
+                                groups.add(group);
+                            }
+
+                            logger.info("Loaded schedule '{}'", course.getKey());
+                        }
+                    } catch (Exception e) {
+                        logger.error("Course schedule '{}' cannot be loaded: {}", info.getId(), e.getMessage());
+                    }
+
                     saveHash(info.getId(), newHash);
+                }
             }
         }
 
@@ -222,20 +223,22 @@ public final class ScheduleServiceImpl implements ScheduleService {
         ScheduleHash oldHash = hashesDao.find(config.getTeachers().getId());
         String newHash = HashUtil.getHash(config.getTeachers().getUrl());
 
-        if ((teachersSchedule == null && !teacherLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
-            teacherLoaded = true;
+        if (newHash != null) {
+            if ((teachersSchedule == null && !teacherLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
+                teacherLoaded = true;
 
-            try {
-                Optional<Schedule> opt = teachersLoader.loadSingle(config.getTeachers());
+                try {
+                    Optional<Schedule> opt = teachersLoader.loadSingle(config.getTeachers());
 
-                if (opt.isPresent()) {
-                    teachersSchedule = opt.get();
-                    saveHash(config.getTeachers().getId(), newHash);
-                    logger.info("Loaded teachers schedule");
-                    return true;
+                    if (opt.isPresent()) {
+                        teachersSchedule = opt.get();
+                        saveHash(config.getTeachers().getId(), newHash);
+                        logger.info("Loaded teachers schedule");
+                        return true;
+                    }
+                } catch (Exception e) {
+                    logger.error("Teacher schedule cannot be loaded", e);
                 }
-            } catch (Exception e) {
-                logger.error("Teacher schedule cannot be loaded", e);
             }
         }
 
@@ -247,20 +250,22 @@ public final class ScheduleServiceImpl implements ScheduleService {
         ScheduleHash oldHash = hashesDao.find(config.getConsult().getId());
         String newHash = HashUtil.getHash(config.getConsult().getUrl());
 
-        if ((consultSchedule == null && !consultLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
-            consultLoaded = true;
+        if (newHash != null) {
+            if ((consultSchedule == null && !consultLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
+                consultLoaded = true;
 
-            try {
-                Optional<Schedule> opt = consultLoader.loadSingle(config.getConsult());
+                try {
+                    Optional<Schedule> opt = consultLoader.loadSingle(config.getConsult());
 
-                if (opt.isPresent()) {
-                    consultSchedule = opt.get();
-                    saveHash(config.getConsult().getId(), newHash);
-                    logger.info("Loaded consultations schedule");
-                    return true;
+                    if (opt.isPresent()) {
+                        consultSchedule = opt.get();
+                        saveHash(config.getConsult().getId(), newHash);
+                        logger.info("Loaded consultations schedule");
+                        return true;
+                    }
+                } catch (Exception e) {
+                    logger.error("Consultations schedule cannot be loaded", e);
                 }
-            } catch (Exception e) {
-                logger.error("Consultations schedule cannot be loaded", e);
             }
         }
 
