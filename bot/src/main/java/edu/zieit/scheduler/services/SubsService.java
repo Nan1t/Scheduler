@@ -7,6 +7,7 @@ import edu.zieit.scheduler.persistence.dao.*;
 import edu.zieit.scheduler.persistence.subscription.*;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public final class SubsService {
 
@@ -122,7 +123,9 @@ public final class SubsService {
     }
 
     public void resetCourseMailing(Collection<NamespacedKey> keys) {
-        coursesDao.resetMailing(keys);
+        coursesDao.resetMailing(keys.stream()
+                .map(NamespacedKey::toString)
+                .collect(Collectors.toList()));
     }
 
     public void updateCourseSubs(Collection<SubscriptionCourse> subs) {

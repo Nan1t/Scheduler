@@ -14,6 +14,7 @@ import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
+import edu.zieit.scheduler.util.LibLoader;
 import edu.zieit.webpanel.WebPanel;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
@@ -23,13 +24,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public final class Scheduler {
 
@@ -93,7 +92,7 @@ public final class Scheduler {
             logger.info("Web panel started");
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Safe shutdown thread"));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Scheduler shutdown thread"));
 
         logger.info("Done! Scheduler ready to work");
     }
@@ -109,6 +108,17 @@ public final class Scheduler {
     }
 
     private void initHibernate(MainConfig conf) {
+        Path driversDir = Paths.get("./drivers").toAbsolutePath();
+        ClassLoader mainLoader = null;
+
+        if (Files.exists(driversDir)) {
+            LibLoader loader = new LibLoader();
+            loader.loadAll(driversDir);
+            loader.finishLoad();
+            mainLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(loader.classLoader());
+        }
+
         Configuration configuration = new Configuration();
 
         configuration.addProperties(conf.getDbProperties());
@@ -125,6 +135,9 @@ public final class Scheduler {
                 .applySettings(configuration.getProperties());
 
         sessionFactory = configuration.buildSessionFactory(builder.build());
+
+        if (mainLoader != null)
+            Thread.currentThread().setContextClassLoader(mainLoader);
     }
 
     public static void main(String[] args) {

@@ -43,13 +43,8 @@ public final class ScheduleServiceImpl implements ScheduleService {
     private Schedule teachersSchedule;
     private Schedule consultSchedule;
 
-    private boolean teacherLoaded;
-    private boolean consultLoaded;
-
     private List<String> groups;
     private List<String> classrooms;
-
-    private boolean firstLoad;
 
     public ScheduleServiceImpl(Language lang, ScheduleConfig config, HashesDao hashesDao) {
         this.lang = lang;
@@ -68,8 +63,6 @@ public final class ScheduleServiceImpl implements ScheduleService {
 
         this.groups = new LinkedList<>();
         this.classrooms = new LinkedList<>();
-
-        this.firstLoad = true;
     }
 
     @Override
@@ -123,29 +116,32 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Collection<Schedule> reloadCourseSchedule() {
+    public Collection<Schedule> reloadCourseSchedule(boolean initial) {
         List<Schedule> updated = new LinkedList<>();
         Set<String> groups = new HashSet<>();
         boolean cleared = false;
 
         for (CourseScheduleInfo info : config.getCourses()) {
-            ScheduleHash oldHash = hashesDao.find(info.getId());
             String newHash = HashUtil.getHash(info.getUrl());
 
             if (newHash != null) {
-                if (firstLoad || oldHash == null || !oldHash.getHash().equals(newHash)) {
+                ScheduleHash oldHash = hashesDao.find(info.getId());
+
+                if (initial || !newHash.equals(oldHash.getHash())) {
                     if (!cleared) {
                         coursesSchedule.clear();
                         courseByGroup.clear();
                         cleared = true;
                     }
 
+                    saveHash(info.getId(), newHash);
+
                     try {
                         for (Schedule schedule : coursesLoader.load(info)) {
                             CourseSchedule course = (CourseSchedule) schedule;
 
                             coursesSchedule.put(course.getKey(), course);
-                            updated.add(course);
+                            updated.add(schedule);
 
                             for (String group : course.getGroupNames()) {
                                 courseByGroup.put(group, course);
@@ -157,13 +153,9 @@ public final class ScheduleServiceImpl implements ScheduleService {
                     } catch (Exception e) {
                         logger.error("Course schedule '{}' cannot be loaded: {}", info.getId(), e.getMessage());
                     }
-
-                    saveHash(info.getId(), newHash);
                 }
             }
         }
-
-        firstLoad = false;
 
         if (!groups.isEmpty()) {
             this.groups = groups.stream()
@@ -178,6 +170,60 @@ public final class ScheduleServiceImpl implements ScheduleService {
         }
 
         return updated;
+    }
+
+    @Override
+    public boolean reloadTeacherSchedule(boolean initial) {
+        String newHash = HashUtil.getHash(config.getTeachers().getUrl());
+
+        if (newHash != null) {
+            ScheduleHash oldHash = hashesDao.find(config.getTeachers().getId());
+
+            if (initial || !newHash.equals(oldHash.getHash())) {
+                saveHash(config.getTeachers().getId(), newHash);
+
+                try {
+                    Optional<Schedule> opt = teachersLoader.loadSingle(config.getTeachers());
+
+                    if (opt.isPresent()) {
+                        teachersSchedule = opt.get();
+                        logger.info("Loaded teachers schedule");
+                        return true;
+                    }
+                } catch (Exception e) {
+                    logger.error("Teacher schedule cannot be loaded", e);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean reloadConsultSchedule(boolean initial) {
+        String newHash = HashUtil.getHash(config.getConsult().getUrl());
+
+        if (newHash != null) {
+            ScheduleHash oldHash = hashesDao.find(config.getConsult().getId());
+
+            if (initial || !newHash.equals(oldHash.getHash())) {
+                saveHash(config.getConsult().getId(), newHash);
+
+                try {
+                    Optional<Schedule> opt = consultLoader.loadSingle(config.getConsult());
+
+                    if (opt.isPresent()) {
+                        consultSchedule = opt.get();
+                        logger.info("Loaded consultations schedule");
+                        return true;
+                    }
+                } catch (Exception e) {
+                    logger.error("Consultations schedule cannot be loaded", e);
+                }
+            }
+        }
+
+        return false;
     }
 
     private void buildClassroomSchedule() {
@@ -216,60 +262,6 @@ public final class ScheduleServiceImpl implements ScheduleService {
         this.classrooms = classrooms.stream()
                 .sorted(Comparator.naturalOrder())
                 .toList();
-    }
-
-    @Override
-    public boolean reloadTeacherSchedule() {
-        ScheduleHash oldHash = hashesDao.find(config.getTeachers().getId());
-        String newHash = HashUtil.getHash(config.getTeachers().getUrl());
-
-        if (newHash != null) {
-            if ((teachersSchedule == null && !teacherLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
-                teacherLoaded = true;
-
-                try {
-                    Optional<Schedule> opt = teachersLoader.loadSingle(config.getTeachers());
-
-                    if (opt.isPresent()) {
-                        teachersSchedule = opt.get();
-                        saveHash(config.getTeachers().getId(), newHash);
-                        logger.info("Loaded teachers schedule");
-                        return true;
-                    }
-                } catch (Exception e) {
-                    logger.error("Teacher schedule cannot be loaded", e);
-                }
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean reloadConsultSchedule() {
-        ScheduleHash oldHash = hashesDao.find(config.getConsult().getId());
-        String newHash = HashUtil.getHash(config.getConsult().getUrl());
-
-        if (newHash != null) {
-            if ((consultSchedule == null && !consultLoaded) || oldHash == null || !oldHash.getHash().equals(newHash)) {
-                consultLoaded = true;
-
-                try {
-                    Optional<Schedule> opt = consultLoader.loadSingle(config.getConsult());
-
-                    if (opt.isPresent()) {
-                        consultSchedule = opt.get();
-                        saveHash(config.getConsult().getId(), newHash);
-                        logger.info("Loaded consultations schedule");
-                        return true;
-                    }
-                } catch (Exception e) {
-                    logger.error("Consultations schedule cannot be loaded", e);
-                }
-            }
-        }
-
-        return false;
     }
 
     private void saveHash(String fileName, String hash) {

@@ -13,6 +13,7 @@ public abstract class AbstractSchedule implements Schedule {
     private final Sheet sheet;
     private final NamespacedKey key;
     private final SheetRenderer renderer;
+    private byte[] image;
 
     public AbstractSchedule(ScheduleInfo info, Sheet sheet, SheetRenderer renderer) {
         this(NamespacedKey.of(info.getId()), sheet, renderer);
@@ -41,7 +42,10 @@ public abstract class AbstractSchedule implements Schedule {
 
     @Override
     public byte[] toImage() {
-        return renderer.renderBytes(sheet);
+        if (image == null)
+            image = renderer.renderBytes(sheet);
+
+        return image;
     }
 
     @Override

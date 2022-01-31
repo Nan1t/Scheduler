@@ -5,10 +5,7 @@ import edu.zieit.scheduler.bot.states.StateDenyAll;
 import edu.zieit.scheduler.bot.states.StateHelp;
 import edu.zieit.scheduler.bot.states.aud.StateAudList;
 import edu.zieit.scheduler.bot.states.aud.StateAudShow;
-import edu.zieit.scheduler.bot.states.consult.StateConsult;
-import edu.zieit.scheduler.bot.states.consult.StateConsultAll;
-import edu.zieit.scheduler.bot.states.consult.StateConsultDeny;
-import edu.zieit.scheduler.bot.states.consult.StateConsultShow;
+import edu.zieit.scheduler.bot.states.consult.*;
 import edu.zieit.scheduler.bot.states.course.StateCourse;
 import edu.zieit.scheduler.bot.states.course.StateCourseDeny;
 import edu.zieit.scheduler.bot.states.course.StateCourseList;
@@ -166,8 +163,8 @@ public class ChatManager {
         registerState(new StateGroupDeny(), "groupdeny");
         registerState(new StateGroup(), "group");
 
-        registerState(new StateTeacherList(bot.getLang(), new StateConsultShow(true)), "consultsub");
-        registerState(new StateTeacherList(bot.getLang(), new StateConsultShow(false)), "consultshow");
+        registerState(new StateConsultList(bot.getLang(), new StateConsultShow(true)), "consultsub");
+        registerState(new StateConsultList(bot.getLang(), new StateConsultShow(false)), "consultshow");
         registerState(new StateConsultDeny(), "consultdeny");
         registerState(new StateConsultAll(), "consall");
         registerState(new StateConsult(), "consult");

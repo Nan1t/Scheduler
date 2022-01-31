@@ -46,7 +46,7 @@ public class CourseSubsDao extends Dao {
         });
     }
 
-    public void resetMailing(Collection<NamespacedKey> keys) {
+    public void resetMailing(Collection<String> keys) {
         withSession(session -> session.createQuery("update SubscriptionCourse " +
                 "set received_mailing = false " +
                 "where schedule_key in (:keys)")

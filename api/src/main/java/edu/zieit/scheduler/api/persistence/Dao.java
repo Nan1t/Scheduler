@@ -56,7 +56,8 @@ public abstract class Dao {
      */
     protected <T> T findValue(Class<?> type, Serializable key) {
         try (Session session = factory.openSession()) {
-            return (T) session.get(type, key);
+            Object val = session.get(type, key);
+            return val != null ? (T) val : null;
         }
     }
 

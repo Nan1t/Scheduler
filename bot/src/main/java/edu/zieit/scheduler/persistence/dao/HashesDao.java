@@ -11,7 +11,15 @@ public class HashesDao extends Dao {
     }
 
     public ScheduleHash find(String fileName) {
-        return findValue(ScheduleHash.class, fileName);
+        ScheduleHash hash = findValue(ScheduleHash.class, fileName);
+
+        if (hash == null) {
+            hash = new ScheduleHash();
+            hash.setFileName(fileName);
+            hash.setHash(null);
+        }
+
+        return hash;
     }
 
     public void save(ScheduleHash sub) {

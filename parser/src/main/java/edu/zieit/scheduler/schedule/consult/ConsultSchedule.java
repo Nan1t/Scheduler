@@ -10,6 +10,7 @@ import edu.zieit.scheduler.schedule.AbstractScheduleBuilder;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConsultSchedule extends AbstractSchedule {
 
@@ -27,6 +28,13 @@ public class ConsultSchedule extends AbstractSchedule {
 
     public String getTitle() {
         return title;
+    }
+
+    public Collection<String> getTeachers() {
+        return weekMap.keySet().stream()
+                .map(Person::toString)
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
     }
 
     public Collection<ConsultDay> getWeek(Person teacher) {

@@ -51,7 +51,7 @@ public final class TimerService {
                 conf.getCheckRate(), TimeUnit.SECONDS);
 
         sendTask = timer.scheduleWithFixedDelay(this::mailSubscribers, 0L,
-                1L, TimeUnit.SECONDS);
+                2L, TimeUnit.SECONDS);
     }
 
     public void stop() {
@@ -61,7 +61,7 @@ public final class TimerService {
     }
 
     private void check() {
-        Collection<Schedule> reloaded = scheduleService.reloadCourseSchedule();
+        Collection<Schedule> reloaded = scheduleService.reloadCourseSchedule(false);
 
         if (!reloaded.isEmpty()) {
             List<NamespacedKey> keys = reloaded.stream()
@@ -82,12 +82,12 @@ public final class TimerService {
             logger.info("Course schedule reloaded. Users marked for mailing");
         }
 
-        if (scheduleService.reloadTeacherSchedule()) {
+        if (scheduleService.reloadTeacherSchedule(false)) {
             subsService.resetTeacherMailing();
             logger.info("Teacher schedule reloaded. Marked everyone for mailing");
         }
 
-        if (scheduleService.reloadConsultSchedule()) {
+        if (scheduleService.reloadConsultSchedule(false)) {
             subsService.resetConsultMailing();
             logger.info("Consult schedule reloaded. Marked everyone for mailing");
         }
@@ -177,7 +177,7 @@ public final class TimerService {
             }
 
             subsService.updateConsultSubs(notMailed);
-            logger.info("Sent " + notMailed.size() + " messages consult mailing");
+            logger.info("Sent " + notMailed.size() + " messages during consult mailing");
         }
     }
 

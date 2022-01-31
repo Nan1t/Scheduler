@@ -56,25 +56,27 @@ public abstract class ChoiceState extends State {
         if (!row.isEmpty())
             builder.keyboardRow(row);
 
-        if (page >= pages - 1) {
-            // Last page
-            builder.keyboardRow(Arrays.asList(
-                    getPageBtn(firstPageText, 0),
-                    getPageBtn(prevPageText, page - 1)
-            ));
-        } else if (page == 0) {
-            // First page
-            builder.keyboardRow(Arrays.asList(
-                    getPageBtn(nextPageText, page + 1),
-                    getPageBtn(lastPageText, pages - 1)
-            ));
-        } else {
-            builder.keyboardRow(Arrays.asList(
-                    getPageBtn(firstPageText, 0),
-                    getPageBtn(prevPageText, page - 1),
-                    getPageBtn(nextPageText, page + 1),
-                    getPageBtn(lastPageText, pages - 1)
-            ));
+        if (data.size() > elemOnPage()) {
+            if (page >= pages - 1) {
+                // Last page
+                builder.keyboardRow(Arrays.asList(
+                        getPageBtn(firstPageText, 0),
+                        getPageBtn(prevPageText, page - 1)
+                ));
+            } else if (page == 0) {
+                // First page
+                builder.keyboardRow(Arrays.asList(
+                        getPageBtn(nextPageText, page + 1),
+                        getPageBtn(lastPageText, pages - 1)
+                ));
+            } else {
+                builder.keyboardRow(Arrays.asList(
+                        getPageBtn(firstPageText, 0),
+                        getPageBtn(prevPageText, page - 1),
+                        getPageBtn(nextPageText, page + 1),
+                        getPageBtn(lastPageText, pages - 1)
+                ));
+            }
         }
 
         return builder.build();

@@ -98,7 +98,8 @@ public class SchedulerBot extends TelegramLongPollingBot {
     }
 
     public void send(ChatSession session, Object method) {
-        sendQueue.offer(new SendMethod(session, method));
+        if (method != null)
+            sendQueue.offer(new SendMethod(session, method));
     }
 
     public void send(Object method) {

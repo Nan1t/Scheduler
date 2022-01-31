@@ -70,28 +70,34 @@ public interface ScheduleService {
 
     /**
      * Reload and reparse all updated students schedules
+     * @param initial Is this initial (first loading).
+     *                On first load hashes equality will be ignored.
      * @return Collection of schedules which has been reloaded
      */
-    Collection<Schedule> reloadCourseSchedule();
+    Collection<Schedule> reloadCourseSchedule(boolean initial);
 
     /**
      * Reload and reparse teachers schedule
+     * @param initial Is this initial (first loading).
+     *                On first load hashes equality will be ignored.
      * @return true if schedule reloaded or false otherwise
      */
-    boolean reloadTeacherSchedule();
+    boolean reloadTeacherSchedule(boolean initial);
 
     /**
      * Reload and reparse consultations schedule
+     * @param initial Is this initial (first loading).
+     *                On first load hashes equality will be ignored.
      * @return true if schedule reloaded or false otherwise
      */
-    boolean reloadConsultSchedule();
+    boolean reloadConsultSchedule(boolean initial);
 
     /**
      * Reload all schedules
      */
     default void reloadAll() {
-        reloadCourseSchedule();
-        reloadTeacherSchedule();
-        reloadConsultSchedule();
+        reloadCourseSchedule(true);
+        reloadTeacherSchedule(true);
+        reloadConsultSchedule(true);
     }
 }
