@@ -124,8 +124,12 @@ public final class ScheduleServiceImpl implements ScheduleService {
         for (CourseScheduleInfo info : config.getCourses()) {
             String newHash = HashUtil.getHash(info.getUrl());
 
+            System.out.println("["+info.getId()+"] new hash: " + newHash);
+
             if (newHash != null) {
                 ScheduleHash oldHash = hashesDao.find(info.getId());
+
+                System.out.println("["+info.getId()+"] old hash: " + oldHash.getHash());
 
                 if (initial || !newHash.equals(oldHash.getHash())) {
                     if (!cleared) {
