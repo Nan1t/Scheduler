@@ -119,7 +119,6 @@ public final class ScheduleServiceImpl implements ScheduleService {
     public Collection<Schedule> reloadCourseSchedule(boolean initial) {
         List<Schedule> updated = new LinkedList<>();
         Set<String> groups = new HashSet<>();
-        boolean cleared = false;
 
         for (CourseScheduleInfo info : config.getCourses()) {
             String newHash = HashUtil.getHash(info.getUrl());
@@ -128,19 +127,13 @@ public final class ScheduleServiceImpl implements ScheduleService {
                 ScheduleHash oldHash = hashesDao.find(info.getId());
 
                 if (initial || !newHash.equals(oldHash.getHash())) {
-                    if (!cleared) {
-                        coursesSchedule.clear();
-                        courseByGroup.clear();
-                        cleared = true;
-                    }
-
                     saveHash(info.getId(), newHash);
 
                     try {
                         for (Schedule schedule : coursesLoader.load(info)) {
                             CourseSchedule course = (CourseSchedule) schedule;
 
-                            coursesSchedule.put(course.getKey(), course);
+                            coursesSchedule.put(schedule.getKey(), schedule);
                             updated.add(schedule);
 
                             for (String group : course.getGroupNames()) {
