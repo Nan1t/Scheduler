@@ -1,6 +1,4 @@
-[![CodeFactor](https://www.codefactor.io/repository/github/nan1t/scheduler/badge)](https://www.codefactor.io/repository/github/nan1t/scheduler)
-
-# Scheduler
+# ZIEIT Schedule manager
 
 This is second version of scheduler bot for ZIEIT institute.
 
