@@ -15,7 +15,7 @@ import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
 import edu.zieit.scheduler.util.LibLoader;
-import edu.zieit.webpanel.WebPanel;
+import edu.zieit.scheduler.webapi.RestServer;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +37,7 @@ public final class Scheduler {
     private SessionFactory sessionFactory;
     private SchedulerBot bot;
     private TimerService timer;
+    private RestServer restServer;
 
     public void start() throws Exception {
         Path rootDir = Paths.get("./");
@@ -86,18 +87,15 @@ public final class Scheduler {
         timer.start();
         logger.info("Started timer");
 
-        if (conf.isUsePanel()) {
-            logger.info("Starting web panel ...");
-            new WebPanel(scheduleService).start();
-            logger.info("Web panel started");
-        }
-
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Scheduler shutdown thread"));
 
         logger.info("Done! Scheduler ready to work");
     }
 
     public void shutdown() {
+        if (restServer != null)
+            restServer.stop();
+
         logger.info("Stopping timer ...");
         timer.stop();
         logger.info("Closing connections ...");

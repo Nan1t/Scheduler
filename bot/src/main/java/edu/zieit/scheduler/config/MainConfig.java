@@ -23,6 +23,9 @@ public final class MainConfig extends AbstractConfig {
 
     private int threadPoolSize;
 
+    private boolean enableRest;
+    private int restApiPort;
+
     public MainConfig(Path rootDir) {
         super(rootDir, "/config.yml", Map.of());
     }
@@ -89,4 +92,11 @@ public final class MainConfig extends AbstractConfig {
         return threadPoolSize;
     }
 
+    public boolean isEnableRest() {
+        return enableRest;
+    }
+
+    public int getRestApiPort() {
+        return restApiPort;
+    }
 }
