@@ -4,16 +4,6 @@
 
 ## Общее
 
-Коммуникация с API проивзодится отправкой POST запросов в следующем формате:
-
-```
-https://<base_url>:<port>/<endpoint>
-```
-
-* `<base_url>` - Доменое имя или IP адрес сервера
-* `<port>` - Порт сервера
-* `<endpoint>` - Конечная точка для сообщения
-
 Тело запроса должно быть в формате JSON. Ответ так же всегда приходит в формате JSON
 
 Все запросы кроме `/login` должны иметь токен доступа в заголовке. Пример:
@@ -39,7 +29,7 @@ Authentication: <access token>
 
 ## Endpoints
 
-### /login
+### [POST] /login
 
 Войти в систему и получить токен доступа.
 
@@ -64,13 +54,9 @@ Authentication: <access token>
 * `invalid_login`
 * `invalid_password`
 
-### /logout
+### [GET] /logout
 
 Завершить текущую сессию
-
-**Запрос**
-
-Отсутствует
 
 **Ответ**
 ```json
@@ -79,11 +65,18 @@ Authentication: <access token>
 }
 ```
 
-**Возможные ошибки**
+### [GET] /checkRate/get
 
-* `user_not_found`
+Получить настройки проверки обновлений в расписании.
 
-### /checkRate/configure
+**Ответ**
+```json
+{
+  "rate": 30
+}
+```
+
+### [POST] /checkRate/edit
 
 Изменить настройки проверки обновлений в расписании.
 
@@ -101,7 +94,18 @@ Authentication: <access token>
 }
 ```
 
-### /computerRooms/configure
+### [GET] /computerRooms/get
+
+Получить настройки компьютерных аудиторий
+
+**Ответ**
+```json
+{
+  "success": true
+}
+```
+
+### [POST] /computerRooms/edit
 
 Изменить настройки компьютерных аудиторий
 
@@ -122,18 +126,32 @@ Authentication: <access token>
 }
 ```
 
-**Возможные ошибки**
+### [GET] /dayIndexes/get
 
-* `fff` -
-* `fff` -
+Получить настройки сопоставления имени дня с его индексом
 
-### /dayIndexes/configure
+**Ответ**
+```json
+{
+  "days": {
+    "<day1>": 0,
+    "<day2>": 1
+  }
+}
+```
+
+### [POST] /dayIndexes/edit
 
 Изменить настройки сопоставления имени дня с его индексом
 
 **Запрос**
 ```json
-
+{
+  "days": {
+    "<day1>": 0,
+    "<day2>": 1
+  }
+}
 ```
 
 **Ответ**
@@ -143,12 +161,18 @@ Authentication: <access token>
 }
 ```
 
-**Возможные ошибки**
+### [GET] /teachers/edit
 
-* `fff` -
-* `fff` -
+Получить настройки расписания преподавателей
 
-### /teachers/configure
+**Ответ**
+```json
+{
+  "success": true
+}
+```
+
+### [POST] /teachers/edit
 
 Изменить настройки расписания преподавателей
 
@@ -164,12 +188,7 @@ Authentication: <access token>
 }
 ```
 
-**Возможные ошибки**
-
-* `fff` -
-* `fff` -
-
-### /consult/configure
+### [POST] /consult
 
 Изменить настройки расписания консультаций
 
@@ -190,7 +209,7 @@ Authentication: <access token>
 * `fff` -
 * `fff` -
 
-### /courses/configure
+### [POST] /courses
 
 Изменить настройки раписания курсов
 
@@ -211,7 +230,7 @@ Authentication: <access token>
 * `fff` -
 * `fff` -
 
-### /rendering/configure
+### [POST] /rendering
 
 Изменить настройки ренедеринга
 
@@ -232,13 +251,9 @@ Authentication: <access token>
 * `fff` -
 * `fff` -
 
-### /stats
+### [GET] /stats
 
 Получить статистику сервиса
-
-**Запрос**
-
-Отсутствует
 
 **Ответ**
 ```json
@@ -255,13 +270,9 @@ Authentication: <access token>
 
 Данное API доступно только для пользователей, имеющих право администратора.
 
-### /user/list
+### [GET] /user/list
 
 Получить список пользователей панели управления.
-
-**Запрос**
-
-Отсутствует
 
 **Ответ**
 ```json
@@ -275,13 +286,9 @@ Authentication: <access token>
 }
 ```
 
-### /user/sessions
+### [GET] /user/sessions
 
 Получить список сессий пользоватлей панели управления.
-
-**Запрос**
-
-Отсутствует
 
 **Ответ**
 ```json
@@ -295,7 +302,7 @@ Authentication: <access token>
 }
 ```
 
-### /user/endSession
+### [POST] /user/endSession
 
 Завершить сессию пользователя панели управления.
 
@@ -317,7 +324,7 @@ Authentication: <access token>
 
 * `invalid_token`
 
-### /user/create
+### [POST] /user/create
 
 Создать нового пользователя панели управления.
 
@@ -343,7 +350,7 @@ Authentication: <access token>
 * `login_taken`
 * `password_short`
 
-### /user/edit
+### [POST] /user/edit
 
 Изменить существующего пользователя панели управления.
 
@@ -368,7 +375,7 @@ Authentication: <access token>
 * `user_not_found`
 * `password_short`
 
-### /user/delete
+### [POST] /user/delete
 
 Удалить пользователя панели управления.
 
