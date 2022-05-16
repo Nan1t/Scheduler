@@ -22,7 +22,6 @@ public final class MainConfig extends AbstractConfig {
     private int pointsTimeout;
 
     private int threadPoolSize;
-    private boolean usePanel;
 
     public MainConfig(Path rootDir) {
         super(rootDir, "/config.yml", Map.of());
@@ -44,7 +43,6 @@ public final class MainConfig extends AbstractConfig {
         pointsTimeout = conf.getNode("points", "timeout").getInt() * 1000;
 
         threadPoolSize = conf.getNode("thread_pool_size").getInt(4);
-        usePanel = conf.getNode("use_panel").getBoolean(false);
     }
 
     public Properties getDbProperties() {
@@ -91,7 +89,4 @@ public final class MainConfig extends AbstractConfig {
         return threadPoolSize;
     }
 
-    public boolean isUsePanel() {
-        return usePanel;
-    }
 }
