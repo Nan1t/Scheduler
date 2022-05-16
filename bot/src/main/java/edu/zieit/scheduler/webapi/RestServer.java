@@ -16,7 +16,6 @@ public class RestServer {
             api = Javalin.create().start(conf.getRestApiPort());
 
 
-
             logger.info("WEB server starter");
         }
     }
