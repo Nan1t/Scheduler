@@ -1,0 +1,36 @@
+package edu.zieit.scheduler.persistence.dao;
+
+import edu.zieit.scheduler.api.persistence.Dao;
+import edu.zieit.scheduler.persistence.webapi.ApiUser;
+import org.hibernate.SessionFactory;
+
+import java.util.List;
+
+public class ApiUserDao extends Dao {
+
+    public ApiUserDao(SessionFactory factory) {
+        super(factory);
+    }
+
+    public List<ApiUser> listAll() {
+        return useSession(session ->
+                session.createQuery("from ApiUser", ApiUser.class)
+                        .getResultList());
+    }
+
+    public ApiUser find(String login) {
+        return findValue(ApiUser.class, login);
+    }
+
+    public void create(ApiUser user) {
+        withSession(session -> session.save(user));
+    }
+
+    public void update(ApiUser user) {
+        withSession(session -> session.update(user));
+    }
+
+    public void delete(ApiUser user) {
+        withSession(session -> session.delete(user));
+    }
+}

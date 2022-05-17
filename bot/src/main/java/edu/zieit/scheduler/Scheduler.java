@@ -9,13 +9,15 @@ import edu.zieit.scheduler.persistence.ScheduleHash;
 import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
 import edu.zieit.scheduler.persistence.subscription.*;
+import edu.zieit.scheduler.persistence.webapi.ApiSession;
+import edu.zieit.scheduler.persistence.webapi.ApiUser;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.ScheduleServiceImpl;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
 import edu.zieit.scheduler.util.LibLoader;
-import edu.zieit.scheduler.webapi.RestServer;
+import edu.zieit.scheduler.webapi.WebServer;
 import napi.configurate.yaml.lang.Language;
 import napi.configurate.yaml.source.ConfigSources;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +39,7 @@ public final class Scheduler {
     private SessionFactory sessionFactory;
     private SchedulerBot bot;
     private TimerService timer;
-    private RestServer restServer;
+    private WebServer webServer;
 
     public void start() throws Exception {
         Path rootDir = Paths.get("./");
@@ -68,6 +70,8 @@ public final class Scheduler {
         PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
         NoticesDao noticesDao = new NoticesDao(sessionFactory);
         HashesDao hashesDao = new HashesDao(sessionFactory);
+        ApiUserDao apiUserDao = new ApiUserDao(sessionFactory);
+        ApiSessionDao apiSessionDao = new ApiSessionDao(sessionFactory);
 
         SubsService subsService = new SubsService(teacherDao, consultDao, coursesDao, pointsDao, noticesDao, groupsDao);
         ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
@@ -87,15 +91,16 @@ public final class Scheduler {
         timer.start();
         logger.info("Started timer");
 
+        webServer = new WebServer();
+        webServer.start(conf);
+
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Scheduler shutdown thread"));
 
         logger.info("Done! Scheduler ready to work");
     }
 
     public void shutdown() {
-        if (restServer != null)
-            restServer.stop();
-
+        webServer.stop();
         logger.info("Stopping timer ...");
         timer.stop();
         logger.info("Closing connections ...");
@@ -128,6 +133,8 @@ public final class Scheduler {
         configuration.addAnnotatedClass(SubscriptionGroup.class);
         configuration.addAnnotatedClass(ScheduleHash.class);
         configuration.addAnnotatedClass(TeacherNotice.class);
+        configuration.addAnnotatedClass(ApiUser.class);
+        configuration.addAnnotatedClass(ApiSession.class);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());
