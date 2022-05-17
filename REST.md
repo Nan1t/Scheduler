@@ -56,12 +56,27 @@ Authentication: <access token>
 
 ### [GET] /logout
 
-Завершить текущую сессию
+Завершить текущую сессию.
 
 **Ответ**
 ```json
 {
   "success": true
+}
+```
+
+### [GET] /stats
+
+Получить статистику сервиса.
+
+**Ответ**
+```json
+{
+  "users": 100,
+  "subs_teacher": 50,
+  "subs_consult": 12,
+  "subs_course": 20,
+  "subs_group": 65
 }
 ```
 
@@ -107,7 +122,7 @@ Authentication: <access token>
 
 ### [POST] /computerRooms/edit
 
-Изменить настройки компьютерных аудиторий
+Изменить настройки компьютерных аудиторий.
 
 **Запрос**
 ```json
@@ -128,7 +143,7 @@ Authentication: <access token>
 
 ### [GET] /dayIndexes/get
 
-Получить настройки сопоставления имени дня с его индексом
+Получить настройки сопоставления имени дня с его индексом.
 
 **Ответ**
 ```json
@@ -142,7 +157,7 @@ Authentication: <access token>
 
 ### [POST] /dayIndexes/edit
 
-Изменить настройки сопоставления имени дня с его индексом
+Изменить настройки сопоставления имени дня с его индексом.
 
 **Запрос**
 ```json
@@ -161,24 +176,34 @@ Authentication: <access token>
 }
 ```
 
-### [GET] /teachers/edit
+### [GET] /teachers/get
 
-Получить настройки расписания преподавателей
+Получить настройки расписания преподавателей.
 
 **Ответ**
 ```json
 {
-  "success": true
+  "url": "<document url>",
+  "associations": {
+    "<keyword1>": "<sheet link>",
+    "<keywordN>": "<sheet link>"
+  }
 }
 ```
 
 ### [POST] /teachers/edit
 
-Изменить настройки расписания преподавателей
+Изменить настройки расписания преподавателей.
 
 **Запрос**
 ```json
-
+{
+  "url": "<document url>",
+  "associations": {
+    "<keyword1>": "<sheet link>",
+    "<keywordN>": "<sheet link>"
+  }
+}
 ```
 
 **Ответ**
@@ -188,13 +213,42 @@ Authentication: <access token>
 }
 ```
 
-### [POST] /consult
+### [GET] /consult/get
 
-Изменить настройки расписания консультаций
+Получить настройки расписания консультаций.
+
+**Ответ**
+```json
+{
+  "url": "<document url>",
+  "dayPoint": {
+    "col": 1,
+    "row": 2
+  },
+  "teacherPoint": {
+    "col": 0,
+    "row": 3
+  }
+}
+```
+
+### [POST] /consult/edit
+
+Изменить настройки расписания консультаций.
 
 **Запрос**
 ```json
-
+{
+  "url": "<document url>",
+  "dayPoint": {
+    "col": 1,
+    "row": 2
+  },
+  "teacherPoint": {
+    "col": 0,
+    "row": 3
+  }
+}
 ```
 
 **Ответ**
@@ -204,18 +258,52 @@ Authentication: <access token>
 }
 ```
 
-**Возможные ошибки**
+### [GET] /courses/get
 
-* `fff` -
-* `fff` -
+Получить настройки раписания курсов.
 
-### [POST] /courses
+**Ответ**
+```json
+{
+  "courses": [
+    {
+      "url": "<document url>",
+      "name": "<course name>",
+      "dayPoint": {
+        "col": 1,
+        "row": 2
+      },
+      "groupPoint": {
+        "col": 0,
+        "row": 3
+      }
+    }
+  ]
+}
+```
 
-Изменить настройки раписания курсов
+### [POST] /courses/edit
+
+Изменить настройки раписания курсов.
 
 **Запрос**
 ```json
-
+{
+  "courses": [
+    {
+      "url": "<document url>",
+      "name": "<course name>",
+      "dayPoint": {
+        "col": 1,
+        "row": 2
+      },
+      "groupPoint": {
+        "col": 0,
+        "row": 3
+      }
+    }
+  ]
+}
 ```
 
 **Ответ**
@@ -225,44 +313,34 @@ Authentication: <access token>
 }
 ```
 
-**Возможные ошибки**
+### [GET] /rendering/get
 
-* `fff` -
-* `fff` -
+Получить настройки ренедеринга.
 
-### [POST] /rendering
+**Ответ**
+```json
+{
+  "format": "<JPEG | PNG | GIF>",
+  "dpi": 175
+}
+```
 
-Изменить настройки ренедеринга
+### [POST] /rendering/edit
+
+Изменить настройки ренедеринга.
 
 **Запрос**
 ```json
-
+{
+  "format": "<JPEG | PNG | GIF>",
+  "dpi": 175
+}
 ```
 
 **Ответ**
 ```json
 {
   "success": true
-}
-```
-
-**Возможные ошибки**
-
-* `fff` -
-* `fff` -
-
-### [GET] /stats
-
-Получить статистику сервиса
-
-**Ответ**
-```json
-{
-  "users": 100,
-  "subs_teacher": 50,
-  "subs_consult": 12,
-  "subs_course": 20,
-  "subs_group": 65
 }
 ```
 
