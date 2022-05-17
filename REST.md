@@ -4,7 +4,7 @@
 
 ## Общее
 
-Тело запроса должно быть в формате JSON. Ответ так же всегда приходит в формате JSON
+Тело запроса должно быть в формате JSON. Ответ так же всегда приходит в формате JSON.
 
 Все запросы кроме `/login` должны иметь токен доступа в заголовке. Пример:
 
@@ -25,7 +25,11 @@ Authentication: <access token>
 
 Где `<error>` - код ошибки в строков виде, а `<message>` - более подробное описание ошибки.
 
-Коды ошибок указаны в описании каждой конечной точке.
+Коды специфичных ошибок указаны в описании каждой конечной точке. 
+
+**Общие ошибки:**
+
+* `access_denied` - Недействительный токен
 
 ## Endpoints
 
@@ -76,7 +80,8 @@ Authentication: <access token>
   "subs_teacher": 50,
   "subs_consult": 12,
   "subs_course": 20,
-  "subs_group": 65
+  "subs_group": 65,
+  "subs_points": 40
 }
 ```
 
@@ -373,7 +378,9 @@ Authentication: <access token>
 {
   "sessions": [
     {
+      "login": "<user login>",
       "token": "<session token>",
+      "expiryAfter": 10000,
       "agent": "<user agent name>"
     }
   ]
