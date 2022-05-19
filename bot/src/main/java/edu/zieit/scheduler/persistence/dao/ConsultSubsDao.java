@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.persistence.dao;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionConsult;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
@@ -10,6 +11,7 @@ import java.util.Collection;
 
 public class ConsultSubsDao extends Dao {
 
+    @Inject
     public ConsultSubsDao(SessionFactory factory) {
         super(factory);
     }

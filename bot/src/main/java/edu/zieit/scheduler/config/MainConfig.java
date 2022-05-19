@@ -1,5 +1,8 @@
 package edu.zieit.scheduler.config;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Properties;
@@ -26,7 +29,8 @@ public final class MainConfig extends AbstractConfig {
     private boolean enableRest;
     private int restApiPort;
 
-    public MainConfig(Path rootDir) {
+    @Inject
+    public MainConfig(@Named("appDir") Path rootDir) {
         super(rootDir, "/config.yml", Map.of());
     }
 

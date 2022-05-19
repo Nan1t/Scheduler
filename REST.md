@@ -85,91 +85,45 @@ Authentication: <access token>
 }
 ```
 
-### [GET] /checkRate/get
+### [GET] /properties
 
-Получить настройки проверки обновлений в расписании.
-
-**Ответ**
-```json
-{
-  "rate": 30
-}
-```
-
-### [POST] /checkRate/edit
-
-Изменить настройки проверки обновлений в расписании.
-
-**Запрос**
-```json
-{
-  "rate": 20
-}
-```
+Получить общие настройки расписания.
 
 **Ответ**
+
 ```json
 {
-  "success": true
-}
-```
-
-### [GET] /computerRooms/get
-
-Получить настройки компьютерных аудиторий
-
-**Ответ**
-```json
-{
-  "success": true
-}
-```
-
-### [POST] /computerRooms/edit
-
-Изменить настройки компьютерных аудиторий.
-
-**Запрос**
-```json
-{
-  "rooms": [
+  "checkRate": 30,
+  "compAuds": [
     "007",
-    "023"
-  ]
-}
-```
-
-**Ответ**
-```json
-{
-  "success": true
-}
-```
-
-### [GET] /dayIndexes/get
-
-Получить настройки сопоставления имени дня с его индексом.
-
-**Ответ**
-```json
-{
-  "days": {
-    "<day1>": 0,
-    "<day2>": 1
+    "009",
+    "..."
+  ],
+  "dayIndexes": {
+    "day1": 0,
+    "day2": 1,
+    "...": 2
   }
 }
 ```
 
-### [POST] /dayIndexes/edit
+### [POST] /properties
 
-Изменить настройки сопоставления имени дня с его индексом.
+Изменить общие настройки расписания.
 
 **Запрос**
 ```json
 {
-  "days": {
-    "<day1>": 0,
-    "<day2>": 1
+  "checkRate": 30,
+  "compAuds": [
+    "007",
+    "009",
+    "..."
+  ],
+  "dayIndexes": {
+    "day1": 0,
+    "day2": 1,
+    "...": 2
   }
 }
 ```
@@ -181,7 +135,7 @@ Authentication: <access token>
 }
 ```
 
-### [GET] /teachers/get
+### [GET] /teachers
 
 Получить настройки расписания преподавателей.
 
@@ -196,7 +150,7 @@ Authentication: <access token>
 }
 ```
 
-### [POST] /teachers/edit
+### [POST] /teachers
 
 Изменить настройки расписания преподавателей.
 
@@ -218,7 +172,7 @@ Authentication: <access token>
 }
 ```
 
-### [GET] /consult/get
+### [GET] /consult
 
 Получить настройки расписания консультаций.
 
@@ -237,7 +191,7 @@ Authentication: <access token>
 }
 ```
 
-### [POST] /consult/edit
+### [POST] /consult
 
 Изменить настройки расписания консультаций.
 
@@ -263,7 +217,7 @@ Authentication: <access token>
 }
 ```
 
-### [GET] /courses/get
+### [GET] /courses
 
 Получить настройки раписания курсов.
 
@@ -287,7 +241,7 @@ Authentication: <access token>
 }
 ```
 
-### [POST] /courses/edit
+### [POST] /courses
 
 Изменить настройки раписания курсов.
 
@@ -318,7 +272,7 @@ Authentication: <access token>
 }
 ```
 
-### [GET] /rendering/get
+### [GET] /rendering
 
 Получить настройки ренедеринга.
 
@@ -330,7 +284,7 @@ Authentication: <access token>
 }
 ```
 
-### [POST] /rendering/edit
+### [POST] /rendering
 
 Изменить настройки ренедеринга.
 

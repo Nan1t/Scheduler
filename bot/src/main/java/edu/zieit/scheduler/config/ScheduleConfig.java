@@ -1,6 +1,8 @@
 package edu.zieit.scheduler.config;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import edu.zieit.scheduler.api.SheetPoint;
 import edu.zieit.scheduler.api.render.DocRenderOptions;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleInfo;
@@ -16,14 +18,15 @@ import java.util.Map;
 public final class ScheduleConfig extends AbstractConfig {
 
     private long checkRate;
-    private Collection<String> compAuds;
+    private Collection<String> compAud;
     private final Map<String, Integer> dayIndexes = new HashMap<>();
     private TeacherScheduleInfo teachers;
     private ConsultScheduleInfo consult;
     private Collection<CourseScheduleInfo> courses;
     private DocRenderOptions renderOptions;
 
-    public ScheduleConfig(Path rootDir) {
+    @Inject
+    public ScheduleConfig(@Named("appDir") Path rootDir) {
         super(rootDir, "/schedule.yml", Map.of(
                 SheetPoint.class, new SheetPoint.Serializer(),
                 TeacherScheduleInfo.class, new TeacherScheduleInfo.Serializer(),
@@ -35,7 +38,7 @@ public final class ScheduleConfig extends AbstractConfig {
     @Override
     protected void load() throws ObjectMappingException {
         checkRate = conf.getNode("check_rate").getLong();
-        compAuds = conf.getNode("comp_auds").getList(TypeToken.of(String.class));
+        compAud = conf.getNode("comp_auds").getList(TypeToken.of(String.class));
         teachers = conf.getNode("teachers").getValue(TypeToken.of(TeacherScheduleInfo.class));
         consult = conf.getNode("consult").getValue(TypeToken.of(ConsultScheduleInfo.class));
         courses = conf.getNode("courses").getList(TypeToken.of(CourseScheduleInfo.class));
@@ -57,8 +60,8 @@ public final class ScheduleConfig extends AbstractConfig {
         return checkRate;
     }
 
-    public Collection<String> getCompAuds() {
-        return compAuds;
+    public Collection<String> getCompAud() {
+        return compAud;
     }
 
     public Map<String, Integer> getDayIndexes() {

@@ -70,9 +70,9 @@ public interface ScheduleService {
 
     /**
      * Reload and reparse all updated students schedules
-     * @param initial Is this initial (first loading).
-     *                On first load hashes equality will be ignored.
-     * @return Collection of schedules which has been reloaded
+     * @param initial Is this initial (first) loading.
+     *                On first load, hashes equality will be ignored.
+     * @return Collection of schedule which has been reloaded
      */
     Collection<Schedule> reloadCourseSchedule(boolean initial);
 

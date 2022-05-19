@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.services;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
@@ -46,6 +47,7 @@ public final class ScheduleServiceImpl implements ScheduleService {
     private List<String> groups;
     private List<String> classrooms;
 
+    @Inject
     public ScheduleServiceImpl(Language lang, ScheduleConfig config, HashesDao hashesDao) {
         this.lang = lang;
         this.config = config;

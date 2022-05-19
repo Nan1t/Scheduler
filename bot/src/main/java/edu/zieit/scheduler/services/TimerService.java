@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.services;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
@@ -38,6 +39,7 @@ public final class TimerService {
     private ScheduledFuture<?> checkTask;
     private ScheduledFuture<?> sendTask;
 
+    @Inject
     public TimerService(ScheduleConfig conf, SchedulerBot bot, ScheduleService scheduleService, SubsService subsService) {
         this.conf = conf;
         this.bot = bot;

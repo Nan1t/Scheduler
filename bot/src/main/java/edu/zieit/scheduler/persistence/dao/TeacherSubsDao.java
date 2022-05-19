@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.persistence.dao;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
 import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import org.hibernate.SessionFactory;
@@ -9,6 +10,7 @@ import java.util.Collection;
 
 public class TeacherSubsDao extends Dao {
 
+    @Inject
     public TeacherSubsDao(SessionFactory factory) {
         super(factory);
     }

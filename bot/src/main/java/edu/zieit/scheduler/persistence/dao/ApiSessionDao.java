@@ -1,14 +1,15 @@
 package edu.zieit.scheduler.persistence.dao;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
 import edu.zieit.scheduler.persistence.webapi.ApiSession;
-import edu.zieit.scheduler.persistence.webapi.ApiUser;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
 
 public class ApiSessionDao extends Dao {
 
+    @Inject
     public ApiSessionDao(SessionFactory factory) {
         super(factory);
     }
@@ -19,8 +20,8 @@ public class ApiSessionDao extends Dao {
                         .getResultList());
     }
 
-    public ApiSession find(String login) {
-        return findValue(ApiSession.class, login);
+    public ApiSession find(String accessToken) {
+        return findValue(ApiSession.class, accessToken);
     }
 
     public void create(ApiSession user) {

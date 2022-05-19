@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.services;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.persistence.TeacherNotice;
@@ -18,6 +19,7 @@ public final class SubsService {
     private final NoticesDao noticesDao;
     private final GroupSubsDao groupsDao;
 
+    @Inject
     public SubsService(TeacherSubsDao teacherDao, ConsultSubsDao consultDao, CourseSubsDao coursesDao,
                        PointsSubsDao pointsDao, NoticesDao noticesDao, GroupSubsDao groupsDao) {
         this.teacherDao = teacherDao;

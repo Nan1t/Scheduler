@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.bot;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatManager;
 import edu.zieit.scheduler.bot.chat.ChatSession;
@@ -42,6 +43,7 @@ public class SchedulerBot extends TelegramLongPollingBot {
     private final ScheduledExecutorService timer;
     private final ScheduledFuture<?> sendTask;
 
+    @Inject
     public SchedulerBot(MainConfig conf, Language lang, ScheduleService scheduleService,
                         SubsService subsService, PointsService pointsService) {
         this.username = conf.getTgBotName();
