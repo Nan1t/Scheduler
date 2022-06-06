@@ -38,6 +38,9 @@ public final class Scheduler {
         MainConfig conf = new MainConfig(rootDir);
         ScheduleConfig scheduleConf = new ScheduleConfig(rootDir);
 
+        conf.reload();
+        scheduleConf.reload();
+
         Injector injector = Guice.createInjector(
                 new BaseModule(rootDir, conf, scheduleConf),
                 new PersistenceModule(conf),
@@ -47,8 +50,6 @@ public final class Scheduler {
 
         Language lang = injector.getInstance(Language.class);
 
-        conf.reload();
-        scheduleConf.reload();
         lang.reload();
 
         Regexs.TEACHER = conf.getRegexTeacherDefault();
@@ -75,7 +76,7 @@ public final class Scheduler {
         timer.start();
         logger.info("Started timer");
 
-        webServer = new WebServer();
+        webServer = injector.getInstance(WebServer.class);
         webServer.start(conf);
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Scheduler shutdown thread"));

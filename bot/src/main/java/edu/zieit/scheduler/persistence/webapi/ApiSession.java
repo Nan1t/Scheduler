@@ -10,8 +10,8 @@ public class ApiSession {
     @Column(name = "access_token")
     private String accessToken;
 
-    @Column(name = "user_login")
-    private String userLogin;
+//    @Column(name = "user_login")
+//    private String userLogin;
 
     @Column(name = "expiry_after")
     private long expiryAfter;
@@ -31,13 +31,13 @@ public class ApiSession {
         this.accessToken = accessToken;
     }
 
-    public String getUserLogin() {
-        return userLogin;
-    }
-
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
-    }
+//    public String getUserLogin() {
+//        return userLogin;
+//    }
+//
+//    public void setUserLogin(String userLogin) {
+//        this.userLogin = userLogin;
+//    }
 
     public long getExpiryAfter() {
         return expiryAfter;

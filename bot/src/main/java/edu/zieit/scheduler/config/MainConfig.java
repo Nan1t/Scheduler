@@ -50,6 +50,9 @@ public final class MainConfig extends AbstractConfig {
         pointsTimeout = conf.getNode("points", "timeout").getInt() * 1000;
 
         threadPoolSize = conf.getNode("thread_pool_size").getInt(4);
+
+        enableRest = conf.getNode("rest_api", "enable").getBoolean(false);
+        restApiPort = conf.getNode("rest_api", "port").getInt(8080);
     }
 
     public Properties getDbProperties() {

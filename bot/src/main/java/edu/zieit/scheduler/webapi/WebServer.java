@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.webapi;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.webapi.controller.*;
 import io.javalin.Javalin;
@@ -12,22 +13,49 @@ public class WebServer {
 
     private Javalin api;
 
+    private final AuthHandler authHandler;
+
+    private final AuthController authController;
+    private final StatsController statsController;
+    private final PropertiesController propsController;
+    private final TeachersController teachersController;
+    private final ConsultController consultController;
+    private final CoursesController coursesController;
+    private final RenderingController renderingController;
+    private final UserController userController;
+
+    @Inject
+    public WebServer(
+            AuthHandler authHandler,
+            AuthController authController,
+            StatsController statsController,
+            PropertiesController propsController,
+            TeachersController teachersController,
+            ConsultController consultController,
+            CoursesController coursesController,
+            RenderingController renderingController,
+            UserController userController
+    ) {
+        this.authHandler = authHandler;
+        this.authController = authController;
+        this.statsController = statsController;
+        this.propsController = propsController;
+        this.teachersController = teachersController;
+        this.consultController = consultController;
+        this.coursesController = coursesController;
+        this.renderingController = renderingController;
+        this.userController = userController;
+    }
+
     public void start(MainConfig conf) {
         if (conf.isEnableRest()) {
-            api = Javalin.create(/*config -> config.accessManager(new AuthHandler())*/)
-                    .start(conf.getRestApiPort());
+            api = Javalin.create(config -> {
+                config.jsonMapper(new GsonMapper());
+                config.accessManager(authHandler);
+            }).start(conf.getRestApiPort());
 
-            var authController = new AuthController();
-            var statsController = new StatsController();
-            var propsController = new PropertiesController();
-            var teachersController = new TeachersController();
-            var consultController = new ConsultController();
-            var coursesController = new CoursesController();
-            var renderingController = new RenderingController();
-            var userController = new UserController();
-
-            api.get("/login", authController::login);
-            api.post("/logout", authController::logout);
+            api.post("/login", authController::login);
+            api.get("/logout", authController::logout);
             api.get("/stats", statsController::get);
             api.get("/properties", propsController::get);
             api.post("/properties", propsController::update);
