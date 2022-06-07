@@ -3,7 +3,6 @@ package edu.zieit.scheduler.services;
 import com.google.inject.Inject;
 import edu.zieit.scheduler.persistence.dao.ApiSessionDao;
 import edu.zieit.scheduler.persistence.dao.ApiUserDao;
-import edu.zieit.scheduler.persistence.webapi.ApiSession;
 
 public class ApiUserService {
 

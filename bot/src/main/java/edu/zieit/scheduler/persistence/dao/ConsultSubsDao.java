@@ -2,8 +2,6 @@ package edu.zieit.scheduler.persistence.dao;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionConsult;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionTeacher;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 

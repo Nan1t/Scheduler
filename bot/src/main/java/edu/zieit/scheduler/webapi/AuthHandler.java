@@ -1,7 +1,6 @@
 package edu.zieit.scheduler.webapi;
 
 import com.google.inject.Inject;
-import edu.zieit.scheduler.persistence.webapi.ApiSession;
 import edu.zieit.scheduler.services.ApiUserService;
 import edu.zieit.scheduler.util.TimeUtil;
 import io.javalin.core.security.AccessManager;

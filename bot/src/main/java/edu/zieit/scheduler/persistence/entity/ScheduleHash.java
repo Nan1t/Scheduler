@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.persistence;
+package edu.zieit.scheduler.persistence.entity;
 
 import javax.persistence.*;
 

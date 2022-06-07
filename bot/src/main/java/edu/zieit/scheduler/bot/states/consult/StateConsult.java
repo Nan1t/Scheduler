@@ -6,7 +6,6 @@ import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.chat.InputResult;
 import edu.zieit.scheduler.bot.chat.State;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionConsult;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;

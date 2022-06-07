@@ -2,7 +2,7 @@ package edu.zieit.scheduler.persistence.dao;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
-import edu.zieit.scheduler.persistence.ScheduleHash;
+import edu.zieit.scheduler.persistence.entity.ScheduleHash;
 import org.hibernate.SessionFactory;
 
 public class HashesDao extends Dao {

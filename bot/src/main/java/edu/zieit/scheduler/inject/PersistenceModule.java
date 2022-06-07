@@ -2,12 +2,8 @@ package edu.zieit.scheduler.inject;
 
 import com.google.inject.AbstractModule;
 import edu.zieit.scheduler.config.MainConfig;
-import edu.zieit.scheduler.persistence.ScheduleHash;
-import edu.zieit.scheduler.persistence.TeacherNotice;
+import edu.zieit.scheduler.persistence.entity.ScheduleHash;
 import edu.zieit.scheduler.persistence.dao.*;
-import edu.zieit.scheduler.persistence.subscription.*;
-import edu.zieit.scheduler.persistence.webapi.ApiSession;
-import edu.zieit.scheduler.persistence.webapi.ApiUser;
 import edu.zieit.scheduler.util.LibLoader;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;

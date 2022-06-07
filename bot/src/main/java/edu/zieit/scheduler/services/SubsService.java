@@ -3,9 +3,7 @@ package edu.zieit.scheduler.services;
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
-import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
-import edu.zieit.scheduler.persistence.subscription.*;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

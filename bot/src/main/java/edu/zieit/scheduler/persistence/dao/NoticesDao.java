@@ -2,7 +2,6 @@ package edu.zieit.scheduler.persistence.dao;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
-import edu.zieit.scheduler.persistence.TeacherNotice;
 import org.hibernate.SessionFactory;
 
 public class NoticesDao extends Dao {

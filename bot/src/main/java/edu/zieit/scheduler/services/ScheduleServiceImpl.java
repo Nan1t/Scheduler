@@ -8,7 +8,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleLoader;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.util.HashUtil;
 import edu.zieit.scheduler.config.ScheduleConfig;
-import edu.zieit.scheduler.persistence.ScheduleHash;
+import edu.zieit.scheduler.persistence.entity.ScheduleHash;
 import edu.zieit.scheduler.persistence.dao.HashesDao;
 import edu.zieit.scheduler.render.AsposeRenderer;
 import edu.zieit.scheduler.schedule.TimeTable;
