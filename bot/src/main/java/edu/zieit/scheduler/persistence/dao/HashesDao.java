@@ -24,12 +24,12 @@ public class HashesDao extends Dao {
         return hash;
     }
 
-    public void save(ScheduleHash sub) {
-        withSession(session -> session.saveOrUpdate(sub));
+    public void save(ScheduleHash hash) {
+        withSession(session -> session.saveOrUpdate(hash));
     }
 
-    public void delete(ScheduleHash sub) {
-        withSession(session -> session.delete(sub));
+    public void delete(ScheduleHash hash) {
+        withSession(session -> session.delete(hash));
     }
 
 }

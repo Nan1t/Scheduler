@@ -2,38 +2,39 @@ package edu.zieit.scheduler.persistence.dao;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
+import edu.zieit.scheduler.persistence.entity.SubsGroup;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import java.util.Collection;
 
-public class GroupSubsDao extends Dao {
+public class SubsGroupDao extends Dao {
 
     @Inject
-    public GroupSubsDao(SessionFactory factory) {
+    public SubsGroupDao(SessionFactory factory) {
         super(factory);
     }
 
-    public SubscriptionGroup find(String tgId) {
-        return findValue(SubscriptionGroup.class, tgId);
+    public SubsGroup find(String tgId) {
+        return findValue(SubsGroup.class, tgId);
     }
 
-    public Collection<SubscriptionGroup> findNotMailed(int limit) {
+    public Collection<SubsGroup> findNotNotified(int limit) {
         return useSession(session -> {
-            Query<?> q = session.createQuery("from SubscriptionGroup where received_mailing = false");
+            Query<?> q = session.createQuery("from SubsGroup where notified = false");
             q.setMaxResults(limit);
-            return (Collection<SubscriptionGroup>) q.list();
+            return (Collection<SubsGroup>) q.list();
         });
     }
 
-    public void save(SubscriptionGroup sub) {
+    public void save(SubsGroup sub) {
         withSession(session -> session.saveOrUpdate(sub));
     }
 
-    public void update(Collection<SubscriptionGroup> subs) {
+    public void update(Collection<SubsGroup> subs) {
         withSession(session -> {
             int i = 0;
-            for (SubscriptionGroup sub : subs) {
+            for (SubsGroup sub : subs) {
                 session.update(sub);
 
                 if (i % 50 == 0) {
@@ -46,15 +47,15 @@ public class GroupSubsDao extends Dao {
         });
     }
 
-    public void resetMailing(Collection<String> groups) {
-        withSession(session -> session.createQuery("update SubscriptionGroup " +
-                "set received_mailing = false where group_name in (:groups)")
+    public void resetNotifications(Collection<String> groups) {
+        withSession(session -> session.createQuery("update SubsGroup " +
+                "set notified = false where group in (:groups)")
                 .setParameterList("groups", groups)
                 .executeUpdate());
     }
 
     public boolean delete(String tgId) {
-        int res = execUpdate("delete from SubscriptionGroup where tg_id = :tg_id",
+        int res = execUpdate("delete from SubsGroup where tg_id = :tg_id",
                 q -> q.setParameter("tg_id", tgId));
         return res > 0;
     }

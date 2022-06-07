@@ -2,38 +2,39 @@ package edu.zieit.scheduler.persistence.dao;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
+import edu.zieit.scheduler.persistence.entity.SubsCourse;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import java.util.Collection;
 
-public class CourseSubsDao extends Dao {
+public class SubsCourseDao extends Dao {
 
     @Inject
-    public CourseSubsDao(SessionFactory factory) {
+    public SubsCourseDao(SessionFactory factory) {
         super(factory);
     }
 
-    public SubscriptionCourse find(String tgId) {
-        return findValue(SubscriptionCourse.class, tgId);
+    public SubsCourse find(String tgId) {
+        return findValue(SubsCourse.class, tgId);
     }
 
-    public Collection<SubscriptionCourse> findNotMailed(int limit) {
+    public Collection<SubsCourse> findNotNotified(int limit) {
         return useSession(session -> {
-            Query<?> q = session.createQuery("from SubscriptionCourse where received_mailing = false");
+            Query<?> q = session.createQuery("from SubsCourse where notified = false");
             q.setMaxResults(limit);
-            return (Collection<SubscriptionCourse>) q.list();
+            return (Collection<SubsCourse>) q.list();
         });
     }
 
-    public void save(SubscriptionCourse sub) {
+    public void save(SubsCourse sub) {
         withSession(session -> session.saveOrUpdate(sub));
     }
 
-    public void update(Collection<SubscriptionCourse> subs) {
+    public void update(Collection<SubsCourse> subs) {
         withSession(session -> {
             int i = 0;
-            for (SubscriptionCourse sub : subs) {
+            for (SubsCourse sub : subs) {
                 session.update(sub);
 
                 if (i % 50 == 0) {
@@ -46,16 +47,16 @@ public class CourseSubsDao extends Dao {
         });
     }
 
-    public void resetMailing(Collection<String> keys) {
-        withSession(session -> session.createQuery("update SubscriptionCourse " +
-                "set received_mailing = false " +
+    public void resetNotications(Collection<String> keys) {
+        withSession(session -> session.createQuery("update SubsCourse " +
+                "set notified = false " +
                 "where schedule_key in (:keys)")
                 .setParameterList("keys", keys)
                 .executeUpdate());
     }
 
     public boolean delete(String tgId) {
-        int res = execUpdate("delete from SubscriptionCourse where tg_id = :tg_id",
+        int res = execUpdate("delete from SubsCourse where tg_id = :tg_id",
                 q -> q.setParameter("tg_id", tgId));
         return res > 0;
     }

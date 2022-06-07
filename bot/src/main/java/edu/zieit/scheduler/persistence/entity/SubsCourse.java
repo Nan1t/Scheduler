@@ -8,7 +8,7 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "subs_teachers")
+@Table(name = "subs_courses")
 @TypeDef(name = "NamespacedKeyDescriptor", typeClass = NamespacedKeyDescriptor.class)
 public class SubsCourse {
 

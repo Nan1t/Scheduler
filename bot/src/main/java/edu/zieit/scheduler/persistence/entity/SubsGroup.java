@@ -3,19 +3,12 @@ package edu.zieit.scheduler.persistence.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "subs_teachers")
+@Table(name = "subs_groups")
 public class SubsGroup {
 
     @Column(name = "tg_id")
     private String tgId;
-
-    @Column(name = "first_name")
-    private String fistName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    private String patronymic;
+    private String group;
     private boolean notified = true;
 
     @OneToOne
@@ -31,28 +24,12 @@ public class SubsGroup {
         this.tgId = tgId;
     }
 
-    public String getFistName() {
-        return fistName;
+    public String getGroup() {
+        return group;
     }
 
-    public void setFistName(String fistName) {
-        this.fistName = fistName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     public boolean isNotified() {

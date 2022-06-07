@@ -9,6 +9,7 @@ public class ScheduleHash {
     @Id
     @Column(name = "file_name")
     private String fileName;
+
     private String hash;
 
     public ScheduleHash() { }

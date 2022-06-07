@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.persistence.entity.ScheduleHash;
 import edu.zieit.scheduler.persistence.dao.*;
+import edu.zieit.scheduler.persistence.entity.*;
 import edu.zieit.scheduler.util.LibLoader;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -27,15 +28,12 @@ public class PersistenceModule extends AbstractModule {
 
         bind(SessionFactory.class).toInstance(sessionFactory);
 
-        bind(TeacherSubsDao.class);
-        bind(ConsultSubsDao.class);
-        bind(CourseSubsDao.class);
-        bind(GroupSubsDao.class);
-        bind(PointsSubsDao.class);
-        bind(NoticesDao.class);
+        bind(SubsTeacherDao.class);
+        bind(SubsConsultDao.class);
+        bind(SubsCourseDao.class);
+        bind(SubsGroupDao.class);
+        bind(SubsPointsDao.class);
         bind(HashesDao.class);
-        bind(ApiUserDao.class);
-        bind(ApiSessionDao.class);
     }
 
     private SessionFactory initHibernate() {
@@ -54,15 +52,12 @@ public class PersistenceModule extends AbstractModule {
 
         configuration.addProperties(conf.getDbProperties());
 
-        configuration.addAnnotatedClass(SubscriptionPoints.class);
-        configuration.addAnnotatedClass(SubscriptionTeacher.class);
-        configuration.addAnnotatedClass(SubscriptionConsult.class);
-        configuration.addAnnotatedClass(SubscriptionCourse.class);
-        configuration.addAnnotatedClass(SubscriptionGroup.class);
+        configuration.addAnnotatedClass(SubsPoint.class);
+        configuration.addAnnotatedClass(SubsTeacher.class);
+        configuration.addAnnotatedClass(SubsConsult.class);
+        configuration.addAnnotatedClass(SubsCourse.class);
+        configuration.addAnnotatedClass(SubsGroup.class);
         configuration.addAnnotatedClass(ScheduleHash.class);
-        configuration.addAnnotatedClass(TeacherNotice.class);
-        configuration.addAnnotatedClass(ApiUser.class);
-        configuration.addAnnotatedClass(ApiSession.class);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());

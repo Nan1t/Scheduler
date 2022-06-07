@@ -10,16 +10,16 @@ import java.util.stream.Collectors;
 
 public final class SubsService {
 
-    private final TeacherSubsDao teacherDao;
-    private final ConsultSubsDao consultDao;
-    private final CourseSubsDao coursesDao;
-    private final PointsSubsDao pointsDao;
+    private final SubsTeacherDao teacherDao;
+    private final SubsConsultDao consultDao;
+    private final SubsCourseDao coursesDao;
+    private final SubsPointsDao pointsDao;
     private final NoticesDao noticesDao;
-    private final GroupSubsDao groupsDao;
+    private final SubsGroupDao groupsDao;
 
     @Inject
-    public SubsService(TeacherSubsDao teacherDao, ConsultSubsDao consultDao, CourseSubsDao coursesDao,
-                       PointsSubsDao pointsDao, NoticesDao noticesDao, GroupSubsDao groupsDao) {
+    public SubsService(SubsTeacherDao teacherDao, SubsConsultDao consultDao, SubsCourseDao coursesDao,
+                       SubsPointsDao pointsDao, NoticesDao noticesDao, SubsGroupDao groupsDao) {
         this.teacherDao = teacherDao;
         this.consultDao = consultDao;
         this.coursesDao = coursesDao;
@@ -35,7 +35,7 @@ public final class SubsService {
     }
 
     public Collection<SubscriptionTeacher> getNotMailedTeacherSubs() {
-        return teacherDao.findNotMailed(30);
+        return teacherDao.findNotNotified(30);
     }
 
     public void subscribeTeacher(String chatId, Person teacher) {
@@ -50,7 +50,7 @@ public final class SubsService {
     }
 
     public void resetTeacherMailing() {
-        teacherDao.resetMailing();
+        teacherDao.resetNotifications();
     }
 
     public void updateTeacherSubs(Collection<SubscriptionTeacher> subs) {
@@ -79,7 +79,7 @@ public final class SubsService {
     }
 
     public Collection<SubscriptionConsult> getNotMailedConsultSubs() {
-        return consultDao.findNotMailed(30);
+        return consultDao.findNotNotified(30);
     }
 
     public void subscribeConsult(String chatId, Person teacher) {
@@ -94,7 +94,7 @@ public final class SubsService {
     }
 
     public void resetConsultMailing() {
-        consultDao.resetMailing();
+        consultDao.resetNotifications();
     }
 
     public void updateConsultSubs(Collection<SubscriptionConsult> subs) {
@@ -108,7 +108,7 @@ public final class SubsService {
     }
 
     public Collection<SubscriptionCourse> getNotMailedCourseSubs() {
-        return coursesDao.findNotMailed(30);
+        return coursesDao.findNotNotified(30);
     }
 
     public void subscribeCourse(String chatId, NamespacedKey scheduleKey) {
@@ -123,7 +123,7 @@ public final class SubsService {
     }
 
     public void resetCourseMailing(Collection<NamespacedKey> keys) {
-        coursesDao.resetMailing(keys.stream()
+        coursesDao.resetNotications(keys.stream()
                 .map(NamespacedKey::toString)
                 .collect(Collectors.toList()));
     }
@@ -139,7 +139,7 @@ public final class SubsService {
     }
 
     public Collection<SubscriptionGroup> getNotMailedGroupSubs() {
-        return groupsDao.findNotMailed(30);
+        return groupsDao.findNotNotified(30);
     }
 
     public void subscribeGroup(String chatId, String group) {
@@ -154,7 +154,7 @@ public final class SubsService {
     }
 
     public void resetGroupMailing(Collection<String> groups) {
-        groupsDao.resetMailing(groups);
+        groupsDao.resetNotifications(groups);
     }
 
     public void updateGroupSubs(Collection<SubscriptionGroup> subs) {

@@ -3,8 +3,8 @@ package edu.zieit.scheduler.persistence.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "subs_points")
-public class SubsPoint {
+@Table(name = "subs_consults")
+public class SubsConsult {
 
     @Column(name = "tg_id")
     private String tgId;
@@ -14,9 +14,9 @@ public class SubsPoint {
 
     @Column(name = "last_name")
     private String lastName;
-    private String patronymic;
 
-    private String password;
+    private String patronymic;
+    private boolean notified = true;
 
     @OneToOne
     @MapsId
@@ -55,12 +55,12 @@ public class SubsPoint {
         this.patronymic = patronymic;
     }
 
-    public String getPassword() {
-        return password;
+    public boolean isNotified() {
+        return notified;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     public User getUser() {
