@@ -4,11 +4,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class BotUser {
 
     @Id
     @Column(name = "tg_id")
-    private String telegramId;
+    private String tgId;
     private String username;
 
     @Column(name = "first_name")
@@ -34,12 +34,12 @@ public class User {
     @PrimaryKeyJoinColumn
     private SubsTeacher subsPoint;
 
-    public String getTelegramId() {
-        return telegramId;
+    public String getTgId() {
+        return tgId;
     }
 
-    public void setTelegramId(String telegramId) {
-        this.telegramId = telegramId;
+    public void setTgId(String tgId) {
+        this.tgId = tgId;
     }
 
     public String getUsername() {

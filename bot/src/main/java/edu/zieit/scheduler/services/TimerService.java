@@ -157,10 +157,10 @@ public final class TimerService {
 
         if (!notMailed.isEmpty()) {
             for (SubsGroup sub : notMailed) {
-                Optional<Schedule> schedule = scheduleService.getCourseByGroup(sub.getGroup());
+                Optional<Schedule> schedule = scheduleService.getCourseByGroup(sub.getGroupName());
 
                 if (schedule.isPresent()) {
-                    ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroup(), scheduleService);
+                    ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroupName(), scheduleService);
 
                     sendPhoto(sub.getTgId(), renderer.renderBytes(), lang.of("mailing.group"));
                 }

@@ -25,7 +25,7 @@ public class StateConsultList extends ListState {
 
     @Override
     protected void onSelected(ChatInput input, ChatSession session) {
-        session.add("teacher", input.getUpdate()
+        session.add("teacher", input.update()
                 .getCallbackQuery().getData());
     }
 

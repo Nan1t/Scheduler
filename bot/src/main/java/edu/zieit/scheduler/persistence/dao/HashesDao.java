@@ -28,8 +28,4 @@ public class HashesDao extends Dao {
         withSession(session -> session.saveOrUpdate(hash));
     }
 
-    public void delete(ScheduleHash hash) {
-        withSession(session -> session.delete(hash));
-    }
-
 }

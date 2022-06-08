@@ -6,15 +6,17 @@ import javax.persistence.*;
 @Table(name = "subs_groups")
 public class SubsGroup {
 
+    @Id
     @Column(name = "tg_id")
     private String tgId;
-    private String group;
+
+    private String groupName;
     private boolean notified = true;
 
     @OneToOne
     @MapsId
     @JoinColumn(name = "tg_id")
-    private User user;
+    private BotUser user;
 
     public String getTgId() {
         return tgId;
@@ -24,12 +26,12 @@ public class SubsGroup {
         this.tgId = tgId;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public boolean isNotified() {
@@ -40,11 +42,11 @@ public class SubsGroup {
         this.notified = notified;
     }
 
-    public User getUser() {
+    public BotUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(BotUser user) {
         this.user = user;
     }
 }

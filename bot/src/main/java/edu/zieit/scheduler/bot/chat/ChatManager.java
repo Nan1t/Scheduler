@@ -6,10 +6,13 @@ import edu.zieit.scheduler.bot.Bot;
 import edu.zieit.scheduler.bot.state.InputResult;
 import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.bot.state.StateRegistry;
+import edu.zieit.scheduler.persistence.entity.BotUser;
+import edu.zieit.scheduler.services.SubsService;
 import napi.configurate.yaml.lang.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,19 +24,22 @@ public class ChatManager {
     private final Bot bot;
     private final Language lang;
     private final StateRegistry states;
+    private final SubsService subsService;
     private final ChatSessionFactory sessionFactory;
     private final Map<String, ChatSession> sessions = new HashMap<>();
 
     @Inject
     public ChatManager(
-            Language lang,
             Bot bot,
+            Language lang,
             StateRegistry states,
+            SubsService subsService,
             Provider<ChatSessionFactory> sessionFactory
     ) {
-        this.lang = lang;
         this.bot = bot;
+        this.lang = lang;
         this.states = states;
+        this.subsService = subsService;
         this.sessionFactory = sessionFactory.get();
     }
 
@@ -42,7 +48,7 @@ public class ChatManager {
 
         if (chatId == null) return;
 
-        ChatSession session = getOrCreateSession(chatId);
+        ChatSession session = getOrCreateSession(update, chatId);
         ChatInput input = new ChatInput(chatId, session, update);
 
         if (update.hasMessage()) {
@@ -59,7 +65,7 @@ public class ChatManager {
                 }
 
                 String cmd = arr[0].substring(1);
-                logger.info("Income command: '" + cmd + "' from " + getUser(update));
+                logger.info("Income command: '" + cmd + "' from " + getUsername(update));
 
                 State state = states.getBaseState(cmd);
 
@@ -95,8 +101,21 @@ public class ChatManager {
         bot.sendMessage(session, lang.of("cmd.unsupported"));
     }
 
-    private ChatSession getOrCreateSession(String chatId) {
-        return sessions.computeIfAbsent(chatId, sessionFactory::createSession);
+    private ChatSession getOrCreateSession(Update update, String chatId) {
+        return sessions.computeIfAbsent(chatId, (tgId) -> {
+            User user = getUser(update);
+
+            if (user == null)
+                throw new IllegalArgumentException("Bot user is null");
+
+            BotUser botUser = subsService.getOrCreateUser(
+                    tgId,
+                    user.getUserName(),
+                    user.getFirstName(),
+                    user.getLastName()
+            );
+            return sessionFactory.createSession(tgId, botUser);
+        });
     }
 
     private void endSession(String chatId) {
@@ -111,7 +130,15 @@ public class ChatManager {
         return null;
     }
 
-    private String getUser(Update update) {
+    private User getUser(Update update) {
+        if (update.hasMessage())
+            return update.getMessage().getFrom();
+        else if (update.hasCallbackQuery())
+            return update.getCallbackQuery().getFrom();
+        return null;
+    }
+
+    private String getUsername(Update update) {
         String username = update.getMessage().getFrom().getUserName();
         String firstName = update.getMessage().getFrom().getFirstName();
         String lastName = update.getMessage().getFrom().getLastName();

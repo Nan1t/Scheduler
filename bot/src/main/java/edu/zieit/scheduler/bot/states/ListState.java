@@ -26,8 +26,8 @@ public abstract class ListState extends ChoiceState {
 
     @Override
     public InputResult input(ChatInput input, ChatSession session) {
-        if (input.getUpdate().hasCallbackQuery()) {
-            int page = getPageCmd(input.getUpdate());
+        if (input.update().hasCallbackQuery()) {
+            int page = getPageCmd(input.update());
 
             if (page != -1) {
                 session.reply(buildListMessage(session, page, false));

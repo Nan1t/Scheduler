@@ -24,7 +24,7 @@ public class StateAudList extends ListState {
 
     @Override
     protected void onSelected(ChatInput input, ChatSession session) {
-        session.add("aud", input.getUpdate()
+        session.add("aud", input.update()
                 .getCallbackQuery().getData());
     }
 

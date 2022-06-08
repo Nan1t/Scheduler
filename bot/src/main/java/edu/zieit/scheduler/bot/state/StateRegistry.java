@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.bot.state;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.bot.states.StateDenyAll;
 import edu.zieit.scheduler.bot.states.StateHelp;
 import edu.zieit.scheduler.bot.states.aud.StateAudList;
@@ -26,7 +27,8 @@ public final class StateRegistry {
     private final Language lang;
     private final Map<String, State> baseStates = new HashMap<>();
 
-    private StateRegistry(Language lang) {
+    @Inject
+    public StateRegistry(Language lang) {
         this.lang = lang;
         init();
     }

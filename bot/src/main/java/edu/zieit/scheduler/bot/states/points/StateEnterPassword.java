@@ -20,10 +20,10 @@ public class StateEnterPassword extends State {
 
     @Override
     public InputResult input(ChatInput input, ChatSession session) {
-        if (input.getUpdate().hasMessage() && input.getUpdate().getMessage().hasText()) {
+        if (input.update().hasMessage() && input.update().getMessage().hasText()) {
             SubsService subsService = session.getSubsService();
 
-            String password = input.getUpdate().getMessage().getText();
+            String password = input.update().getMessage().getText();
             Person person = session.get("person");
 
             session.add("password", password);

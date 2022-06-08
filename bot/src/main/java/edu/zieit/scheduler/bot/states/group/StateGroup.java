@@ -25,12 +25,12 @@ public class StateGroup extends State {
 
         if (subs != null) {
             ScheduleService service = session.getScheduleService();
-            Optional<Schedule> schedule = service.getCourseByGroup(subs.getGroup());
+            Optional<Schedule> schedule = service.getCourseByGroup(subs.getGroupName());
 
             if (schedule.isPresent()) {
-                ScheduleRenderer renderer = schedule.get().getPersonalRenderer(subs.getGroup(), service);
+                ScheduleRenderer renderer = schedule.get().getPersonalRenderer(subs.getGroupName(), service);
                 InputStream img = new ByteArrayInputStream(renderer.renderBytes());
-                String caption = String.format(session.getLang().of("cmd.group.caption"), subs.getGroup());
+                String caption = String.format(session.getLang().of("cmd.group.caption"), subs.getGroupName());
 
                 session.reply(ChatUtil.editableMessage(session, img,
                         FilenameUtil.getNameWithExt(service, "photo"), caption));

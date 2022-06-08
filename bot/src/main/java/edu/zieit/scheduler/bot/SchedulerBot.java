@@ -62,10 +62,13 @@ public class SchedulerBot extends TelegramLongPollingBot implements Bot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        CompletableFuture.runAsync(
-                () -> chatManager.handleUpdate(update),
-                threadPool
-        );
+        CompletableFuture.runAsync(() -> {
+            try {
+                chatManager.handleUpdate(update);
+            } catch (Throwable t) {
+                logger.error("Update handling error:", t);
+            }
+        }, threadPool);
     }
 
     @Override

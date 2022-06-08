@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Table(name = "subs_consults")
 public class SubsConsult {
 
+    @Id
     @Column(name = "tg_id")
     private String tgId;
 
@@ -23,7 +24,7 @@ public class SubsConsult {
     @OneToOne
     @MapsId
     @JoinColumn(name = "tg_id")
-    private User user;
+    private BotUser user;
 
     public String getTgId() {
         return tgId;
@@ -65,11 +66,11 @@ public class SubsConsult {
         this.notified = notified;
     }
 
-    public User getUser() {
+    public BotUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(BotUser user) {
         this.user = user;
     }
 

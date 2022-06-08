@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.Bot;
 import edu.zieit.scheduler.bot.state.State;
+import edu.zieit.scheduler.persistence.entity.BotUser;
 import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.SubsService;
 import napi.configurate.yaml.lang.Language;
@@ -20,6 +21,7 @@ public class ChatSession {
     private final SubsService subsService;
     private final PointsService pointsService;
 
+    private final BotUser user;
     private final String chatId;
     private final Map<String, Object> args = new HashMap<>();
 
@@ -33,7 +35,8 @@ public class ChatSession {
             ScheduleService scheduleService,
             SubsService subsService,
             PointsService pointsService,
-            @Assisted String chatId
+            @Assisted String chatId,
+            @Assisted BotUser user
     ) {
         this.bot = bot;
         this.lang = lang;
@@ -41,6 +44,7 @@ public class ChatSession {
         this.subsService = subsService;
         this.pointsService = pointsService;
         this.chatId = chatId;
+        this.user = user;
         resetLastMsgId();
     }
 
@@ -66,6 +70,10 @@ public class ChatSession {
 
     public String getChatId() {
         return chatId;
+    }
+
+    public BotUser getUser() {
+        return user;
     }
 
     public State getState() {

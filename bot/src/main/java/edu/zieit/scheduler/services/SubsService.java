@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public final class SubsService {
 
+    private final UserDao userDao;
     private final SubsTeacherDao teacherDao;
     private final SubsConsultDao consultDao;
     private final SubsCourseDao coursesDao;
@@ -19,17 +20,42 @@ public final class SubsService {
 
     @Inject
     public SubsService(
+            UserDao userDao,
             SubsTeacherDao teacherDao, 
             SubsConsultDao consultDao, 
             SubsCourseDao coursesDao,
             SubsPointsDao pointsDao,
             SubsGroupDao groupsDao
     ) {
+        this.userDao = userDao;
         this.teacherDao = teacherDao;
         this.consultDao = consultDao;
         this.coursesDao = coursesDao;
         this.pointsDao = pointsDao;
         this.groupsDao = groupsDao;
+    }
+
+    /* Users */
+
+    public BotUser getOrCreateUser(
+            String tgId,
+            String username,
+            String firstName,
+            String lastName
+    ) {
+        BotUser user = userDao.find(tgId);
+
+        if (user == null) {
+            user = new BotUser();
+            user.setTgId(tgId);
+            user.setUsername(username);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+
+            userDao.save(user);
+        }
+
+        return user;
     }
 
     /* Teachers */
@@ -138,7 +164,7 @@ public final class SubsService {
     public void subscribeGroup(String chatId, String group) {
         SubsGroup sub = new SubsGroup();
         sub.setTgId(chatId);
-        sub.setGroup(group);
+        sub.setGroupName(group);
         groupsDao.save(sub);
     }
 

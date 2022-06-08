@@ -19,8 +19,8 @@ public class StateEnterName extends State {
 
     @Override
     public InputResult input(ChatInput input, ChatSession session) {
-        if (input.getUpdate().hasMessage() && input.getUpdate().getMessage().hasText()) {
-            String raw = input.getUpdate().getMessage().getText();
+        if (input.update().hasMessage() && input.update().getMessage().hasText()) {
+            String raw = input.update().getMessage().getText();
             String[] arr = raw.split(" ");
 
             if (arr.length == 3) {

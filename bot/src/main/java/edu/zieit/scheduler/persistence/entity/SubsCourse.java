@@ -12,6 +12,7 @@ import javax.persistence.*;
 @TypeDef(name = "NamespacedKeyDescriptor", typeClass = NamespacedKeyDescriptor.class)
 public class SubsCourse {
 
+    @Id
     @Column(name = "tg_id")
     private String tgId;
 
@@ -24,7 +25,7 @@ public class SubsCourse {
     @OneToOne
     @MapsId
     @JoinColumn(name = "tg_id")
-    private User user;
+    private BotUser user;
 
     public String getTgId() {
         return tgId;
@@ -50,11 +51,11 @@ public class SubsCourse {
         this.notified = notified;
     }
 
-    public User getUser() {
+    public BotUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(BotUser user) {
         this.user = user;
     }
 }

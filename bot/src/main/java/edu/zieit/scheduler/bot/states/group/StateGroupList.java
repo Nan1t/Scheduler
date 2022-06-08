@@ -24,7 +24,7 @@ public class StateGroupList extends ListState {
 
     @Override
     protected void onSelected(ChatInput input, ChatSession session) {
-        session.add("group", input.getUpdate()
+        session.add("group", input.update()
                 .getCallbackQuery().getData());
     }
 

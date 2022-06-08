@@ -28,6 +28,7 @@ public class PersistenceModule extends AbstractModule {
 
         bind(SessionFactory.class).toInstance(sessionFactory);
 
+        bind(UserDao.class);
         bind(SubsTeacherDao.class);
         bind(SubsConsultDao.class);
         bind(SubsCourseDao.class);
@@ -58,6 +59,7 @@ public class PersistenceModule extends AbstractModule {
         configuration.addAnnotatedClass(SubsCourse.class);
         configuration.addAnnotatedClass(SubsGroup.class);
         configuration.addAnnotatedClass(ScheduleHash.class);
+        configuration.addAnnotatedClass(BotUser.class);
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());
