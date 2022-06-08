@@ -1,13 +1,9 @@
 package edu.zieit.scheduler.bot;
 
 import com.google.inject.Inject;
-import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatManager;
 import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.config.MainConfig;
-import edu.zieit.scheduler.services.PointsService;
-import edu.zieit.scheduler.services.SubsService;
-import napi.configurate.yaml.lang.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -22,7 +18,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.*;
 
-public class SchedulerBot extends TelegramLongPollingBot {
+public class SchedulerBot extends TelegramLongPollingBot implements Bot {
 
     private static final Logger logger = LogManager.getLogger(SchedulerBot.class);
 
@@ -30,51 +26,23 @@ public class SchedulerBot extends TelegramLongPollingBot {
 
     private final String username;
     private final String token;
-    private final Language lang;
-    private final ChatManager chatManager;
 
     private final ExecutorService threadPool;
-
-    private final ScheduleService scheduleService;
-    private final SubsService subsService;
-    private final PointsService pointsService;
+    private final ChatManager chatManager;
     private final Queue<SendMethod> sendQueue = new LinkedList<>();
 
     private final ScheduledExecutorService timer;
     private final ScheduledFuture<?> sendTask;
 
     @Inject
-    public SchedulerBot(MainConfig conf, Language lang, ScheduleService scheduleService,
-                        SubsService subsService, PointsService pointsService) {
+    public SchedulerBot(MainConfig conf, ChatManager chatManager) {
         this.username = conf.getTgBotName();
         this.token = conf.getTgToken();
-        this.lang = lang;
-        this.chatManager = new ChatManager(this);
-        this.scheduleService = scheduleService;
-        this.subsService = subsService;
-        this.pointsService = pointsService;
-
-        threadPool = Executors.newFixedThreadPool(conf.getThreadPoolSize());
-
+        this.chatManager = chatManager;
+        this.threadPool = Executors.newFixedThreadPool(conf.getThreadPoolSize());
         this.timer = Executors.newScheduledThreadPool(1);
         this.sendTask = timer.scheduleAtFixedRate(this::sendFromQueue,
                 0L, 1L, TimeUnit.SECONDS);
-    }
-
-    public Language getLang() {
-        return lang;
-    }
-
-    public ScheduleService getScheduleService() {
-        return scheduleService;
-    }
-
-    public SubsService getSubsService() {
-        return subsService;
-    }
-
-    public PointsService getPointsService() {
-        return pointsService;
     }
 
     @Override
@@ -88,26 +56,32 @@ public class SchedulerBot extends TelegramLongPollingBot {
     }
 
     @Override
-    public void onUpdateReceived(Update update) {
-        CompletableFuture.runAsync(() ->
-                chatManager.handleUpdate(update), threadPool);
+    public String getUsername() {
+        return username;
     }
 
-    public void send(ChatSession session, Object[] methods) {
+    @Override
+    public void onUpdateReceived(Update update) {
+        CompletableFuture.runAsync(
+                () -> chatManager.handleUpdate(update),
+                threadPool
+        );
+    }
+
+    @Override
+    public void send(ChatSession session, Object... methods) {
         for (Object method : methods) {
-            send(session, method);
+            if (method != null)
+                sendQueue.offer(new SendMethod(session, method));
         }
     }
 
-    public void send(ChatSession session, Object method) {
-        if (method != null)
-            sendQueue.offer(new SendMethod(session, method));
-    }
-
+    @Override
     public void send(Object method) {
         send(null, method);
     }
 
+    @Override
     public void sendMessage(ChatSession session, String msg) {
         send(session, SendMessage.builder()
                 .chatId(session.getChatId())

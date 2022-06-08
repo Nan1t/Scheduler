@@ -7,10 +7,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.config.ScheduleConfig;
-import edu.zieit.scheduler.inject.BaseModule;
-import edu.zieit.scheduler.inject.PersistenceModule;
-import edu.zieit.scheduler.inject.ServicesModule;
-import edu.zieit.scheduler.inject.WebModule;
+import edu.zieit.scheduler.inject.*;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.services.TimerService;
 import edu.zieit.scheduler.webapi.WebServer;
@@ -45,7 +42,8 @@ public final class Scheduler {
                 new BaseModule(rootDir, conf, scheduleConf),
                 new PersistenceModule(conf),
                 new ServicesModule(),
-                new WebModule()
+                new WebModule(),
+                new BotModule()
         );
 
         Language lang = injector.getInstance(Language.class);

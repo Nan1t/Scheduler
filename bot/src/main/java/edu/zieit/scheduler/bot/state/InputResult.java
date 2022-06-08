@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.bot.chat;
+package edu.zieit.scheduler.bot.state;
 
 public enum InputResult {
     NEXT,

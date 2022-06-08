@@ -2,15 +2,15 @@ package edu.zieit.scheduler.bot.states.points;
 
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.services.SubsService;
 
 public class StatePointsDeny extends State {
 
     @Override
     public void activate(ChatSession session) {
-        SubsService subsService = session.getBot().getSubsService();
+        SubsService subsService = session.getSubsService();
         boolean res = subsService.unsubscribePoints(session.getChatId());
 
         if (res) {

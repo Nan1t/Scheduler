@@ -4,10 +4,9 @@ import edu.zieit.scheduler.api.Pair;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.bot.states.ListState;
 import edu.zieit.scheduler.schedule.consult.ConsultSchedule;
-import edu.zieit.scheduler.schedule.teacher.TeacherSchedule;
 import napi.configurate.yaml.lang.Language;
 
 import java.util.List;

@@ -3,8 +3,8 @@ package edu.zieit.scheduler.bot.states.points;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 
 public class StateEnterName extends State {
 

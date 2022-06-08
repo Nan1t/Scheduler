@@ -3,8 +3,8 @@ package edu.zieit.scheduler.bot.states.points;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.services.SubsService;
 
 public class StateEnterPassword extends State {
@@ -21,7 +21,7 @@ public class StateEnterPassword extends State {
     @Override
     public InputResult input(ChatInput input, ChatSession session) {
         if (input.getUpdate().hasMessage() && input.getUpdate().getMessage().hasText()) {
-            SubsService subsService = session.getBot().getSubsService();
+            SubsService subsService = session.getSubsService();
 
             String password = input.getUpdate().getMessage().getText();
             Person person = session.get("person");

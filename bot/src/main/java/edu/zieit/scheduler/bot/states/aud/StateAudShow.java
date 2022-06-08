@@ -5,8 +5,8 @@ import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;
 
@@ -18,7 +18,7 @@ public class StateAudShow extends State {
 
     @Override
     public void activate(ChatSession session) {
-        ScheduleService service = session.getChatManager().getBot().getScheduleService();
+        ScheduleService service = session.getScheduleService();
         String classroom = session.getString("aud");
 
         if (classroom != null) {
@@ -29,13 +29,13 @@ public class StateAudShow extends State {
                 InputStream img = new ByteArrayInputStream(renderer.renderBytes());
                 String caption = String.format(session.getLang().of("cmd.aud.caption"), classroom);
 
-                session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
+                session.reply(ChatUtil.editableMessage(session, img,
                         FilenameUtil.getNameWithExt(service, "photo"), caption));
             } else {
-                session.getBot().sendMessage(session, session.getLang().of("cmd.aud.notfound"));
+                session.reply(session.getLang().of("cmd.aud.notfound"));
             }
         } else {
-            session.getBot().sendMessage(session, session.getLang().of("cmd.aud.notfound"));
+            session.reply(session.getLang().of("cmd.aud.notfound"));
         }
     }
 

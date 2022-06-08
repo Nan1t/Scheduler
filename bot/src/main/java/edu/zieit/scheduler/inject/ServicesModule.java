@@ -3,7 +3,7 @@ package edu.zieit.scheduler.inject;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
-import edu.zieit.scheduler.bot.SchedulerBot;
+import edu.zieit.scheduler.bot.chat.ChatManager;
 import edu.zieit.scheduler.services.*;
 
 public class ServicesModule extends AbstractModule {
@@ -15,9 +15,8 @@ public class ServicesModule extends AbstractModule {
                 .to(ScheduleServiceImpl.class)
                 .in(Scopes.SINGLETON);
         bind(PointsService.class).in(Scopes.SINGLETON);
-        bind(SchedulerBot.class).in(Scopes.SINGLETON);
         bind(TimerService.class).in(Scopes.SINGLETON);
-        bind(ApiUserService.class).in(Scopes.SINGLETON);
+        bind(ChatManager.class).in(Scopes.SINGLETON);
     }
 
 }

@@ -1,5 +1,7 @@
 package edu.zieit.scheduler.persistence.entity;
 
+import edu.zieit.scheduler.api.Person;
+
 import javax.persistence.*;
 
 @Entity
@@ -69,5 +71,9 @@ public class SubsConsult {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Person getTeacher() {
+        return Person.simple(fistName, lastName, patronymic);
     }
 }

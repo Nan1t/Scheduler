@@ -6,8 +6,8 @@ import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;
@@ -25,7 +25,7 @@ public class StateCourseShow extends State {
 
     @Override
     public void activate(ChatSession session) {
-        ScheduleService service = session.getChatManager().getBot().getScheduleService();
+        ScheduleService service = session.getScheduleService();
         NamespacedKey key = NamespacedKey.parse(session.getString("course"));
         Schedule schedule = service.getCourseSchedule(key);
 
@@ -35,12 +35,11 @@ public class StateCourseShow extends State {
                     ? String.format(session.getLang().of("cmd.course.subscribed"), stud.getDisplayName())
                     : String.format(session.getLang().of("cmd.course.caption"), stud.getDisplayName());
 
-            session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
+            session.reply(ChatUtil.editableMessage(session, img,
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
 
             if (saveSubs) {
-                session.getBot().getSubsService()
-                        .subscribeCourse(session.getChatId(), key);
+                session.getSubsService().subscribeCourse(session.getChatId(), key);
             }
         }
     }

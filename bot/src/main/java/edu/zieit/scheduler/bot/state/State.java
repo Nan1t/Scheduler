@@ -1,4 +1,7 @@
-package edu.zieit.scheduler.bot.chat;
+package edu.zieit.scheduler.bot.state;
+
+import edu.zieit.scheduler.bot.chat.ChatInput;
+import edu.zieit.scheduler.bot.chat.ChatSession;
 
 public abstract class State {
 

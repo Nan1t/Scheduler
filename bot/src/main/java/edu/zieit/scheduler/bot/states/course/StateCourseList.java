@@ -5,7 +5,7 @@ import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.bot.states.ListState;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import napi.configurate.yaml.lang.Language;

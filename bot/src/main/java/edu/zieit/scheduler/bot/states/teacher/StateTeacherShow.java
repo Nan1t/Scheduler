@@ -5,8 +5,8 @@ import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;
 
@@ -26,18 +26,18 @@ public class StateTeacherShow extends State {
         Person person = Person.teacher(session.getString("teacher"));
         
         if (person != null) {
-            ScheduleService service = session.getChatManager().getBot().getScheduleService();
+            ScheduleService service = session.getScheduleService();
             ScheduleRenderer renderer = service.getTeacherSchedule().getPersonalRenderer(person, service);
             InputStream img = new ByteArrayInputStream(renderer.renderBytes());
             String caption = saveSubs
                     ? String.format(session.getLang().of("cmd.teacher.subscribed"), person)
                     : String.format(session.getLang().of("cmd.teacher.caption"), person);
 
-            session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
+            session.reply(ChatUtil.editableMessage(session, img,
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
 
             if (saveSubs) {
-                session.getBot().getSubsService()
+                session.getSubsService()
                         .subscribeTeacher(session.getChatId(), person);
             }
         }

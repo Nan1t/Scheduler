@@ -6,11 +6,12 @@ import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
-import edu.zieit.scheduler.bot.SchedulerBot;
+import edu.zieit.scheduler.bot.Bot;
 import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.entity.*;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.FilenameUtil;
+import napi.configurate.yaml.lang.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -28,8 +29,9 @@ public final class TimerService {
 
     private static final Logger logger = LogManager.getLogger(TimerService.class);
 
+    private final Bot bot;
+    private final Language lang;
     private final ScheduleConfig conf;
-    private final SchedulerBot bot;
     private final ScheduleService scheduleService;
     private final SubsService subsService;
 
@@ -38,9 +40,16 @@ public final class TimerService {
     private ScheduledFuture<?> sendTask;
 
     @Inject
-    public TimerService(ScheduleConfig conf, SchedulerBot bot, ScheduleService scheduleService, SubsService subsService) {
-        this.conf = conf;
+    public TimerService(
+            Bot bot,
+            Language lang,
+            ScheduleConfig conf,
+            ScheduleService scheduleService,
+            SubsService subsService
+    ) {
         this.bot = bot;
+        this.lang = lang;
+        this.conf = conf;
         this.scheduleService = scheduleService;
         this.subsService = subsService;
         this.timer = Executors.newScheduledThreadPool(2);
@@ -113,8 +122,7 @@ public final class TimerService {
                 ScheduleRenderer renderer = scheduleService.getTeacherSchedule()
                         .getPersonalRenderer(teacher, scheduleService);
 
-                sendPhoto(sub.getTgId(), renderer.renderBytes(),
-                        bot.getLang().of("mailing.teacher"));
+                sendPhoto(sub.getTgId(), renderer.renderBytes(), lang.of("mailing.teacher"));
 
                 sub.setNotified(true);
             }
@@ -133,8 +141,7 @@ public final class TimerService {
                 Schedule schedule = scheduleService.getCourseSchedule(sub.getScheduleKey());
 
                 if (schedule != null) {
-                    sendPhoto(sub.getTgId(), schedule.toImage(),
-                            bot.getLang().of("mailing.course"));
+                    sendPhoto(sub.getTgId(), schedule.toImage(), lang.of("mailing.course"));
                 }
 
                 sub.setNotified(true);
@@ -155,8 +162,7 @@ public final class TimerService {
                 if (schedule.isPresent()) {
                     ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroup(), scheduleService);
 
-                    sendPhoto(sub.getTgId(), renderer.renderBytes(),
-                            bot.getLang().of("mailing.group"));
+                    sendPhoto(sub.getTgId(), renderer.renderBytes(), lang.of("mailing.group"));
                 }
 
                 sub.setNotified(true);
@@ -180,8 +186,7 @@ public final class TimerService {
                 ScheduleRenderer renderer = scheduleService.getConsultSchedule()
                         .getPersonalRenderer(teacher, scheduleService);
 
-                sendPhoto(sub.getTgId(), renderer.renderBytes(),
-                        bot.getLang().of("mailing.consult"));
+                sendPhoto(sub.getTgId(), renderer.renderBytes(), lang.of("mailing.consult"));
 
                 sub.setNotified(true);
             }
