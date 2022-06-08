@@ -74,19 +74,19 @@ public final class TimerService {
                 }
             }
 
-            subsService.resetCourseMailing(keys);
-            subsService.resetGroupMailing(groups);
+            subsService.resetCourseNotifications(keys);
+            subsService.resetGroupNotifications(groups);
 
             logger.info("Course schedule reloaded. Users marked for mailing");
         }
 
         if (scheduleService.reloadTeacherSchedule(false)) {
-            subsService.resetTeacherMailing();
+            subsService.resetTeacherNotifications();
             logger.info("Teacher schedule reloaded. Marked everyone for mailing");
         }
 
         if (scheduleService.reloadConsultSchedule(false)) {
-            subsService.resetConsultMailing();
+            subsService.resetConsultNotifications();
             logger.info("Consult schedule reloaded. Marked everyone for mailing");
         }
     }
@@ -99,7 +99,7 @@ public final class TimerService {
     }
 
     private void sendTeachers() {
-        Collection<SubscriptionTeacher> notMailed = subsService.getNotMailedTeacherSubs();
+        Collection<SubscriptionTeacher> notMailed = subsService.getNotNotifiedTeacherSubs();
 
         if (!notMailed.isEmpty()) {
             for (SubscriptionTeacher sub : notMailed) {
@@ -119,7 +119,7 @@ public final class TimerService {
     }
 
     private void sendCourses() {
-        Collection<SubscriptionCourse> notMailed = subsService.getNotMailedCourseSubs();
+        Collection<SubscriptionCourse> notMailed = subsService.getNotNotifiedCourseSubs();
 
         if (!notMailed.isEmpty()) {
             for (SubscriptionCourse sub : notMailed) {
@@ -139,7 +139,7 @@ public final class TimerService {
     }
 
     private void sendGroups() {
-        Collection<SubscriptionGroup> notMailed = subsService.getNotMailedGroupSubs();
+        Collection<SubscriptionGroup> notMailed = subsService.getNotNotifiedGroupSubs();
 
         if (!notMailed.isEmpty()) {
             for (SubscriptionGroup sub : notMailed) {
@@ -161,7 +161,7 @@ public final class TimerService {
     }
 
     private void sendConsult() {
-        Collection<SubscriptionConsult> notMailed = subsService.getNotMailedConsultSubs();
+        Collection<SubscriptionConsult> notMailed = subsService.getNotNotifiedConsultSubs();
 
         if (!notMailed.isEmpty()) {
             for (SubscriptionConsult sub : notMailed) {
