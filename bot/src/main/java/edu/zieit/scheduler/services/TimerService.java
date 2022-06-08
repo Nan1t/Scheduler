@@ -2,11 +2,13 @@ package edu.zieit.scheduler.services;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.NamespacedKey;
+import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.config.ScheduleConfig;
+import edu.zieit.scheduler.persistence.entity.*;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.FilenameUtil;
 import org.apache.logging.log4j.LogManager;
@@ -99,17 +101,22 @@ public final class TimerService {
     }
 
     private void sendTeachers() {
-        Collection<SubscriptionTeacher> notMailed = subsService.getNotNotifiedTeacherSubs();
+        Collection<SubsTeacher> notMailed = subsService.getNotNotifiedTeacherSubs();
 
         if (!notMailed.isEmpty()) {
-            for (SubscriptionTeacher sub : notMailed) {
+            for (SubsTeacher sub : notMailed) {
+                Person teacher = Person.simple(
+                        sub.getFistName(), 
+                        sub.getLastName(), 
+                        sub.getPatronymic()
+                );
                 ScheduleRenderer renderer = scheduleService.getTeacherSchedule()
-                        .getPersonalRenderer(sub.getTeacher(), scheduleService);
+                        .getPersonalRenderer(teacher, scheduleService);
 
-                sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                sendPhoto(sub.getTgId(), renderer.renderBytes(),
                         bot.getLang().of("mailing.teacher"));
 
-                sub.setReceivedMailing(true);
+                sub.setNotified(true);
             }
 
             subsService.updateTeacherSubs(notMailed);
@@ -119,18 +126,18 @@ public final class TimerService {
     }
 
     private void sendCourses() {
-        Collection<SubscriptionCourse> notMailed = subsService.getNotNotifiedCourseSubs();
+        Collection<SubsCourse> notMailed = subsService.getNotNotifiedCourseSubs();
 
         if (!notMailed.isEmpty()) {
-            for (SubscriptionCourse sub : notMailed) {
+            for (SubsCourse sub : notMailed) {
                 Schedule schedule = scheduleService.getCourseSchedule(sub.getScheduleKey());
 
                 if (schedule != null) {
-                    sendPhoto(sub.getTelegramId(), schedule.toImage(),
+                    sendPhoto(sub.getTgId(), schedule.toImage(),
                             bot.getLang().of("mailing.course"));
                 }
 
-                sub.setReceivedMailing(true);
+                sub.setNotified(true);
             }
 
             subsService.updateCourseSubs(notMailed);
@@ -139,20 +146,20 @@ public final class TimerService {
     }
 
     private void sendGroups() {
-        Collection<SubscriptionGroup> notMailed = subsService.getNotNotifiedGroupSubs();
+        Collection<SubsGroup> notMailed = subsService.getNotNotifiedGroupSubs();
 
         if (!notMailed.isEmpty()) {
-            for (SubscriptionGroup sub : notMailed) {
-                Optional<Schedule> schedule = scheduleService.getCourseByGroup(sub.getGroupName());
+            for (SubsGroup sub : notMailed) {
+                Optional<Schedule> schedule = scheduleService.getCourseByGroup(sub.getGroup());
 
                 if (schedule.isPresent()) {
-                    ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroupName(), scheduleService);
+                    ScheduleRenderer renderer = schedule.get().getPersonalRenderer(sub.getGroup(), scheduleService);
 
-                    sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                    sendPhoto(sub.getTgId(), renderer.renderBytes(),
                             bot.getLang().of("mailing.group"));
                 }
 
-                sub.setReceivedMailing(true);
+                sub.setNotified(true);
             }
 
             subsService.updateGroupSubs(notMailed);
@@ -161,17 +168,22 @@ public final class TimerService {
     }
 
     private void sendConsult() {
-        Collection<SubscriptionConsult> notMailed = subsService.getNotNotifiedConsultSubs();
+        Collection<SubsConsult> notMailed = subsService.getNotNotifiedConsultSubs();
 
         if (!notMailed.isEmpty()) {
-            for (SubscriptionConsult sub : notMailed) {
+            for (SubsConsult sub : notMailed) {
+                Person teacher = Person.simple(
+                        sub.getFistName(),
+                        sub.getLastName(),
+                        sub.getPatronymic()
+                );
                 ScheduleRenderer renderer = scheduleService.getConsultSchedule()
-                        .getPersonalRenderer(sub.getTeacher(), scheduleService);
+                        .getPersonalRenderer(teacher, scheduleService);
 
-                sendPhoto(sub.getTelegramId(), renderer.renderBytes(),
+                sendPhoto(sub.getTgId(), renderer.renderBytes(),
                         bot.getLang().of("mailing.consult"));
 
-                sub.setReceivedMailing(true);
+                sub.setNotified(true);
             }
 
             subsService.updateConsultSubs(notMailed);
