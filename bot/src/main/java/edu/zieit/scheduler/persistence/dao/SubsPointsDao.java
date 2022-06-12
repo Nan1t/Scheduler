@@ -17,7 +17,7 @@ public class SubsPointsDao extends Dao {
     }
 
     public void save(SubsPoint sub) {
-        withSession(session -> session.saveOrUpdate(sub));
+        withSession(session -> session.save(sub));
     }
 
     public boolean delete(String tgId) {

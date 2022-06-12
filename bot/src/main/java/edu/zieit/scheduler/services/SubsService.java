@@ -68,13 +68,16 @@ public final class SubsService {
         return teacherDao.findNotNotified(30);
     }
 
-    public void subscribeTeacher(String chatId, Person teacher) {
+    public void subscribeTeacher(BotUser user, Person teacher) {
         SubsTeacher sub = new SubsTeacher();
-        sub.setTgId(chatId);
+        sub.setTgId(user.getTgId());
         sub.setFistName(teacher.firstName());
         sub.setLastName(teacher.lastName());
         sub.setPatronymic(teacher.patronymic());
+        sub.setUser(user);
         teacherDao.save(sub);
+
+        // TODO заменить chatId на BotUser везде
     }
 
     public boolean unsubscribeTeacher(String chatId) {

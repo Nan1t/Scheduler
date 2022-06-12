@@ -109,7 +109,7 @@ public class SchedulerBot extends TelegramLongPollingBot implements Bot {
             executeAsync(editMedia);
             return;
         }
-        logger.warn("Attempt to send undefined method to Telegram user: " + method.getClass().getName());
+        logger.warn("Attempt to send undefined method to Telegram user: " + method.getClass());
     }
 
     private void sendFromQueue() {

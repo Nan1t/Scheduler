@@ -28,7 +28,7 @@ public class SubsTeacherDao extends Dao {
     }
 
     public void save(SubsTeacher sub) {
-        withSession(session -> session.saveOrUpdate(sub));
+        withSession(session -> session.save(sub));
     }
 
     public void update(Collection<SubsTeacher> subs) {

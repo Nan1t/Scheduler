@@ -33,12 +33,16 @@ public class StateTeacherShow extends State {
                     ? String.format(session.getLang().of("cmd.teacher.subscribed"), person)
                     : String.format(session.getLang().of("cmd.teacher.caption"), person);
 
-            session.reply(ChatUtil.editableMessage(session, img,
-                    FilenameUtil.getNameWithExt(service, "photo"), caption));
+            session.reply(ChatUtil.editableMessage(
+                    session,
+                    img,
+                    FilenameUtil.getNameWithExt(service, "photo"),
+                    caption
+            ));
 
             if (saveSubs) {
                 session.getSubsService()
-                        .subscribeTeacher(session.getChatId(), person);
+                        .subscribeTeacher(session.getUser(), person);
             }
         }
     }

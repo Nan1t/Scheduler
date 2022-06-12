@@ -102,7 +102,7 @@ public class ChatManager {
     }
 
     private ChatSession getOrCreateSession(Update update, String chatId) {
-        return sessions.computeIfAbsent(chatId, (tgId) -> {
+        return sessions.computeIfAbsent(chatId, tgId -> {
             User user = getUser(update);
 
             if (user == null)

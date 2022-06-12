@@ -28,7 +28,7 @@ public class SubsGroupDao extends Dao {
     }
 
     public void save(SubsGroup sub) {
-        withSession(session -> session.saveOrUpdate(sub));
+        withSession(session -> session.save(sub));
     }
 
     public void update(Collection<SubsGroup> subs) {
