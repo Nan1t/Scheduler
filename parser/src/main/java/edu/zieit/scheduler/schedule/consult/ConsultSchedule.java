@@ -1,10 +1,10 @@
 package edu.zieit.scheduler.schedule.consult;
 
-import com.google.common.base.Preconditions;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.schedule.ScheduleRenderer;
+import edu.zieit.scheduler.api.util.Preconditions;
 import edu.zieit.scheduler.schedule.AbstractSchedule;
 import edu.zieit.scheduler.schedule.AbstractScheduleBuilder;
 import org.apache.poi.ss.usermodel.Sheet;

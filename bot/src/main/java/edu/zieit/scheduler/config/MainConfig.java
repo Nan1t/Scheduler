@@ -5,7 +5,6 @@ import com.google.inject.name.Named;
 import edu.zieit.scheduler.api.config.AbstractConfig;
 
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,7 @@ public final class MainConfig extends AbstractConfig {
 
     @Inject
     public MainConfig(@Named("appDir") Path rootDir) {
-        super(rootDir, "/config.yml", Map.of());
+        super(rootDir, "/config.yml");
     }
 
     @Override

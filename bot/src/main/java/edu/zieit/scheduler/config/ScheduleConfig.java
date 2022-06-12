@@ -8,12 +8,12 @@ import edu.zieit.scheduler.api.render.DocRenderOptions;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleInfo;
 import edu.zieit.scheduler.schedule.course.CourseScheduleInfo;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleInfo;
+import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ScheduleConfig extends AbstractConfig {
 
@@ -27,12 +27,7 @@ public final class ScheduleConfig extends AbstractConfig {
 
     @Inject
     public ScheduleConfig(@Named("appDir") Path rootDir) {
-        super(rootDir, "/schedule.yml", Map.of(
-                SheetPoint.class, new SheetPoint.Serializer(),
-                TeacherScheduleInfo.class, new TeacherScheduleInfo.Serializer(),
-                ConsultScheduleInfo.class, new ConsultScheduleInfo.Serializer(),
-                CourseScheduleInfo.class, new CourseScheduleInfo.Serializer()
-        ));
+        super(rootDir, "/schedule.yml");
     }
 
     @Override
@@ -41,7 +36,11 @@ public final class ScheduleConfig extends AbstractConfig {
         compAud = conf.node("comp_auds").getList(String.class);
         teachers = conf.node("teachers").get(TeacherScheduleInfo.class);
         consult = conf.node("consult").get(ConsultScheduleInfo.class);
-        courses = conf.node("courses").getList(CourseScheduleInfo.class);
+        courses = new LinkedList<>();
+
+        for (var elem : conf.node("courses").childrenList()) {
+            courses.add(elem.get(CourseScheduleInfo.class));
+        }
 
         DocRenderOptions.Format renderFormat = DocRenderOptions.Format
                 .valueOf(conf.node("render", "format").getString("JPEG"));
@@ -54,6 +53,16 @@ public final class ScheduleConfig extends AbstractConfig {
             int index = entry.getValue().getInt();
             dayIndexes.put(day, index);
         }
+    }
+
+    @Override
+    protected TypeSerializerCollection serializers() {
+        return TypeSerializerCollection.builder()
+                .register(SheetPoint.class, new SheetPoint.Serializer())
+                .register(TeacherScheduleInfo.class, new TeacherScheduleInfo.Serializer())
+                .register(ConsultScheduleInfo.class, new ConsultScheduleInfo.Serializer())
+                .register(CourseScheduleInfo.class, new CourseScheduleInfo.Serializer())
+                .build();
     }
 
     public long getCheckRate() {

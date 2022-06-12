@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.api;
 
-import com.google.common.base.Preconditions;
+import edu.zieit.scheduler.api.util.Preconditions;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -73,6 +73,7 @@ public record NamespacedKey(String namespace, String key) implements Serializabl
      */
     public static NamespacedKey parse(String str) {
         Preconditions.checkNotNull(str, "Raw NamespaceKey cannot be null");
+
         String[] arr = str.split(":");
         if (arr.length == 1) return of(arr[0]);
         if (arr.length != 2) throw new IllegalArgumentException("Invalid namespaced key: " + str);

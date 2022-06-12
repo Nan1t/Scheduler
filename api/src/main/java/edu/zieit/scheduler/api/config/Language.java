@@ -1,7 +1,6 @@
 package edu.zieit.scheduler.api.config;
 
 import org.spongepowered.configurate.serialize.SerializationException;
-import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -15,11 +14,7 @@ public final class Language extends AbstractConfig {
     private final Map<String, List<String>> lists = new HashMap<>();
 
     public Language(Path rootDir, String configPath) {
-        this(rootDir, configPath, Map.of());
-    }
-
-    public Language(Path rootDir, String configPath, Map<Class<?>, TypeSerializer<?>> serializers) {
-        super(rootDir, configPath, serializers);
+        super(rootDir, configPath);
     }
 
     public String of(String key) {

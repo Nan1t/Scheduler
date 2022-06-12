@@ -42,7 +42,7 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
 
             for (var entry : node.node("associations").childrenMap().entrySet()) {
                 String abbreviation = entry.getKey().toString().toLowerCase();
-                String rawKey = entry.getValue().getString(null);
+                String rawKey = entry.getValue().getString();
                 NamespacedKey key = NamespacedKey.parse(rawKey);
                 associations.put(abbreviation, key);
             }
