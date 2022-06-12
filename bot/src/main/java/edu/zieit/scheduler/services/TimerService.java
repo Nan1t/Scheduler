@@ -11,7 +11,7 @@ import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.persistence.entity.*;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.FilenameUtil;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;

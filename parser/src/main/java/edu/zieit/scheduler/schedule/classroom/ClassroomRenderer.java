@@ -7,7 +7,7 @@ import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.schedule.course.CourseClass;
 import edu.zieit.scheduler.schedule.course.CourseDay;
 import edu.zieit.scheduler.util.ExcelUtil;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;

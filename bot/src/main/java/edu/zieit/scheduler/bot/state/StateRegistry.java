@@ -17,7 +17,7 @@ import edu.zieit.scheduler.bot.states.group.StateGroupShow;
 import edu.zieit.scheduler.bot.states.points.StatePoints;
 import edu.zieit.scheduler.bot.states.points.StatePointsDeny;
 import edu.zieit.scheduler.bot.states.teacher.*;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.HashMap;
 import java.util.Map;

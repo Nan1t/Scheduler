@@ -1,12 +1,13 @@
 package edu.zieit.scheduler.schedule.consult;
 
-import com.google.common.reflect.TypeToken;
 import edu.zieit.scheduler.api.SheetPoint;
 import edu.zieit.scheduler.schedule.AbstractScheduleInfo;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.serialize.TypeSerializer;
 
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -32,23 +33,23 @@ public class ConsultScheduleInfo extends AbstractScheduleInfo {
     public static class Serializer implements TypeSerializer<ConsultScheduleInfo> {
 
         @Override
-        public ConsultScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node) throws ObjectMappingException {
+        public ConsultScheduleInfo deserialize(Type type, ConfigurationNode node) throws SerializationException {
             URL url;
 
             try {
-                url = new URL(node.getNode("url").getString(""));
+                url = new URL(node.node("url").getString(""));
             } catch (MalformedURLException e) {
-                throw new ObjectMappingException("Incorrect or missing schedule URL");
+                throw new SerializationException("Incorrect or missing schedule URL");
             }
 
-            SheetPoint dayPoint = node.getNode("day_point").getValue(TypeToken.of(SheetPoint.class));
-            SheetPoint teacherPoint = node.getNode("teacher_point").getValue(TypeToken.of(SheetPoint.class));
+            SheetPoint dayPoint = node.node("day_point").get(SheetPoint.class);
+            SheetPoint teacherPoint = node.node("teacher_point").get(SheetPoint.class);
 
             return new ConsultScheduleInfo(url, dayPoint, teacherPoint);
         }
 
         @Override
-        public void serialize(TypeToken<?> type, ConsultScheduleInfo obj, ConfigurationNode value) throws ObjectMappingException {
+        public void serialize(Type type, @Nullable ConsultScheduleInfo obj, ConfigurationNode node) throws SerializationException {
 
         }
     }

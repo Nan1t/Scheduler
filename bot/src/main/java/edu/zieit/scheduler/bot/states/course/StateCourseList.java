@@ -8,7 +8,7 @@ import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.bot.states.ListState;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.Collection;
 import java.util.Comparator;

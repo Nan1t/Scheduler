@@ -2,7 +2,7 @@ package edu.zieit.scheduler.bot.states;
 
 import edu.zieit.scheduler.api.Pair;
 import edu.zieit.scheduler.bot.state.State;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;

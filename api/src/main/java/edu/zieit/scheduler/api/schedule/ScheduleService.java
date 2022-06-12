@@ -2,7 +2,7 @@ package edu.zieit.scheduler.api.schedule;
 
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.render.SheetRenderer;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.Collection;
 import java.util.Optional;

@@ -10,7 +10,7 @@ import edu.zieit.scheduler.schedule.course.CourseClass;
 import edu.zieit.scheduler.schedule.course.CourseDay;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.util.ExcelUtil;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -229,8 +229,13 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
                 .collect(Collectors.joining(lang.of("schedule.render.teacher.or"))) : null;
     }
 
-    private Collection<CourseClass> findClasses(CourseSchedule schedule, TeacherDay day,
-                                                int classNum, Person teacher, boolean retAlternate) {
+    private Collection<CourseClass> findClasses(
+            CourseSchedule schedule,
+            TeacherDay day,
+            int classNum,
+            Person teacher,
+            boolean retAlternate
+    ) {
         int dayIndex = TimeTable.getDayIndex(day.getName());
         Optional<CourseDay> dayOpt = schedule.getDay(dayIndex);
 
@@ -246,7 +251,12 @@ public class TeacherScheduleRenderer extends AbstractScheduleRenderer {
                 : Collections.emptyList();
     }
 
-    private Collection<CourseClass> getAlternateClasses(CourseSchedule schedule, TeacherDay day, int classNum, Person teacher) {
+    private Collection<CourseClass> getAlternateClasses(
+            CourseSchedule schedule,
+            TeacherDay day,
+            int classNum,
+            Person teacher
+    ) {
         for (CourseSchedule member : schedule.getFileGroup()) {
             Collection<CourseClass> classes = findClasses(member, day, classNum, teacher, false);
 

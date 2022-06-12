@@ -5,7 +5,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.schedule.AbstractScheduleRenderer;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.util.ExcelUtil;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellUtil;

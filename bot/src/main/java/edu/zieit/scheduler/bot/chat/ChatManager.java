@@ -8,7 +8,7 @@ import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.bot.state.StateRegistry;
 import edu.zieit.scheduler.persistence.entity.BotUser;
 import edu.zieit.scheduler.services.SubsService;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;

@@ -2,6 +2,7 @@ package edu.zieit.scheduler.config;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import edu.zieit.scheduler.api.config.AbstractConfig;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -36,23 +37,23 @@ public final class MainConfig extends AbstractConfig {
 
     @Override
     protected void load() {
-        dbProperties = loadProperties(conf.getNode("database"));
-        tgBotName = conf.getNode("telegram", "bot_name").getString();
-        tgToken = conf.getNode("telegram", "token").getString();
+        dbProperties = loadProperties(conf.node("database"));
+        tgBotName = conf.node("telegram", "bot_name").getString();
+        tgToken = conf.node("telegram", "token").getString();
 
-        regexTeacherDefault = Pattern.compile(conf.getNode("regex", "teacher_default").getString(""));
-        regexTeacherInline = Pattern.compile(conf.getNode("regex", "teacher_inline").getString(""));
-        regexClassroom = Pattern.compile(conf.getNode("regex", "classroom").getString(""));
+        regexTeacherDefault = Pattern.compile(conf.node("regex", "teacher_default").getString(""));
+        regexTeacherInline = Pattern.compile(conf.node("regex", "teacher_inline").getString(""));
+        regexClassroom = Pattern.compile(conf.node("regex", "classroom").getString(""));
 
-        pointsUrl = conf.getNode("points", "url").getString();
-        pointsLoginQuery = conf.getNode("points", "login_query").getString();
-        pointsLoginSuccessCode = conf.getNode("points", "login_success").getInt();
-        pointsTimeout = conf.getNode("points", "timeout").getInt() * 1000;
+        pointsUrl = conf.node("points", "url").getString();
+        pointsLoginQuery = conf.node("points", "login_query").getString();
+        pointsLoginSuccessCode = conf.node("points", "login_success").getInt();
+        pointsTimeout = conf.node("points", "timeout").getInt() * 1000;
 
-        threadPoolSize = conf.getNode("thread_pool_size").getInt(4);
+        threadPoolSize = conf.node("thread_pool_size").getInt(4);
 
-        enableRest = conf.getNode("rest_api", "enable").getBoolean(false);
-        restApiPort = conf.getNode("rest_api", "port").getInt(8080);
+        enableRest = conf.node("rest_api", "enable").getBoolean(false);
+        restApiPort = conf.node("rest_api", "port").getInt(8080);
     }
 
     public Properties getDbProperties() {

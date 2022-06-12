@@ -1,14 +1,14 @@
 package edu.zieit.scheduler.config;
 
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import edu.zieit.scheduler.api.SheetPoint;
+import edu.zieit.scheduler.api.config.AbstractConfig;
 import edu.zieit.scheduler.api.render.DocRenderOptions;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleInfo;
 import edu.zieit.scheduler.schedule.course.CourseScheduleInfo;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleInfo;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -36,20 +36,20 @@ public final class ScheduleConfig extends AbstractConfig {
     }
 
     @Override
-    protected void load() throws ObjectMappingException {
-        checkRate = conf.getNode("check_rate").getLong();
-        compAud = conf.getNode("comp_auds").getList(TypeToken.of(String.class));
-        teachers = conf.getNode("teachers").getValue(TypeToken.of(TeacherScheduleInfo.class));
-        consult = conf.getNode("consult").getValue(TypeToken.of(ConsultScheduleInfo.class));
-        courses = conf.getNode("courses").getList(TypeToken.of(CourseScheduleInfo.class));
+    protected void load() throws SerializationException {
+        checkRate = conf.node("check_rate").getLong();
+        compAud = conf.node("comp_auds").getList(String.class);
+        teachers = conf.node("teachers").get(TeacherScheduleInfo.class);
+        consult = conf.node("consult").get(ConsultScheduleInfo.class);
+        courses = conf.node("courses").getList(CourseScheduleInfo.class);
 
         DocRenderOptions.Format renderFormat = DocRenderOptions.Format
-                .valueOf(conf.getNode("render", "format").getString("JPEG"));
-        int renderDpi = conf.getNode("render", "dpi").getInt(150);
+                .valueOf(conf.node("render", "format").getString("JPEG"));
+        int renderDpi = conf.node("render", "dpi").getInt(150);
 
         renderOptions = new DocRenderOptions(renderFormat, renderDpi);
 
-        for (var entry : conf.getNode("day_indexes").getChildrenMap().entrySet()) {
+        for (var entry : conf.node("day_indexes").childrenMap().entrySet()) {
             String day = entry.getKey().toString();
             int index = entry.getValue().getInt();
             dayIndexes.put(day, index);

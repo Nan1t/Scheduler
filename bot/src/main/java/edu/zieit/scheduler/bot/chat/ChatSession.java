@@ -8,7 +8,7 @@ import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.persistence.entity.BotUser;
 import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.SubsService;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -4,8 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.config.ScheduleConfig;
-import napi.configurate.yaml.lang.Language;
-import napi.configurate.yaml.source.ConfigSources;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.nio.file.Path;
 
@@ -29,10 +28,7 @@ public class BaseModule extends AbstractModule {
 
         bind(MainConfig.class).toInstance(conf);
         bind(ScheduleConfig.class).toInstance(scheduleConf);
-        bind(Language.class).toInstance(Language.builder()
-                .source(ConfigSources.resource("/lang.yml", this)
-                        .copyTo(rootDir))
-                .build());
+        bind(Language.class).toInstance(new Language(rootDir, "/lang.yml"));
     }
 
 }

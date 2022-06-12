@@ -16,7 +16,7 @@ import edu.zieit.scheduler.schedule.classroom.ClassroomSchedule;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleLoader;
 import edu.zieit.scheduler.schedule.course.*;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

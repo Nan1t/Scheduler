@@ -1,12 +1,13 @@
 package edu.zieit.scheduler.schedule.course;
 
-import com.google.common.reflect.TypeToken;
 import edu.zieit.scheduler.api.SheetPoint;
 import edu.zieit.scheduler.schedule.AbstractScheduleInfo;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.serialize.TypeSerializer;
 
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -38,25 +39,24 @@ public class CourseScheduleInfo extends AbstractScheduleInfo {
     public static class Serializer implements TypeSerializer<CourseScheduleInfo> {
 
         @Override
-        public CourseScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
-                throws ObjectMappingException {
+        public CourseScheduleInfo deserialize(Type type, ConfigurationNode node) throws SerializationException {
             URL url;
 
             try {
-                url = new URL(node.getNode("url").getString(""));
+                url = new URL(node.node("url").getString(""));
             } catch (MalformedURLException e) {
-                throw new ObjectMappingException("Incorrect or missing schedule URL");
+                throw new SerializationException("Incorrect or missing schedule URL");
             }
 
-            String displayName = node.getNode("name").getString();
-            SheetPoint dayPoint = node.getNode("day_point").getValue(TypeToken.of(SheetPoint.class));
-            SheetPoint groupPoint = node.getNode("group_point").getValue(TypeToken.of(SheetPoint.class));
+            String displayName = node.node("name").getString();
+            SheetPoint dayPoint = node.node("day_point").get(SheetPoint.class);
+            SheetPoint groupPoint = node.node("group_point").get(SheetPoint.class);
 
             return new CourseScheduleInfo(url, displayName, dayPoint, groupPoint);
         }
 
         @Override
-        public void serialize(TypeToken<?> type, CourseScheduleInfo obj, ConfigurationNode value) {
+        public void serialize(Type type, @Nullable CourseScheduleInfo obj, ConfigurationNode node) {
 
         }
 

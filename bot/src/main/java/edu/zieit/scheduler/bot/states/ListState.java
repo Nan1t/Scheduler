@@ -7,7 +7,7 @@ import edu.zieit.scheduler.bot.chat.ChatSession;
 import edu.zieit.scheduler.bot.state.InputResult;
 import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.util.ChatUtil;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 

@@ -11,7 +11,7 @@ import edu.zieit.scheduler.inject.*;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.services.TimerService;
 import edu.zieit.scheduler.webapi.WebServer;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
