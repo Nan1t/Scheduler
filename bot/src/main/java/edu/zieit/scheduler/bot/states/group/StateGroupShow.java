@@ -41,7 +41,7 @@ public class StateGroupShow extends State {
                         FilenameUtil.getNameWithExt(service, "photo"), caption));
 
                 if (saveSubs) {
-                    session.getSubsService().subscribeGroup(session.getChatId(), group);
+                    session.getSubsService().subscribeGroup(session.getUser(), group);
                 }
             } else {
                 session.reply(session.getLang().of("cmd.group.notfound"));

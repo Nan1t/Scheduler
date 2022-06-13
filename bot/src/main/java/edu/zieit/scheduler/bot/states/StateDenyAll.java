@@ -12,10 +12,10 @@ public class StateDenyAll extends State {
     public void activate(ChatSession session) {
         SubsService service = session.getSubsService();
 
-        service.unsubscribeTeacher(session.getChatId());
-        service.unsubscribeConsult(session.getChatId());
-        service.unsubscribeCourse(session.getChatId());
-        service.unsubscribeGroup(session.getChatId());
+        service.unsubscribeTeacher(session.getUser());
+        service.unsubscribeConsult(session.getUser());
+        service.unsubscribeCourse(session.getUser());
+        service.unsubscribeGroup(session.getUser());
 
         session.reply(session.getLang().of("cmd.denyall"));
     }

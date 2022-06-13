@@ -37,7 +37,7 @@ public class StateConsultShow extends State {
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
 
             if (saveSubs) {
-                session.getSubsService().subscribeConsult(session.getChatId(), person);
+                session.getSubsService().subscribeConsult(session.getUser(), person);
             }
         }
     }

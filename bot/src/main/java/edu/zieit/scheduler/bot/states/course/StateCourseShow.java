@@ -39,7 +39,7 @@ public class StateCourseShow extends State {
                     FilenameUtil.getNameWithExt(service, "photo"), caption));
 
             if (saveSubs) {
-                session.getSubsService().subscribeCourse(session.getChatId(), key);
+                session.getSubsService().subscribeCourse(session.getUser(), key);
             }
         }
     }

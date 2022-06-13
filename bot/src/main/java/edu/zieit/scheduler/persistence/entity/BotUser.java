@@ -34,6 +34,10 @@ public class BotUser {
     @PrimaryKeyJoinColumn
     private SubsTeacher subsPoint;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private SubsConsult subsConsult;
+
     public String getTgId() {
         return tgId;
     }
@@ -104,5 +108,13 @@ public class BotUser {
 
     public void setSubsPoint(SubsTeacher subsPoint) {
         this.subsPoint = subsPoint;
+    }
+
+    public SubsConsult getSubsConsult() {
+        return subsConsult;
+    }
+
+    public void setSubsConsult(SubsConsult subsConsult) {
+        this.subsConsult = subsConsult;
     }
 }

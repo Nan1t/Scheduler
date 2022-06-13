@@ -11,7 +11,7 @@ public class StateTeacherDeny extends State {
     @Override
     public void activate(ChatSession session) {
         SubsService subsService = session.getSubsService();
-        boolean res = subsService.unsubscribeTeacher(session.getChatId());
+        boolean res = subsService.unsubscribeTeacher(session.getUser());
 
         if (res) {
             session.reply(session.getLang().of("cmd.teacher.deny"));

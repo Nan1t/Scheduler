@@ -76,12 +76,11 @@ public final class SubsService {
         sub.setPatronymic(teacher.patronymic());
         sub.setUser(user);
         teacherDao.save(sub);
-
-        // TODO заменить chatId на BotUser везде
     }
 
-    public boolean unsubscribeTeacher(String chatId) {
-        return teacherDao.delete(chatId);
+    public boolean unsubscribeTeacher(BotUser user) {
+        user.setSubsTeacher(null);
+        return teacherDao.delete(user.getTgId());
     }
 
     public void resetTeacherNotifications() {
@@ -102,17 +101,19 @@ public final class SubsService {
         return consultDao.findNotNotified(30);
     }
 
-    public void subscribeConsult(String chatId, Person teacher) {
+    public void subscribeConsult(BotUser user, Person teacher) {
         SubsConsult sub = new SubsConsult();
-        sub.setTgId(chatId);
+        sub.setTgId(user.getTgId());
         sub.setFistName(teacher.firstName());
         sub.setLastName(teacher.lastName());
         sub.setPatronymic(teacher.patronymic());
+        sub.setUser(user);
         consultDao.save(sub);
     }
 
-    public boolean unsubscribeConsult(String chatId) {
-        return consultDao.delete(chatId);
+    public boolean unsubscribeConsult(BotUser user) {
+        user.setSubsConsult(null);
+        return consultDao.delete(user.getTgId());
     }
 
     public void resetConsultNotifications() {
@@ -133,15 +134,17 @@ public final class SubsService {
         return coursesDao.findNotNotified(30);
     }
 
-    public void subscribeCourse(String chatId, NamespacedKey scheduleKey) {
+    public void subscribeCourse(BotUser user, NamespacedKey scheduleKey) {
         SubsCourse sub = new SubsCourse();
-        sub.setTgId(chatId);
+        sub.setTgId(user.getTgId());
         sub.setScheduleKey(scheduleKey);
+        sub.setUser(user);
         coursesDao.save(sub);
     }
 
-    public boolean unsubscribeCourse(String chatId) {
-        return coursesDao.delete(chatId);
+    public boolean unsubscribeCourse(BotUser user) {
+        user.setSubsCourse(null);
+        return coursesDao.delete(user.getTgId());
     }
 
     public void resetCourseNotifications(Collection<NamespacedKey> keys) {
@@ -164,15 +167,17 @@ public final class SubsService {
         return groupsDao.findNotNotified(30);
     }
 
-    public void subscribeGroup(String chatId, String group) {
+    public void subscribeGroup(BotUser user, String group) {
         SubsGroup sub = new SubsGroup();
-        sub.setTgId(chatId);
+        sub.setTgId(user.getTgId());
         sub.setGroupName(group);
+        sub.setUser(user);
         groupsDao.save(sub);
     }
 
-    public boolean unsubscribeGroup(String chatId) {
-        return groupsDao.delete(chatId);
+    public boolean unsubscribeGroup(BotUser user) {
+        user.setSubsGroup(null);
+        return groupsDao.delete(user.getTgId());
     }
 
     public void resetGroupNotifications(Collection<String> groups) {
@@ -189,18 +194,20 @@ public final class SubsService {
         return pointsDao.find(chatId);
     }
 
-    public void subscribePoints(String chatId, Person student, String password) {
+    public void subscribePoints(BotUser user, Person student, String password) {
         SubsPoint sub = new SubsPoint();
-        sub.setTgId(chatId);
+        sub.setTgId(user.getTgId());
         sub.setFistName(student.firstName());
         sub.setLastName(student.lastName());
         sub.setPatronymic(student.patronymic());
         sub.setPassword(password);
+        sub.setUser(user);
         pointsDao.save(sub);
     }
 
-    public boolean unsubscribePoints(String chatId) {
-        return pointsDao.delete(chatId);
+    public boolean unsubscribePoints(BotUser user) {
+        user.setSubsPoint(null);
+        return pointsDao.delete(user.getTgId());
     }
 
 }

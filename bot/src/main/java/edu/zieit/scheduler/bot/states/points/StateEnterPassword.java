@@ -28,7 +28,7 @@ public class StateEnterPassword extends State {
 
             session.add("password", password);
 
-            subsService.subscribePoints(session.getChatId(), person, password);
+            subsService.subscribePoints(session.getUser(), person, password);
 
             return InputResult.NEXT;
         }

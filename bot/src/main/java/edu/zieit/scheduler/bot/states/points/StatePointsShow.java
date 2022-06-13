@@ -23,7 +23,7 @@ public class StatePointsShow extends State {
 
         if (!send(session, person, password)) {
             // If user entered invalid credentials, remove this wrong saved data
-            session.getSubsService().unsubscribePoints(session.getChatId());
+            session.getSubsService().unsubscribePoints(session.getUser());
         }
     }
 

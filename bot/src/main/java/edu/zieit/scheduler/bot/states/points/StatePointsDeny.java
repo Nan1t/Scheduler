@@ -11,7 +11,7 @@ public class StatePointsDeny extends State {
     @Override
     public void activate(ChatSession session) {
         SubsService subsService = session.getSubsService();
-        boolean res = subsService.unsubscribePoints(session.getChatId());
+        boolean res = subsService.unsubscribePoints(session.getUser());
 
         if (res) {
             session.reply(session.getLang().of("cmd.points.logout.success"));
