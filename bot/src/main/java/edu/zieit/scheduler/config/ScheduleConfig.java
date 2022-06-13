@@ -94,29 +94,72 @@ public final class ScheduleConfig extends AbstractConfig {
 
     public void setCheckRate(long checkRate) {
         this.checkRate = checkRate;
+
+        try {
+            conf.node("check_rate").set(checkRate);
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setCompAud(Collection<String> compAud) {
         this.compAud = compAud;
+
+        try {
+            conf.node("comp_auds").set(compAud);
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setDayIndexes(Map<String, Integer> dayIndexes) {
         this.dayIndexes = dayIndexes;
+
+        try {
+            conf.node("day_indexes").set(dayIndexes);
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setTeachers(TeacherScheduleInfo teachers) {
         this.teachers = teachers;
+
+        try {
+            conf.node("teachers").set(teachers);
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setConsult(ConsultScheduleInfo consult) {
         this.consult = consult;
+
+        try {
+            conf.node("consult").set(consult);
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setCourses(Collection<CourseScheduleInfo> courses) {
         this.courses = courses;
+
+        try {
+            conf.node("courses").setList(CourseScheduleInfo.class, courses.stream().toList());
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setRenderOptions(DocRenderOptions renderOptions) {
         this.renderOptions = renderOptions;
+
+        try {
+            conf.node("render", "format").set(renderOptions.format().toString());
+            conf.node("render", "dpi").set(renderOptions.dpi());
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 }

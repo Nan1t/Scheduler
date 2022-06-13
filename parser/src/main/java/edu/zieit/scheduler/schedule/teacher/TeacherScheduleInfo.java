@@ -22,6 +22,10 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
         this.associations = associations;
     }
 
+    public Map<String, NamespacedKey> getAssociations() {
+        return associations;
+    }
+
     public NamespacedKey getAssociation(String abbreviation) {
         return associations.get(abbreviation.toLowerCase());
     }

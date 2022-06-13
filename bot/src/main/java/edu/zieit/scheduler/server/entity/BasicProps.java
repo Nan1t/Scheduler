@@ -3,7 +3,7 @@ package edu.zieit.scheduler.server.entity;
 import java.util.Collection;
 import java.util.Map;
 
-public class BasicProperties {
+public class BasicProps {
 
     private long checkRate;
     private Collection<String> compAuds;

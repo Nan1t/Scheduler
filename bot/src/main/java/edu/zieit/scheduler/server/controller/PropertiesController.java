@@ -2,7 +2,7 @@ package edu.zieit.scheduler.server.controller;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.config.ScheduleConfig;
-import edu.zieit.scheduler.server.entity.BasicProperties;
+import edu.zieit.scheduler.server.entity.BasicProps;
 import edu.zieit.scheduler.server.entity.Response;
 import io.javalin.http.Context;
 import io.javalin.http.InternalServerErrorResponse;
@@ -23,7 +23,7 @@ public class PropertiesController {
     }
 
     public void get(Context ctx) {
-        BasicProperties props = new BasicProperties();
+        BasicProps props = new BasicProps();
         props.setCheckRate(config.getCheckRate());
         props.setCompAuds(config.getCompAud());
         props.setDayIndexes(config.getDayIndexes());
@@ -31,7 +31,7 @@ public class PropertiesController {
     }
 
     public void update(Context ctx) {
-        BasicProperties props = ctx.bodyAsClass(BasicProperties.class);
+        BasicProps props = ctx.bodyAsClass(BasicProps.class);
 
         config.setCheckRate(props.getCheckRate());
         config.setCompAud(props.getCompAuds());
