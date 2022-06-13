@@ -18,7 +18,7 @@ public final class ScheduleConfig extends AbstractConfig {
 
     private long checkRate;
     private Collection<String> compAud;
-    private final Map<String, Integer> dayIndexes = new HashMap<>();
+    private Map<String, Integer> dayIndexes = new HashMap<>();
     private TeacherScheduleInfo teachers;
     private ConsultScheduleInfo consult;
     private Collection<CourseScheduleInfo> courses;
@@ -98,6 +98,10 @@ public final class ScheduleConfig extends AbstractConfig {
 
     public void setCompAud(Collection<String> compAud) {
         this.compAud = compAud;
+    }
+
+    public void setDayIndexes(Map<String, Integer> dayIndexes) {
+        this.dayIndexes = dayIndexes;
     }
 
     public void setTeachers(TeacherScheduleInfo teachers) {
