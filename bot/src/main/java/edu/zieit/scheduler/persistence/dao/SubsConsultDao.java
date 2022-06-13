@@ -57,4 +57,11 @@ public class SubsConsultDao extends Dao {
         return res > 0;
     }
 
+    public long count() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select count(*) from SubsConsult");
+            return (Long) query.uniqueResult();
+        });
+    }
+
 }

@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.webapi;
+package edu.zieit.scheduler.server;
 
 import com.google.gson.Gson;
 import io.javalin.plugin.json.JsonMapper;

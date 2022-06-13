@@ -58,6 +58,10 @@ public final class SubsService {
         return user;
     }
 
+    public long countUsers() {
+        return userDao.count();
+    }
+
     /* Teachers */
 
     public SubsTeacher getTeacherSubs(String chatId) {
@@ -89,6 +93,10 @@ public final class SubsService {
 
     public void updateTeacherSubs(Collection<SubsTeacher> subs) {
         teacherDao.update(subs);
+    }
+
+    public long countTeacherSubs() {
+        return teacherDao.count();
     }
 
     /* Consultations */
@@ -124,6 +132,10 @@ public final class SubsService {
         consultDao.update(subs);
     }
 
+    public long countConsultSubs() {
+        return consultDao.count();
+    }
+
     /* Courses */
 
     public SubsCourse getCourseSubs(String chatId) {
@@ -157,6 +169,10 @@ public final class SubsService {
         coursesDao.update(subs);
     }
 
+    public long countCourseSubs() {
+        return coursesDao.count();
+    }
+
     /* Groups */
 
     public SubsGroup getGroupSubs(String chatId) {
@@ -188,6 +204,10 @@ public final class SubsService {
         groupsDao.update(subs);
     }
 
+    public long countGroupSubs() {
+        return groupsDao.count();
+    }
+
     /* Points */
 
     public SubsPoint getPointsSubs(String chatId) {
@@ -208,6 +228,10 @@ public final class SubsService {
     public boolean unsubscribePoints(BotUser user) {
         user.setSubsPoint(null);
         return pointsDao.delete(user.getTgId());
+    }
+
+    public long countPointsSubs() {
+        return pointsDao.count();
     }
 
 }

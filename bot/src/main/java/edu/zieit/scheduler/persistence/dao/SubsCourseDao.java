@@ -61,4 +61,11 @@ public class SubsCourseDao extends Dao {
         return res > 0;
     }
 
+    public long count() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select count(*) from SubsCourse");
+            return (Long) query.uniqueResult();
+        });
+    }
+
 }

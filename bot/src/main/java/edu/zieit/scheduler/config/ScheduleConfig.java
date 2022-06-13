@@ -8,7 +8,6 @@ import edu.zieit.scheduler.api.render.DocRenderOptions;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleInfo;
 import edu.zieit.scheduler.schedule.course.CourseScheduleInfo;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleInfo;
-import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
@@ -91,5 +90,29 @@ public final class ScheduleConfig extends AbstractConfig {
 
     public DocRenderOptions getRenderOptions() {
         return renderOptions;
+    }
+
+    public void setCheckRate(long checkRate) {
+        this.checkRate = checkRate;
+    }
+
+    public void setCompAud(Collection<String> compAud) {
+        this.compAud = compAud;
+    }
+
+    public void setTeachers(TeacherScheduleInfo teachers) {
+        this.teachers = teachers;
+    }
+
+    public void setConsult(ConsultScheduleInfo consult) {
+        this.consult = consult;
+    }
+
+    public void setCourses(Collection<CourseScheduleInfo> courses) {
+        this.courses = courses;
+    }
+
+    public void setRenderOptions(DocRenderOptions renderOptions) {
+        this.renderOptions = renderOptions;
     }
 }

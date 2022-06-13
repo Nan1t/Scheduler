@@ -15,6 +15,7 @@ public class ServicesModule extends AbstractModule {
                 .in(Scopes.SINGLETON);
         bind(PointsService.class).in(Scopes.SINGLETON);
         bind(TimerService.class).in(Scopes.SINGLETON);
+        bind(ApiUserService.class).in(Scopes.SINGLETON);
     }
 
 }

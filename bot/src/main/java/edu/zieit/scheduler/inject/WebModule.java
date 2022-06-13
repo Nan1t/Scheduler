@@ -1,15 +1,13 @@
 package edu.zieit.scheduler.inject;
 
 import com.google.inject.AbstractModule;
-import edu.zieit.scheduler.webapi.AuthHandler;
-import edu.zieit.scheduler.webapi.WebServer;
-import edu.zieit.scheduler.webapi.controller.*;
+import edu.zieit.scheduler.server.WebServer;
+import edu.zieit.scheduler.server.controller.*;
 
 public class WebModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(AuthHandler.class);
         bind(AuthController.class);
         bind(StatsController.class);
         bind(PropertiesController.class);

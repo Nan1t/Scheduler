@@ -137,6 +137,10 @@ public class ChatSession {
         bot.sendMessage(this, message);
     }
 
+    public void reply(Object method) {
+        bot.send(this, method);
+    }
+
     public void reply(Object[] method) {
         bot.send(this, method);
     }

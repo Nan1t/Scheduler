@@ -13,6 +13,7 @@ import org.hibernate.cfg.Configuration;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Supplier;
 
 public class PersistenceModule extends AbstractModule {
 
@@ -35,9 +36,36 @@ public class PersistenceModule extends AbstractModule {
         bind(SubsGroupDao.class);
         bind(SubsPointsDao.class);
         bind(HashesDao.class);
+        bind(ApiUserDao.class);
+    }
+
+    private void registerEntities(Configuration config) {
+        config.addAnnotatedClass(SubsPoint.class);
+        config.addAnnotatedClass(SubsTeacher.class);
+        config.addAnnotatedClass(SubsConsult.class);
+        config.addAnnotatedClass(SubsCourse.class);
+        config.addAnnotatedClass(SubsGroup.class);
+        config.addAnnotatedClass(ScheduleHash.class);
+        config.addAnnotatedClass(BotUser.class);
+        config.addAnnotatedClass(ApiUser.class);
+        config.addAnnotatedClass(ApiSession.class);
     }
 
     private SessionFactory initHibernate() {
+        return loadDrivers(() -> {
+            Configuration configuration = new Configuration();
+
+            configuration.addProperties(conf.getDbProperties());
+            registerEntities(configuration);
+
+            StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties());
+
+            return configuration.buildSessionFactory(builder.build());
+        });
+    }
+
+    private <T> T loadDrivers(Supplier<T> factorySupplier) {
         Path driversDir = Paths.get("./drivers").toAbsolutePath();
         ClassLoader mainLoader = null;
 
@@ -49,27 +77,12 @@ public class PersistenceModule extends AbstractModule {
             Thread.currentThread().setContextClassLoader(loader.classLoader());
         }
 
-        Configuration configuration = new Configuration();
-
-        configuration.addProperties(conf.getDbProperties());
-
-        configuration.addAnnotatedClass(SubsPoint.class);
-        configuration.addAnnotatedClass(SubsTeacher.class);
-        configuration.addAnnotatedClass(SubsConsult.class);
-        configuration.addAnnotatedClass(SubsCourse.class);
-        configuration.addAnnotatedClass(SubsGroup.class);
-        configuration.addAnnotatedClass(ScheduleHash.class);
-        configuration.addAnnotatedClass(BotUser.class);
-
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-
-        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
+        T result = factorySupplier.get();
 
         if (mainLoader != null)
             Thread.currentThread().setContextClassLoader(mainLoader);
 
-        return sessionFactory;
+        return result;
     }
 
 }

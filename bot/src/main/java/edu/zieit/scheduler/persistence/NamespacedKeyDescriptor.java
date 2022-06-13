@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.persistence.descriptors;
+package edu.zieit.scheduler.persistence;
 
 import edu.zieit.scheduler.api.NamespacedKey;
 import org.hibernate.HibernateException;

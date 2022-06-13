@@ -10,7 +10,7 @@ import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.inject.*;
 import edu.zieit.scheduler.schedule.TimeTable;
 import edu.zieit.scheduler.services.TimerService;
-import edu.zieit.scheduler.webapi.WebServer;
+import edu.zieit.scheduler.server.WebServer;
 import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

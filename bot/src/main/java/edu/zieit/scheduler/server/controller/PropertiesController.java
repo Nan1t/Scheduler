@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.webapi.controller;
+package edu.zieit.scheduler.server.controller;
 
 import io.javalin.http.Context;
 

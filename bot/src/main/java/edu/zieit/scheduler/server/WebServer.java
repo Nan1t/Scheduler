@@ -1,8 +1,8 @@
-package edu.zieit.scheduler.webapi;
+package edu.zieit.scheduler.server;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.config.MainConfig;
-import edu.zieit.scheduler.webapi.controller.*;
+import edu.zieit.scheduler.server.controller.*;
 import io.javalin.Javalin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,8 +12,6 @@ public class WebServer {
     private static final Logger logger = LogManager.getLogger(WebServer.class);
 
     private Javalin api;
-
-    private final AuthHandler authHandler;
 
     private final AuthController authController;
     private final StatsController statsController;
@@ -26,7 +24,6 @@ public class WebServer {
 
     @Inject
     public WebServer(
-            AuthHandler authHandler,
             AuthController authController,
             StatsController statsController,
             PropertiesController propsController,
@@ -36,7 +33,6 @@ public class WebServer {
             RenderingController renderingController,
             UserController userController
     ) {
-        this.authHandler = authHandler;
         this.authController = authController;
         this.statsController = statsController;
         this.propsController = propsController;
@@ -49,10 +45,11 @@ public class WebServer {
 
     public void start(MainConfig conf) {
         if (conf.isEnableRest()) {
-            api = Javalin.create(config -> {
-                config.jsonMapper(new GsonMapper());
-                config.accessManager(authHandler);
-            }).start(conf.getRestApiPort());
+            api = Javalin.create(
+                    config -> config.jsonMapper(new GsonMapper())
+            ).start(conf.getRestApiPort());
+
+            api.before(authController::authenticate);
 
             api.post("/login", authController::login);
             api.get("/logout", authController::logout);

@@ -57,4 +57,11 @@ public class SubsTeacherDao extends Dao {
         return res > 0;
     }
 
+    public long count() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select count(*) from SubsTeacher");
+            return (Long) query.uniqueResult();
+        });
+    }
+
 }

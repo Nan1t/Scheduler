@@ -60,4 +60,11 @@ public class SubsGroupDao extends Dao {
         return res > 0;
     }
 
+    public long count() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select count(*) from SubsGroup");
+            return (Long) query.uniqueResult();
+        });
+    }
+
 }

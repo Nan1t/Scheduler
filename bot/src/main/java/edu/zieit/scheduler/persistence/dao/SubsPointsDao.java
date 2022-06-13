@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import edu.zieit.scheduler.api.persistence.Dao;
 import edu.zieit.scheduler.persistence.entity.SubsPoint;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 public class SubsPointsDao extends Dao {
 
@@ -26,4 +27,10 @@ public class SubsPointsDao extends Dao {
         return res > 0;
     }
 
+    public long count() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select count(*) from SubsPoint");
+            return (Long) query.uniqueResult();
+        });
+    }
 }

@@ -1,7 +1,7 @@
 package edu.zieit.scheduler.persistence.entity;
 
 import edu.zieit.scheduler.api.NamespacedKey;
-import edu.zieit.scheduler.persistence.descriptors.NamespacedKeyDescriptor;
+import edu.zieit.scheduler.persistence.NamespacedKeyDescriptor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 

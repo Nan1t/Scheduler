@@ -1,8 +1,8 @@
-package edu.zieit.scheduler.webapi.controller;
+package edu.zieit.scheduler.server.controller;
 
 import io.javalin.http.Context;
 
-public class ConsultController {
+public class RenderingController {
 
     public void get(Context ctx) {
 

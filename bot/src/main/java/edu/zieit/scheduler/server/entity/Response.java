@@ -1,4 +1,4 @@
-package edu.zieit.scheduler.webapi.entity;
+package edu.zieit.scheduler.server.entity;
 
 public record Response(boolean success) {
 
