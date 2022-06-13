@@ -14,7 +14,7 @@ Authentication: <access token>
 
 ## Ошибки
 
-На любой запрос может прийти ошибка вместо ответа. Сообщение ошибки имеет следующий формат:
+На авторизованый запрос может прийти ошибка в формате JSON:
 
 ```json
 {
@@ -25,11 +25,7 @@ Authentication: <access token>
 
 Где `<error>` - код ошибки в строков виде, а `<message>` - более подробное описание ошибки.
 
-Коды специфичных ошибок указаны в описании каждой конечной точке. 
-
-**Общие ошибки:**
-
-* `access_denied` - Недействительный токен
+Коды ошибок указаны в описании каждой конечной точки. 
 
 ## Endpoints
 
@@ -48,7 +44,6 @@ Authentication: <access token>
 **Ответ**
 ```json
 {
-  "success": true,
   "accessToken": "<random access token>"
 }
 ```
@@ -77,11 +72,11 @@ Authentication: <access token>
 ```json
 {
   "users": 100,
-  "subs_teacher": 50,
-  "subs_consult": 12,
-  "subs_course": 20,
-  "subs_group": 65,
-  "subs_points": 40
+  "subsTeacher": 50,
+  "subsConsult": 12,
+  "subsCourse": 20,
+  "subsGroup": 65,
+  "subsPoints": 40
 }
 ```
 
@@ -334,7 +329,6 @@ Authentication: <access token>
     {
       "login": "<user login>",
       "token": "<session token>",
-      "expiryAfter": 10000,
       "agent": "<user agent name>"
     }
   ]
