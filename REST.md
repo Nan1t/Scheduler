@@ -72,11 +72,11 @@ Authentication: <access token>
 ```json
 {
   "users": 100,
-  "subs_teacher": 50,
-  "subs_consult": 12,
-  "subs_course": 20,
-  "subs_group": 65,
-  "subs_points": 40
+  "subsTeacher": 50,
+  "subsConsult": 12,
+  "subsCourse": 20,
+  "subsGroup": 65,
+  "subsPoints": 40
 }
 ```
 
@@ -329,7 +329,6 @@ Authentication: <access token>
     {
       "login": "<user login>",
       "token": "<session token>",
-      "expiryAfter": 10000,
       "agent": "<user agent name>"
     }
   ]
