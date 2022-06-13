@@ -49,8 +49,12 @@ public class ConsultScheduleInfo extends AbstractScheduleInfo {
         }
 
         @Override
-        public void serialize(Type type, @Nullable ConsultScheduleInfo obj, ConfigurationNode node) throws SerializationException {
-
+        public void serialize(Type type, @Nullable ConsultScheduleInfo info, ConfigurationNode node) throws SerializationException {
+            if (info != null) {
+                node.node("url").set(info.getUrl().toString());
+                node.node("day_point").set(info.dayPoint());
+                node.node("teacher_point").set(info.teacherPoint());
+            }
         }
     }
 }

@@ -56,10 +56,14 @@ public class CourseScheduleInfo extends AbstractScheduleInfo {
         }
 
         @Override
-        public void serialize(Type type, @Nullable CourseScheduleInfo obj, ConfigurationNode node) {
-
+        public void serialize(Type type, @Nullable CourseScheduleInfo info, ConfigurationNode node) throws SerializationException {
+            if (info != null) {
+                node.node("url").set(info.getUrl().toString());
+                node.node("name").set(info.getDisplayName());
+                node.node("day_point").set(info.getDayPoint());
+                node.node("group_point").set(info.getGroupPoint());
+            }
         }
-
     }
 
 }

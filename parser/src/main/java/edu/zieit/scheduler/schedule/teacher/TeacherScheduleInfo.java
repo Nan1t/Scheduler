@@ -55,8 +55,17 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
         }
 
         @Override
-        public void serialize(Type type, @Nullable TeacherScheduleInfo obj, ConfigurationNode node) throws SerializationException {
+        public void serialize(Type type, @Nullable TeacherScheduleInfo info, ConfigurationNode node) throws SerializationException {
+            if (info != null) {
+                Map<String, String> ass = new HashMap<>();
 
+                for (var entry : info.getAssociations().entrySet()) {
+                    ass.put(entry.getKey(), entry.getValue().toString());
+                }
+
+                node.node("url").set(info.getUrl().toString());
+                node.node("associations").set(ass);
+            }
         }
     }
 }

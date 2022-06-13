@@ -4,6 +4,7 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
+import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ public abstract class AbstractConfig {
         this.loader = YamlConfigurationLoader.builder()
                 .path(resolveFile(rootDir, configPath))
                 .defaultOptions(options)
+                .nodeStyle(NodeStyle.BLOCK)
+                .indent(2)
                 .build();
     }
 
