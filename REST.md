@@ -89,11 +89,6 @@ Authentication: <access token>
 ```json
 {
   "checkRate": 30,
-  "compAuds": [
-    "007",
-    "009",
-    "..."
-  ],
   "dayIndexes": {
     "day1": 0,
     "day2": 1,
@@ -110,11 +105,6 @@ Authentication: <access token>
 ```json
 {
   "checkRate": 30,
-  "compAuds": [
-    "007",
-    "009",
-    "..."
-  ],
   "dayIndexes": {
     "day1": 0,
     "day2": 1,
@@ -267,37 +257,6 @@ Authentication: <access token>
 }
 ```
 
-### [GET] /rendering
-
-Получить настройки ренедеринга.
-
-**Ответ**
-```json
-{
-  "format": "<JPEG | PNG | GIF>",
-  "dpi": 175
-}
-```
-
-### [POST] /rendering
-
-Изменить настройки ренедеринга.
-
-**Запрос**
-```json
-{
-  "format": "<JPEG | PNG | GIF>",
-  "dpi": 175
-}
-```
-
-**Ответ**
-```json
-{
-  "success": true
-}
-```
-
 ## Admin Endpoints
 
 Данное API доступно только для пользователей, имеющих право администратора.
@@ -425,3 +384,7 @@ Authentication: <access token>
   "success": true
 }
 ```
+
+**Возможные ошибки**
+
+* `user_not_found`
