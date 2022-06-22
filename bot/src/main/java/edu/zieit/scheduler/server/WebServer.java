@@ -19,7 +19,6 @@ public class WebServer {
     private final TeachersController teachersController;
     private final ConsultController consultController;
     private final CoursesController coursesController;
-    private final RenderingController renderingController;
     private final UserController userController;
 
     @Inject
@@ -30,7 +29,6 @@ public class WebServer {
             TeachersController teachersController,
             ConsultController consultController,
             CoursesController coursesController,
-            RenderingController renderingController,
             UserController userController
     ) {
         this.authController = authController;
@@ -39,7 +37,6 @@ public class WebServer {
         this.teachersController = teachersController;
         this.consultController = consultController;
         this.coursesController = coursesController;
-        this.renderingController = renderingController;
         this.userController = userController;
     }
 
@@ -65,14 +62,11 @@ public class WebServer {
             api.post("/consult", consultController::update);
             api.get("/courses", coursesController::get);
             api.post("/courses", coursesController::update);
-            api.get("/rendering", renderingController::get);
-            api.post("/rendering", renderingController::update);
 
             api.get("/user/list", userController::listUsers);
             api.get("/user/sessions", userController::listSessions);
             api.post("/user/endSession", userController::endSession);
             api.post("/user/create", userController::createUser);
-            api.post("/user/edit", userController::editUser);
             api.post("/user/delete", userController::deleteUser);
 
             logger.info("WEB server starter");

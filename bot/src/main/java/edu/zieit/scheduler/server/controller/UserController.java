@@ -7,7 +7,6 @@ import edu.zieit.scheduler.server.entity.Response;
 import edu.zieit.scheduler.server.entity.ResponseError;
 import edu.zieit.scheduler.server.entity.user.*;
 import edu.zieit.scheduler.services.ApiUserService;
-import edu.zieit.scheduler.util.BCrypt;
 import io.javalin.http.Context;
 import io.javalin.http.UnauthorizedResponse;
 
@@ -79,35 +78,6 @@ public class UserController {
         }
 
         service.createUser(req.getLogin(), req.getPassword(), req.isAdmin());
-        ctx.json(new Response(true));
-    }
-
-    public void editUser(Context ctx) {
-        validateAccess(ctx);
-
-        UserEntity req = ctx.bodyAsClass(UserEntity.class);
-        ApiUser user = service.findUser(req.getLogin());
-
-        if (user == null) {
-            ctx.json(new ResponseError("user_not_found", ""));
-            return;
-        }
-
-        if (req.getPassword() != null) {
-            if (req.getPassword().length() < 4) {
-                ctx.json(new ResponseError("password_short", ""));
-                return;
-            }
-
-            String salt = BCrypt.gensalt();
-            String passwHash = BCrypt.hashpw(req.getPassword(), salt);
-            user.setPassword(passwHash);
-        }
-
-        user.setAdmin(req.isAdmin());
-        user.setSessions(null);
-        service.saveUser(user);
-
         ctx.json(new Response(true));
     }
 

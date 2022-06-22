@@ -14,7 +14,6 @@ public class WebModule extends AbstractModule {
         bind(TeachersController.class);
         bind(ConsultController.class);
         bind(CoursesController.class);
-        bind(RenderingController.class);
         bind(UserController.class);
         bind(WebServer.class);
     }
