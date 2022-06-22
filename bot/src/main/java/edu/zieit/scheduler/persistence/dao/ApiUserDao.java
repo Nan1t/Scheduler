@@ -22,7 +22,7 @@ public class ApiUserDao extends Dao {
 
     public List<ApiUser> getAllUsers() {
         return useSession(session -> {
-            Query<?> query = session.createQuery("select * from ApiUser");
+            Query<?> query = session.createQuery("from ApiUser");
             return (List<ApiUser>) query.list();
         });
     }
@@ -40,13 +40,13 @@ public class ApiUserDao extends Dao {
 
     public List<ApiSession> getAllSessions() {
         return useSession(session -> {
-            Query<?> query = session.createQuery("select * from ApiSession");
+            Query<?> query = session.createQuery("from ApiSession");
             return (List<ApiSession>) query.list();
         });
     }
 
     public void save(ApiUser user) {
-        withSession(session -> session.save(user));
+        withSession(session -> session.saveOrUpdate(user));
     }
 
     public void saveSession(ApiSession s) {

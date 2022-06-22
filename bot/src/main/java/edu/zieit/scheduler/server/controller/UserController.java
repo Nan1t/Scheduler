@@ -9,8 +9,8 @@ import edu.zieit.scheduler.server.entity.user.*;
 import edu.zieit.scheduler.services.ApiUserService;
 import edu.zieit.scheduler.util.BCrypt;
 import io.javalin.http.Context;
+import io.javalin.http.UnauthorizedResponse;
 
-import java.util.Collections;
 import java.util.List;
 
 public class UserController {
@@ -23,9 +23,11 @@ public class UserController {
     }
 
     public void listUsers(Context ctx) {
+        validateAccess(ctx);
+
         List<ApiUser> users = service.getAllUsers();
         List<UserEntity> entities = users.stream()
-                .map(e -> new UserEntity(e.getLogin(), e.getPassword(), e.isAdmin()))
+                .map(e -> new UserEntity(e.getLogin(), null, e.isAdmin()))
                 .toList();
         UsersResponse response = new UsersResponse();
         response.setUsers(entities);
@@ -33,6 +35,8 @@ public class UserController {
     }
 
     public void listSessions(Context ctx) {
+        validateAccess(ctx);
+
         List<ApiSession> users = service.getAllSessions();
         List<SessionEntity> entities = users.stream()
                 .map(e -> new SessionEntity(e.getUser().getLogin(), e.getAccessToken(), e.getAgent()))
@@ -43,6 +47,8 @@ public class UserController {
     }
 
     public void endSession(Context ctx) {
+        validateAccess(ctx);
+
         EndSessionRequest req = ctx.bodyAsClass(EndSessionRequest.class);
         ApiSession session = service.findSession(req.getToken());
 
@@ -56,6 +62,8 @@ public class UserController {
     }
 
     public void createUser(Context ctx) {
+        validateAccess(ctx);
+
         UserEntity req = ctx.bodyAsClass(UserEntity.class);
 
         if (req.getPassword().length() < 4) {
@@ -75,13 +83,9 @@ public class UserController {
     }
 
     public void editUser(Context ctx) {
+        validateAccess(ctx);
+
         UserEntity req = ctx.bodyAsClass(UserEntity.class);
-
-        if (req.getPassword().length() < 4) {
-            ctx.json(new ResponseError("password_short", ""));
-            return;
-        }
-
         ApiUser user = service.findUser(req.getLogin());
 
         if (user == null) {
@@ -90,6 +94,11 @@ public class UserController {
         }
 
         if (req.getPassword() != null) {
+            if (req.getPassword().length() < 4) {
+                ctx.json(new ResponseError("password_short", ""));
+                return;
+            }
+
             String salt = BCrypt.gensalt();
             String passwHash = BCrypt.hashpw(req.getPassword(), salt);
             user.setPassword(passwHash);
@@ -103,6 +112,8 @@ public class UserController {
     }
 
     public void deleteUser(Context ctx) {
+        validateAccess(ctx);
+
         DeleteUserRequest req = ctx.bodyAsClass(DeleteUserRequest.class);
         ApiUser user = service.findUser(req.getLogin());
 
@@ -113,6 +124,13 @@ public class UserController {
 
         service.deleteUser(user);
         ctx.json(new Response(true));
+    }
+
+    private void validateAccess(Context ctx) {
+        ApiSession session = ctx.attribute("session");
+        if (!session.getUser().isAdmin()) {
+            throw new UnauthorizedResponse();
+        }
     }
 
 }

@@ -44,7 +44,8 @@ Authentication: <access token>
 **Ответ**
 ```json
 {
-  "accessToken": "<random access token>"
+  "accessToken": "<random access token>",
+  "isAdmin": false
 }
 ```
 
