@@ -58,7 +58,6 @@ public final class TimerService {
     public void start() {
         checkTask = timer.scheduleWithFixedDelay(this::check, 0L,
                 conf.getCheckRate(), TimeUnit.SECONDS);
-
         sendTask = timer.scheduleWithFixedDelay(this::mailSubscribers, 0L,
                 2L, TimeUnit.SECONDS);
     }

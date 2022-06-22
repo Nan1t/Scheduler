@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class TeachersController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger(TeachersController.class);
 
     private final ScheduleConfig config;
 

@@ -17,7 +17,7 @@ import java.net.URL;
 
 public class ConsultController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger(ConsultController.class);
 
     private final ScheduleConfig config;
 

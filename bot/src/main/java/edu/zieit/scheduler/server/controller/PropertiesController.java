@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class PropertiesController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger(PropertiesController.class);
 
     private final ScheduleConfig config;
 

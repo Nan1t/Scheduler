@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class AuthController {
 
-    private static final Logger log = LogManager.getLogger();
+    private static final Logger log = LogManager.getLogger(AuthController.class);
 
     private final ApiUserService userService;
 

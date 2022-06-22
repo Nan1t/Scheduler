@@ -46,7 +46,10 @@ public class WebServer {
     public void start(MainConfig conf) {
         if (conf.isEnableRest()) {
             api = Javalin.create(
-                    config -> config.jsonMapper(new GsonMapper())
+                    config -> {
+                        config.jsonMapper(new GsonMapper());
+                        config.enableCorsForAllOrigins();
+                    }
             ).start(conf.getRestApiPort());
 
             api.before(authController::authenticate);

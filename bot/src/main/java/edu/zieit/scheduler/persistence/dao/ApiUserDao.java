@@ -5,6 +5,9 @@ import edu.zieit.scheduler.api.persistence.Dao;
 import edu.zieit.scheduler.persistence.entity.ApiSession;
 import edu.zieit.scheduler.persistence.entity.ApiUser;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+
+import java.util.List;
 
 public class ApiUserDao extends Dao {
 
@@ -17,8 +20,29 @@ public class ApiUserDao extends Dao {
         return findValue(ApiUser.class, login);
     }
 
+    public List<ApiUser> getAllUsers() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select * from ApiUser");
+            return (List<ApiUser>) query.list();
+        });
+    }
+
+    public long countUsers() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select count(*) from ApiUser");
+            return (Long) query.uniqueResult();
+        });
+    }
+
     public ApiSession getSession(String accessToken) {
         return findValue(ApiSession.class, accessToken);
+    }
+
+    public List<ApiSession> getAllSessions() {
+        return useSession(session -> {
+            Query<?> query = session.createQuery("select * from ApiSession");
+            return (List<ApiSession>) query.list();
+        });
     }
 
     public void save(ApiUser user) {

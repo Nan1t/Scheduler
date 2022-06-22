@@ -17,6 +17,7 @@ public class BotUser {
     @Column(name = "last_name")
     private String lastName;
     private boolean notifications;
+    private boolean notified = true;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -76,6 +77,14 @@ public class BotUser {
 
     public void setNotifications(boolean notifications) {
         this.notifications = notifications;
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     public SubsTeacher getSubsTeacher() {
