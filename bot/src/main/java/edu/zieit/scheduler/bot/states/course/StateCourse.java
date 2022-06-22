@@ -4,9 +4,9 @@ import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionCourse;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
+import edu.zieit.scheduler.persistence.entity.SubsCourse;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.util.ChatUtil;
@@ -19,24 +19,24 @@ public class StateCourse extends State {
 
     @Override
     public void activate(ChatSession session) {
-        SubsService subsService = session.getBot().getSubsService();
-        SubscriptionCourse subs = subsService.getCourseSubs(session.getChatId());
+        SubsService subsService = session.getSubsService();
+        SubsCourse subs = subsService.getCourseSubs(session.getChatId());
 
         if (subs != null) {
-            ScheduleService service = session.getChatManager().getBot().getScheduleService();
+            ScheduleService service = session.getScheduleService();
             Schedule schedule = service.getCourseSchedule(subs.getScheduleKey());
 
             if (schedule instanceof CourseSchedule course) {
                 InputStream img = new ByteArrayInputStream(schedule.toImage());
                 String caption = String.format(session.getLang().of("cmd.course.caption"), course.getDisplayName());
 
-                session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
+                session.reply(ChatUtil.editableMessage(session, img,
                         FilenameUtil.getNameWithExt(service, "photo"), caption));
             } else {
-                session.getBot().sendMessage(session, session.getLang().of("cmd.course.notfound"));
+                session.reply(session.getLang().of("cmd.course.notfound"));
             }
         } else {
-            session.getBot().sendMessage(session, session.getLang().of("cmd.course.nosubs"));
+            session.reply(session.getLang().of("cmd.course.nosubs"));
         }
     }
 

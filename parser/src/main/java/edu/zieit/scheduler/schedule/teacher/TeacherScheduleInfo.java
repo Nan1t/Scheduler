@@ -1,12 +1,13 @@
 package edu.zieit.scheduler.schedule.teacher;
 
-import com.google.common.reflect.TypeToken;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.schedule.AbstractScheduleInfo;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.serialize.TypeSerializer;
 
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -21,6 +22,10 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
         this.associations = associations;
     }
 
+    public Map<String, NamespacedKey> getAssociations() {
+        return associations;
+    }
+
     public NamespacedKey getAssociation(String abbreviation) {
         return associations.get(abbreviation.toLowerCase());
     }
@@ -28,21 +33,20 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
     public static class Serializer implements TypeSerializer<TeacherScheduleInfo> {
 
         @Override
-        public TeacherScheduleInfo deserialize(TypeToken<?> type, ConfigurationNode node)
-                throws ObjectMappingException {
+        public TeacherScheduleInfo deserialize(Type type, ConfigurationNode node) throws SerializationException {
             URL url;
 
             try {
-                url = new URL(node.getNode("url").getString(""));
+                url = new URL(node.node("url").getString(""));
             } catch (MalformedURLException e) {
-                throw new ObjectMappingException("Incorrect or missing schedule URL");
+                throw new SerializationException("Incorrect or missing schedule URL");
             }
 
             Map<String, NamespacedKey> associations = new HashMap<>();
 
-            for (var entry : node.getNode("associations").getChildrenMap().entrySet()) {
+            for (var entry : node.node("associations").childrenMap().entrySet()) {
                 String abbreviation = entry.getKey().toString().toLowerCase();
-                String rawKey = entry.getValue().getString(null);
+                String rawKey = entry.getValue().getString();
                 NamespacedKey key = NamespacedKey.parse(rawKey);
                 associations.put(abbreviation, key);
             }
@@ -51,8 +55,17 @@ public class TeacherScheduleInfo extends AbstractScheduleInfo {
         }
 
         @Override
-        public void serialize(TypeToken<?> type, TeacherScheduleInfo obj, ConfigurationNode value) {
+        public void serialize(Type type, @Nullable TeacherScheduleInfo info, ConfigurationNode node) throws SerializationException {
+            if (info != null) {
+                Map<String, String> ass = new HashMap<>();
 
+                for (var entry : info.getAssociations().entrySet()) {
+                    ass.put(entry.getKey(), entry.getValue().toString());
+                }
+
+                node.node("url").set(info.getUrl().toString());
+                node.node("associations").set(ass);
+            }
         }
     }
 }

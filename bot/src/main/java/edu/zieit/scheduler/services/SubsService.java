@@ -1,182 +1,237 @@
 package edu.zieit.scheduler.services;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.Person;
-import edu.zieit.scheduler.persistence.TeacherNotice;
 import edu.zieit.scheduler.persistence.dao.*;
-import edu.zieit.scheduler.persistence.subscription.*;
+import edu.zieit.scheduler.persistence.entity.*;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public final class SubsService {
 
-    private final TeacherSubsDao teacherDao;
-    private final ConsultSubsDao consultDao;
-    private final CourseSubsDao coursesDao;
-    private final PointsSubsDao pointsDao;
-    private final NoticesDao noticesDao;
-    private final GroupSubsDao groupsDao;
+    private final UserDao userDao;
+    private final SubsTeacherDao teacherDao;
+    private final SubsConsultDao consultDao;
+    private final SubsCourseDao coursesDao;
+    private final SubsPointsDao pointsDao;
+    private final SubsGroupDao groupsDao;
 
-    public SubsService(TeacherSubsDao teacherDao, ConsultSubsDao consultDao, CourseSubsDao coursesDao,
-                       PointsSubsDao pointsDao, NoticesDao noticesDao, GroupSubsDao groupsDao) {
+    @Inject
+    public SubsService(
+            UserDao userDao,
+            SubsTeacherDao teacherDao, 
+            SubsConsultDao consultDao, 
+            SubsCourseDao coursesDao,
+            SubsPointsDao pointsDao,
+            SubsGroupDao groupsDao
+    ) {
+        this.userDao = userDao;
         this.teacherDao = teacherDao;
         this.consultDao = consultDao;
         this.coursesDao = coursesDao;
         this.pointsDao = pointsDao;
-        this.noticesDao = noticesDao;
         this.groupsDao = groupsDao;
+    }
+
+    /* Users */
+
+    public BotUser getOrCreateUser(
+            String tgId,
+            String username,
+            String firstName,
+            String lastName
+    ) {
+        BotUser user = userDao.find(tgId);
+
+        if (user == null) {
+            user = new BotUser();
+            user.setTgId(tgId);
+            user.setUsername(username);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+
+            userDao.save(user);
+        }
+
+        return user;
+    }
+
+    public long countUsers() {
+        return userDao.count();
     }
 
     /* Teachers */
 
-    public SubscriptionTeacher getTeacherSubs(String chatId) {
+    public SubsTeacher getTeacherSubs(String chatId) {
         return teacherDao.find(chatId);
     }
 
-    public Collection<SubscriptionTeacher> getNotMailedTeacherSubs() {
-        return teacherDao.findNotMailed(30);
+    public Collection<SubsTeacher> getNotNotifiedTeacherSubs() {
+        return teacherDao.findNotNotified(30);
     }
 
-    public void subscribeTeacher(String chatId, Person teacher) {
-        SubscriptionTeacher sub = new SubscriptionTeacher();
-        sub.setTelegramId(chatId);
-        sub.setTeacher(teacher);
+    public void subscribeTeacher(BotUser user, Person teacher) {
+        SubsTeacher sub = new SubsTeacher();
+        sub.setTgId(user.getTgId());
+        sub.setFistName(teacher.firstName());
+        sub.setLastName(teacher.lastName());
+        sub.setPatronymic(teacher.patronymic());
+        sub.setUser(user);
         teacherDao.save(sub);
     }
 
-    public boolean unsubscribeTeacher(String chatId) {
-        return teacherDao.delete(chatId);
+    public boolean unsubscribeTeacher(BotUser user) {
+        user.setSubsTeacher(null);
+        return teacherDao.delete(user.getTgId());
     }
 
-    public void resetTeacherMailing() {
-        teacherDao.resetMailing();
+    public void resetTeacherNotifications() {
+        teacherDao.resetNotifications();
     }
 
-    public void updateTeacherSubs(Collection<SubscriptionTeacher> subs) {
+    public void updateTeacherSubs(Collection<SubsTeacher> subs) {
         teacherDao.update(subs);
     }
 
-    public boolean toggleNotices(String chatId) {
-        TeacherNotice notice = noticesDao.find(chatId);
-
-        if (notice == null) {
-            notice = new TeacherNotice();
-            notice.setTelegramId(chatId);
-            notice.setEnabled(true);
-            noticesDao.save(notice);
-            return true;
-        } else {
-            noticesDao.delete(chatId);
-            return false;
-        }
+    public long countTeacherSubs() {
+        return teacherDao.count();
     }
 
     /* Consultations */
 
-    public SubscriptionConsult getConsultSubs(String chatId) {
+    public SubsConsult getConsultSubs(String chatId) {
         return consultDao.find(chatId);
     }
 
-    public Collection<SubscriptionConsult> getNotMailedConsultSubs() {
-        return consultDao.findNotMailed(30);
+    public Collection<SubsConsult> getNotNotifiedConsultSubs() {
+        return consultDao.findNotNotified(30);
     }
 
-    public void subscribeConsult(String chatId, Person teacher) {
-        SubscriptionConsult sub = new SubscriptionConsult();
-        sub.setTelegramId(chatId);
-        sub.setTeacher(teacher);
+    public void subscribeConsult(BotUser user, Person teacher) {
+        SubsConsult sub = new SubsConsult();
+        sub.setTgId(user.getTgId());
+        sub.setFistName(teacher.firstName());
+        sub.setLastName(teacher.lastName());
+        sub.setPatronymic(teacher.patronymic());
+        sub.setUser(user);
         consultDao.save(sub);
     }
 
-    public boolean unsubscribeConsult(String chatId) {
-        return consultDao.delete(chatId);
+    public boolean unsubscribeConsult(BotUser user) {
+        user.setSubsConsult(null);
+        return consultDao.delete(user.getTgId());
     }
 
-    public void resetConsultMailing() {
-        consultDao.resetMailing();
+    public void resetConsultNotifications() {
+        consultDao.resetNotifications();
     }
 
-    public void updateConsultSubs(Collection<SubscriptionConsult> subs) {
+    public void updateConsultSubs(Collection<SubsConsult> subs) {
         consultDao.update(subs);
+    }
+
+    public long countConsultSubs() {
+        return consultDao.count();
     }
 
     /* Courses */
 
-    public SubscriptionCourse getCourseSubs(String chatId) {
+    public SubsCourse getCourseSubs(String chatId) {
         return coursesDao.find(chatId);
     }
 
-    public Collection<SubscriptionCourse> getNotMailedCourseSubs() {
-        return coursesDao.findNotMailed(30);
+    public Collection<SubsCourse> getNotNotifiedCourseSubs() {
+        return coursesDao.findNotNotified(30);
     }
 
-    public void subscribeCourse(String chatId, NamespacedKey scheduleKey) {
-        SubscriptionCourse sub = new SubscriptionCourse();
-        sub.setTelegramId(chatId);
+    public void subscribeCourse(BotUser user, NamespacedKey scheduleKey) {
+        SubsCourse sub = new SubsCourse();
+        sub.setTgId(user.getTgId());
         sub.setScheduleKey(scheduleKey);
+        sub.setUser(user);
         coursesDao.save(sub);
     }
 
-    public boolean unsubscribeCourse(String chatId) {
-        return coursesDao.delete(chatId);
+    public boolean unsubscribeCourse(BotUser user) {
+        user.setSubsCourse(null);
+        return coursesDao.delete(user.getTgId());
     }
 
-    public void resetCourseMailing(Collection<NamespacedKey> keys) {
-        coursesDao.resetMailing(keys.stream()
+    public void resetCourseNotifications(Collection<NamespacedKey> keys) {
+        coursesDao.resetNotications(keys.stream()
                 .map(NamespacedKey::toString)
                 .collect(Collectors.toList()));
     }
 
-    public void updateCourseSubs(Collection<SubscriptionCourse> subs) {
+    public void updateCourseSubs(Collection<SubsCourse> subs) {
         coursesDao.update(subs);
+    }
+
+    public long countCourseSubs() {
+        return coursesDao.count();
     }
 
     /* Groups */
 
-    public SubscriptionGroup getGroupSubs(String chatId) {
+    public SubsGroup getGroupSubs(String chatId) {
         return groupsDao.find(chatId);
     }
 
-    public Collection<SubscriptionGroup> getNotMailedGroupSubs() {
-        return groupsDao.findNotMailed(30);
+    public Collection<SubsGroup> getNotNotifiedGroupSubs() {
+        return groupsDao.findNotNotified(30);
     }
 
-    public void subscribeGroup(String chatId, String group) {
-        SubscriptionGroup sub = new SubscriptionGroup();
-        sub.setTelegramId(chatId);
+    public void subscribeGroup(BotUser user, String group) {
+        SubsGroup sub = new SubsGroup();
+        sub.setTgId(user.getTgId());
         sub.setGroupName(group);
+        sub.setUser(user);
         groupsDao.save(sub);
     }
 
-    public boolean unsubscribeGroup(String chatId) {
-        return groupsDao.delete(chatId);
+    public boolean unsubscribeGroup(BotUser user) {
+        user.setSubsGroup(null);
+        return groupsDao.delete(user.getTgId());
     }
 
-    public void resetGroupMailing(Collection<String> groups) {
-        groupsDao.resetMailing(groups);
+    public void resetGroupNotifications(Collection<String> groups) {
+        groupsDao.resetNotifications(groups);
     }
 
-    public void updateGroupSubs(Collection<SubscriptionGroup> subs) {
+    public void updateGroupSubs(Collection<SubsGroup> subs) {
         groupsDao.update(subs);
+    }
+
+    public long countGroupSubs() {
+        return groupsDao.count();
     }
 
     /* Points */
 
-    public SubscriptionPoints getPointsSubs(String chatId) {
+    public SubsPoint getPointsSubs(String chatId) {
         return pointsDao.find(chatId);
     }
 
-    public void subscribePoints(String chatId, Person student, String password) {
-        SubscriptionPoints sub = new SubscriptionPoints();
-        sub.setTelegramId(chatId);
-        sub.setPerson(student);
+    public void subscribePoints(BotUser user, Person student, String password) {
+        SubsPoint sub = new SubsPoint();
+        sub.setTgId(user.getTgId());
+        sub.setFistName(student.firstName());
+        sub.setLastName(student.lastName());
+        sub.setPatronymic(student.patronymic());
         sub.setPassword(password);
+        sub.setUser(user);
         pointsDao.save(sub);
     }
 
-    public boolean unsubscribePoints(String chatId) {
-        return pointsDao.delete(chatId);
+    public boolean unsubscribePoints(BotUser user) {
+        user.setSubsPoint(null);
+        return pointsDao.delete(user.getTgId());
+    }
+
+    public long countPointsSubs() {
+        return pointsDao.count();
     }
 
 }

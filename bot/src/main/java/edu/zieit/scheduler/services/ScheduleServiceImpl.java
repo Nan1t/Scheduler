@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.services;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.render.SheetRenderer;
 import edu.zieit.scheduler.api.schedule.Schedule;
@@ -7,7 +8,7 @@ import edu.zieit.scheduler.api.schedule.ScheduleLoader;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.api.util.HashUtil;
 import edu.zieit.scheduler.config.ScheduleConfig;
-import edu.zieit.scheduler.persistence.ScheduleHash;
+import edu.zieit.scheduler.persistence.entity.ScheduleHash;
 import edu.zieit.scheduler.persistence.dao.HashesDao;
 import edu.zieit.scheduler.render.AsposeRenderer;
 import edu.zieit.scheduler.schedule.TimeTable;
@@ -15,7 +16,7 @@ import edu.zieit.scheduler.schedule.classroom.ClassroomSchedule;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleLoader;
 import edu.zieit.scheduler.schedule.course.*;
 import edu.zieit.scheduler.schedule.teacher.TeacherScheduleLoader;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,6 +47,7 @@ public final class ScheduleServiceImpl implements ScheduleService {
     private List<String> groups;
     private List<String> classrooms;
 
+    @Inject
     public ScheduleServiceImpl(Language lang, ScheduleConfig config, HashesDao hashesDao) {
         this.lang = lang;
         this.config = config;
@@ -76,8 +78,18 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Schedule getCourseSchedule(NamespacedKey key) {
-        return coursesSchedule.get(key);
+    public Schedule getCourseSchedule(NamespacedKey nsKey) {
+        Schedule schedule = coursesSchedule.get(nsKey);
+
+        if (schedule == null && nsKey.hasKey()) {
+            for (var entry : coursesSchedule.entrySet()) {
+                if (entry.getKey().isSimilar(nsKey)) {
+                    return entry.getValue();
+                }
+            }
+        }
+
+        return schedule;
     }
 
     @Override

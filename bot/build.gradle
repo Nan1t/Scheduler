@@ -14,6 +14,9 @@ dependencies {
     implementation project(':api')
     implementation project(':parser')
 
+    implementation 'com.google.inject:guice:5.1.0'
+    implementation 'com.google.inject.extensions:guice-assistedinject:5.1.0'
+
     implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
     implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}"
     implementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}"
@@ -26,6 +29,9 @@ dependencies {
     implementation 'org.hibernate:hibernate-hikaricp:5.3.7.Final'
     implementation 'com.zaxxer:HikariCP:3.2.0'
     implementation 'org.postgresql:postgresql:42.2.5'
+
+    implementation 'io.javalin:javalin:4.6.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
 }
 
 shadowJar {

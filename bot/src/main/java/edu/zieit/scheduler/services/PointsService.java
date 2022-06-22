@@ -1,5 +1,6 @@
 package edu.zieit.scheduler.services;
 
+import com.google.inject.Inject;
 import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.util.ConversionUtil;
@@ -29,6 +30,7 @@ public final class PointsService {
     private final HttpGet pointsRequest;
     private final RequestConfig requestConfig;
 
+    @Inject
     public PointsService(MainConfig conf) {
         this.conf = conf;
 

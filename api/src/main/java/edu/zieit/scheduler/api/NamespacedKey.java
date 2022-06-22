@@ -1,6 +1,6 @@
 package edu.zieit.scheduler.api;
 
-import com.google.common.base.Preconditions;
+import edu.zieit.scheduler.api.util.Preconditions;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -25,6 +25,16 @@ public record NamespacedKey(String namespace, String key) implements Serializabl
      */
     public boolean compareNamespace(NamespacedKey another) {
         return another.namespace().equals(this.namespace());
+    }
+
+    public boolean hasKey() {
+        return key != null && !key.isEmpty();
+    }
+
+    public boolean isSimilar(NamespacedKey another) {
+        if (!compareNamespace(another)) return false;
+        if (!this.hasKey() && !another.hasKey()) return true;
+        return this.hasKey() && another.hasKey() && this.key.startsWith(another.key());
     }
 
     @Override
@@ -73,6 +83,7 @@ public record NamespacedKey(String namespace, String key) implements Serializabl
      */
     public static NamespacedKey parse(String str) {
         Preconditions.checkNotNull(str, "Raw NamespaceKey cannot be null");
+
         String[] arr = str.split(":");
         if (arr.length == 1) return of(arr[0]);
         if (arr.length != 2) throw new IllegalArgumentException("Invalid namespaced key: " + str);

@@ -9,8 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
 
-public record LastMessageCallback(ChatSession session)
-        implements SentCallback<Message> {
+public record LastMessageCallback(ChatSession session) implements SentCallback<Message> {
 
     private static final Logger logger = LogManager.getLogger(ChatManager.class);
 

@@ -4,11 +4,10 @@ import edu.zieit.scheduler.api.Pair;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.bot.states.ListState;
 import edu.zieit.scheduler.schedule.consult.ConsultSchedule;
-import edu.zieit.scheduler.schedule.teacher.TeacherSchedule;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +25,7 @@ public class StateConsultList extends ListState {
 
     @Override
     protected void onSelected(ChatInput input, ChatSession session) {
-        session.add("teacher", input.getUpdate()
+        session.add("teacher", input.update()
                 .getCallbackQuery().getData());
     }
 

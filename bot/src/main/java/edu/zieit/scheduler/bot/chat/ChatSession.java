@@ -1,40 +1,79 @@
 package edu.zieit.scheduler.bot.chat;
 
-import edu.zieit.scheduler.bot.SchedulerBot;
-import napi.configurate.yaml.lang.Language;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
+import edu.zieit.scheduler.bot.Bot;
+import edu.zieit.scheduler.bot.state.State;
+import edu.zieit.scheduler.persistence.entity.BotUser;
+import edu.zieit.scheduler.services.PointsService;
+import edu.zieit.scheduler.services.SubsService;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChatSession {
 
-    private final ChatManager chatManager;
+    private final Bot bot;
+    private final Language lang;
+    private final ScheduleService scheduleService;
+    private final SubsService subsService;
+    private final PointsService pointsService;
+
+    private final BotUser user;
     private final String chatId;
     private final Map<String, Object> args = new HashMap<>();
 
     private State state;
     private int lastMsgId;
 
-    public ChatSession(ChatManager chatManager, String chatId) {
-        this.chatManager = chatManager;
+    @AssistedInject
+    public ChatSession(
+            Bot bot,
+            Language lang,
+            ScheduleService scheduleService,
+            SubsService subsService,
+            PointsService pointsService,
+            @Assisted String chatId,
+            @Assisted BotUser user
+    ) {
+        this.bot = bot;
+        this.lang = lang;
+        this.scheduleService = scheduleService;
+        this.subsService = subsService;
+        this.pointsService = pointsService;
         this.chatId = chatId;
+        this.user = user;
         resetLastMsgId();
     }
 
-    public ChatManager getChatManager() {
-        return chatManager;
-    }
-
-    public SchedulerBot getBot() {
-        return chatManager.getBot();
+    public Bot getBot() {
+        return bot;
     }
 
     public Language getLang() {
-        return chatManager.getBot().getLang();
+        return lang;
+    }
+
+    public ScheduleService getScheduleService() {
+        return scheduleService;
+    }
+
+    public SubsService getSubsService() {
+        return subsService;
+    }
+
+    public PointsService getPointsService() {
+        return pointsService;
     }
 
     public String getChatId() {
         return chatId;
+    }
+
+    public BotUser getUser() {
+        return user;
     }
 
     public State getState() {
@@ -95,7 +134,15 @@ public class ChatSession {
     }
 
     public void reply(String message) {
-        getBot().sendMessage(this, message);
+        bot.sendMessage(this, message);
+    }
+
+    public void reply(Object method) {
+        bot.send(this, method);
+    }
+
+    public void reply(Object[] method) {
+        bot.send(this, method);
     }
 
 }

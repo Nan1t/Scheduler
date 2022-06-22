@@ -67,7 +67,7 @@ public class TeacherScheduleLoader extends AbstractScheduleLoader {
                 int classNum = Integer.parseInt(ExcelUtil.getCellValue(classNumCell));
                 String coursesRaw = ExcelUtil.getCellValue(coursesCell);
 
-                if (!coursesRaw.strip().isEmpty()) {
+                if (!coursesRaw.isBlank()) {
                     Collection<String> courses = Arrays.stream(coursesRaw.split(","))
                             .map(s->s.trim().toLowerCase())
                             .collect(Collectors.toList());

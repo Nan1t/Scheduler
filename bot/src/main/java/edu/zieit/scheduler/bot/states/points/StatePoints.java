@@ -4,9 +4,9 @@ import edu.zieit.scheduler.api.Person;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
-import edu.zieit.scheduler.persistence.subscription.SubscriptionPoints;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
+import edu.zieit.scheduler.persistence.entity.SubsPoint;
 import edu.zieit.scheduler.services.PointsService;
 import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.util.ChatUtil;
@@ -24,7 +24,7 @@ public class StatePoints extends State {
 
     @Override
     public void activate(ChatSession session) {
-        SubsService subsService = session.getBot().getSubsService();
+        SubsService subsService = session.getSubsService();
 
         if (session.has("person") && session.has("password")) {
             Person person = session.get("person");
@@ -32,7 +32,7 @@ public class StatePoints extends State {
 
             send(session, person, password);
         } else {
-            SubscriptionPoints subs = subsService.getPointsSubs(session.getChatId());
+            SubsPoint subs = subsService.getPointsSubs(session.getChatId());
 
             if (subs != null) {
                 send(session, subs.getPerson(), subs.getPassword());
@@ -44,16 +44,19 @@ public class StatePoints extends State {
 
     private void send(ChatSession session, Person person, String password) {
         try {
-            PointsService pointsService = session.getBot().getPointsService();
+            PointsService pointsService = session.getPointsService();
             byte[] bytes = pointsService.getPoints(person, password);
 
             if (bytes != null) {
-                ScheduleService service = session.getBot().getScheduleService();
+                ScheduleService service = session.getScheduleService();
                 InputStream img = new ByteArrayInputStream(bytes);
                 String caption = session.getLang().of("cmd.points.caption");
 
-                session.getBot().send(session, ChatUtil.editableMessage(session, img,
-                        FilenameUtil.getNameWithExt(service, "photo"), caption));
+                session.reply(ChatUtil.editableMessage(
+                        session,
+                        img,
+                        FilenameUtil.getNameWithExt(service, "photo"),
+                        caption));
 
                 return;
             }

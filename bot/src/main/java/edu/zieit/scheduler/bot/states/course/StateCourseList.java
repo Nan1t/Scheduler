@@ -5,10 +5,10 @@ import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.bot.states.ListState;
 import edu.zieit.scheduler.schedule.course.CourseSchedule;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -28,8 +28,7 @@ public class StateCourseList extends ListState {
 
     @Override
     protected void onSelected(ChatInput input, ChatSession session) {
-        session.add("course", input.getUpdate()
-                .getCallbackQuery().getData());
+        session.add("course", input.update().getCallbackQuery().getData());
     }
 
     @Override

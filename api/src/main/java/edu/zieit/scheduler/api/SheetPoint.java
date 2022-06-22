@@ -1,8 +1,11 @@
 package edu.zieit.scheduler.api;
 
-import com.google.common.reflect.TypeToken;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.serialize.TypeSerializer;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.serialize.TypeSerializer;
+
+import java.lang.reflect.Type;
 
 /**
  * 0-based cell position
@@ -12,17 +15,17 @@ public record SheetPoint(int col, int row) {
     public static class Serializer implements TypeSerializer<SheetPoint> {
 
         @Override
-        public SheetPoint deserialize(TypeToken<?> type, ConfigurationNode node) {
-            int col = node.getNode("col").getInt();
-            int row = node.getNode("row").getInt();
+        public SheetPoint deserialize(Type type, ConfigurationNode node) throws SerializationException {
+            int col = node.node("col").getInt();
+            int row = node.node("row").getInt();
             return new SheetPoint(col, row);
         }
 
         @Override
-        public void serialize(TypeToken<?> type, SheetPoint point, ConfigurationNode node) {
+        public void serialize(Type type, @Nullable SheetPoint point, ConfigurationNode node) throws SerializationException {
             if (point != null) {
-                node.getNode("col").setValue(point.col());
-                node.getNode("row").setValue(point.row());
+                node.node("col").set(point.col());
+                node.node("row").set(point.row());
             }
         }
 

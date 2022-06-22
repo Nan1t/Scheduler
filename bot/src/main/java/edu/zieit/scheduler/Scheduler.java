@@ -1,31 +1,23 @@
 package edu.zieit.scheduler;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import edu.zieit.scheduler.api.Regexs;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.SchedulerBot;
 import edu.zieit.scheduler.config.MainConfig;
 import edu.zieit.scheduler.config.ScheduleConfig;
-import edu.zieit.scheduler.persistence.ScheduleHash;
-import edu.zieit.scheduler.persistence.TeacherNotice;
-import edu.zieit.scheduler.persistence.dao.*;
-import edu.zieit.scheduler.persistence.subscription.*;
+import edu.zieit.scheduler.inject.*;
 import edu.zieit.scheduler.schedule.TimeTable;
-import edu.zieit.scheduler.services.PointsService;
-import edu.zieit.scheduler.services.ScheduleServiceImpl;
-import edu.zieit.scheduler.services.SubsService;
 import edu.zieit.scheduler.services.TimerService;
-import edu.zieit.scheduler.util.LibLoader;
-import napi.configurate.yaml.lang.Language;
-import napi.configurate.yaml.source.ConfigSources;
+import edu.zieit.scheduler.server.WebServer;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -36,19 +28,26 @@ public final class Scheduler {
     private SessionFactory sessionFactory;
     private SchedulerBot bot;
     private TimerService timer;
+    private WebServer webServer;
 
     public void start() throws Exception {
         Path rootDir = Paths.get("./");
-
         MainConfig conf = new MainConfig(rootDir);
         ScheduleConfig scheduleConf = new ScheduleConfig(rootDir);
-        Language lang = Language.builder()
-                .source(ConfigSources.resource("/lang.yml", this)
-                        .copyTo(rootDir))
-                .build();
 
         conf.reload();
         scheduleConf.reload();
+
+        Injector injector = Guice.createInjector(
+                new BaseModule(rootDir, conf, scheduleConf),
+                new PersistenceModule(conf),
+                new ServicesModule(),
+                new WebModule(),
+                new BotModule()
+        );
+
+        Language lang = injector.getInstance(Language.class);
+
         lang.reload();
 
         Regexs.TEACHER = conf.getRegexTeacherDefault();
@@ -57,33 +56,26 @@ public final class Scheduler {
 
         TimeTable.setDayIndexes(scheduleConf.getDayIndexes());
 
-        initHibernate(conf);
+        sessionFactory = injector.getInstance(SessionFactory.class);
 
-        TeacherSubsDao teacherDao = new TeacherSubsDao(sessionFactory);
-        ConsultSubsDao consultDao = new ConsultSubsDao(sessionFactory);
-        CourseSubsDao coursesDao = new CourseSubsDao(sessionFactory);
-        GroupSubsDao groupsDao = new GroupSubsDao(sessionFactory);
-        PointsSubsDao pointsDao = new PointsSubsDao(sessionFactory);
-        NoticesDao noticesDao = new NoticesDao(sessionFactory);
-        HashesDao hashesDao = new HashesDao(sessionFactory);
-
-        SubsService subsService = new SubsService(teacherDao, consultDao, coursesDao, pointsDao, noticesDao, groupsDao);
-        ScheduleService scheduleService = new ScheduleServiceImpl(lang, scheduleConf, hashesDao);
-        PointsService pointsService = new PointsService(conf);
+        ScheduleService scheduleService = injector.getInstance(ScheduleService.class);
 
         logger.info("Loading schedule ...");
         scheduleService.reloadAll();
         logger.info("All schedule loaded");
 
-        bot = new SchedulerBot(conf, lang, scheduleService, subsService, pointsService);
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+        bot = injector.getInstance(SchedulerBot.class);
 
         logger.info("Starting long polling bot ...");
         botsApi.registerBot(bot);
 
-        timer = new TimerService(scheduleConf, bot, scheduleService, subsService);
+        timer = injector.getInstance(TimerService.class);
         timer.start();
         logger.info("Started timer");
+
+        webServer = injector.getInstance(WebServer.class);
+        webServer.start(conf);
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "Scheduler shutdown thread"));
 
@@ -91,6 +83,7 @@ public final class Scheduler {
     }
 
     public void shutdown() {
+        webServer.stop();
         logger.info("Stopping timer ...");
         timer.stop();
         logger.info("Closing connections ...");
@@ -98,39 +91,6 @@ public final class Scheduler {
         logger.info("Closing long polling bot ...");
         bot.shutdown();
         System.out.println("Goodbye!");
-    }
-
-    private void initHibernate(MainConfig conf) {
-        Path driversDir = Paths.get("./drivers").toAbsolutePath();
-        ClassLoader mainLoader = null;
-
-        if (Files.exists(driversDir)) {
-            LibLoader loader = new LibLoader();
-            loader.loadAll(driversDir);
-            loader.finishLoad();
-            mainLoader = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(loader.classLoader());
-        }
-
-        Configuration configuration = new Configuration();
-
-        configuration.addProperties(conf.getDbProperties());
-
-        configuration.addAnnotatedClass(SubscriptionPoints.class);
-        configuration.addAnnotatedClass(SubscriptionTeacher.class);
-        configuration.addAnnotatedClass(SubscriptionConsult.class);
-        configuration.addAnnotatedClass(SubscriptionCourse.class);
-        configuration.addAnnotatedClass(SubscriptionGroup.class);
-        configuration.addAnnotatedClass(ScheduleHash.class);
-        configuration.addAnnotatedClass(TeacherNotice.class);
-
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-
-        sessionFactory = configuration.buildSessionFactory(builder.build());
-
-        if (mainLoader != null)
-            Thread.currentThread().setContextClassLoader(mainLoader);
     }
 
     public static void main(String[] args) {

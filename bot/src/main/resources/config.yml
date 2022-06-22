@@ -3,14 +3,15 @@
 #
 
 # Настройка подключения к БД через Hibernate
+# Версия драйвера H2 должен быть не выше 1.4.200
 database:
   'hibernate.dialect': "org.hibernate.dialect.H2Dialect"
   'hibernate.connection.driver_class': "org.h2.Driver"
-  'hibernate.connection.url': "jdbc:h2:./database"
+  'hibernate.connection.url': "jdbc:h2:./database;mode=MYSQL"
   'hibernate.connection.username': "user"
   'hibernate.connection.password': "user"
   'hibernate.show_sql': "false"
-  'hibernate.hbm2ddl.auto': "update"
+  'hibernate.hbm2ddl.auto': "create"
   'hibernate.jdbc.batch_size': "50"
 
 # Настройка подключения к Telegram боту
@@ -41,3 +42,10 @@ points:
 
 # Кол-во потоков для параллельной обработки запросов
 thread_pool_size: 6
+
+# Настройка REST API для панели управления
+rest_api:
+  # Запускать ли API сервер
+  enable: false
+  # Порт, на котором будет работать сервер
+  port: 8080

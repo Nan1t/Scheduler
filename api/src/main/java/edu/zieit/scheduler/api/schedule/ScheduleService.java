@@ -2,7 +2,7 @@ package edu.zieit.scheduler.api.schedule;
 
 import edu.zieit.scheduler.api.NamespacedKey;
 import edu.zieit.scheduler.api.render.SheetRenderer;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -70,9 +70,9 @@ public interface ScheduleService {
 
     /**
      * Reload and reparse all updated students schedules
-     * @param initial Is this initial (first loading).
-     *                On first load hashes equality will be ignored.
-     * @return Collection of schedules which has been reloaded
+     * @param initial Is this initial (first) loading.
+     *                On first load, hashes equality will be ignored.
+     * @return Collection of schedule which has been reloaded
      */
     Collection<Schedule> reloadCourseSchedule(boolean initial);
 

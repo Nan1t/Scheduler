@@ -2,23 +2,21 @@ package edu.zieit.scheduler.bot.states.course;
 
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.services.SubsService;
 
 public class StateCourseDeny extends State {
 
     @Override
     public void activate(ChatSession session) {
-        SubsService subsService = session.getBot().getSubsService();
-        boolean res = subsService.unsubscribeCourse(session.getChatId());
+        SubsService subsService = session.getSubsService();
+        boolean res = subsService.unsubscribeCourse(session.getUser());
 
         if (res) {
-            session.getBot().sendMessage(session,
-                    session.getLang().of("cmd.course.deny"));
+            session.reply(session.getLang().of("cmd.course.deny"));
         } else {
-            session.getBot().sendMessage(session,
-                    session.getLang().of("cmd.course.nosubs"));
+            session.reply(session.getLang().of("cmd.course.nosubs"));
         }
     }
 

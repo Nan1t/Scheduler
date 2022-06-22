@@ -1,25 +1,18 @@
 package edu.zieit.scheduler.bot.chat;
 
-import edu.zieit.scheduler.bot.SchedulerBot;
-import edu.zieit.scheduler.bot.states.StateDenyAll;
-import edu.zieit.scheduler.bot.states.StateHelp;
-import edu.zieit.scheduler.bot.states.aud.StateAudList;
-import edu.zieit.scheduler.bot.states.aud.StateAudShow;
-import edu.zieit.scheduler.bot.states.consult.*;
-import edu.zieit.scheduler.bot.states.course.StateCourse;
-import edu.zieit.scheduler.bot.states.course.StateCourseDeny;
-import edu.zieit.scheduler.bot.states.course.StateCourseList;
-import edu.zieit.scheduler.bot.states.course.StateCourseShow;
-import edu.zieit.scheduler.bot.states.group.StateGroup;
-import edu.zieit.scheduler.bot.states.group.StateGroupDeny;
-import edu.zieit.scheduler.bot.states.group.StateGroupList;
-import edu.zieit.scheduler.bot.states.group.StateGroupShow;
-import edu.zieit.scheduler.bot.states.points.StatePoints;
-import edu.zieit.scheduler.bot.states.points.StatePointsDeny;
-import edu.zieit.scheduler.bot.states.teacher.*;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import edu.zieit.scheduler.bot.Bot;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
+import edu.zieit.scheduler.bot.state.StateRegistry;
+import edu.zieit.scheduler.persistence.entity.BotUser;
+import edu.zieit.scheduler.services.SubsService;
+import edu.zieit.scheduler.api.config.Language;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,28 +21,26 @@ public class ChatManager {
 
     private static final Logger logger = LogManager.getLogger(ChatManager.class);
 
-    private final SchedulerBot bot;
-    private final Map<String, ChatSession> sessions;
-    private final Map<String, State> baseStates = new HashMap<>();
+    private final Bot bot;
+    private final Language lang;
+    private final StateRegistry states;
+    private final SubsService subsService;
+    private final ChatSessionFactory sessionFactory;
+    private final Map<String, ChatSession> sessions = new HashMap<>();
 
-    public ChatManager(SchedulerBot bot) {
+    @Inject
+    public ChatManager(
+            Bot bot,
+            Language lang,
+            StateRegistry states,
+            SubsService subsService,
+            Provider<ChatSessionFactory> sessionFactory
+    ) {
         this.bot = bot;
-        sessions = new HashMap<>();
-        registerStates();
-    }
-
-    public SchedulerBot getBot() {
-        return bot;
-    }
-
-    public State getBaseState(String cmd) {
-        return baseStates.get(cmd.toLowerCase());
-    }
-
-    public void registerState(State state, String... aliases) {
-        for (String alias : aliases) {
-            baseStates.put(alias.toLowerCase(), state);
-        }
+        this.lang = lang;
+        this.states = states;
+        this.subsService = subsService;
+        this.sessionFactory = sessionFactory.get();
     }
 
     public void handleUpdate(Update update) {
@@ -57,7 +48,7 @@ public class ChatManager {
 
         if (chatId == null) return;
 
-        ChatSession session = getOrCreateSession(chatId);
+        ChatSession session = getOrCreateSession(update, chatId);
         ChatInput input = new ChatInput(chatId, session, update);
 
         if (update.hasMessage()) {
@@ -67,16 +58,16 @@ public class ChatManager {
                 String cmdRaw = update.getMessage().getText();
                 String[] arr = cmdRaw.split("@");
 
-                if (arr.length > 1 && !arr[1].equalsIgnoreCase(bot.getBotUsername())) {
+                if (arr.length > 1 && !arr[1].equalsIgnoreCase(bot.getUsername())) {
                     // Command not for this bot
                     endSession(chatId);
                     return;
                 }
 
                 String cmd = arr[0].substring(1);
-                logger.info("Income command: '" + cmd + "' from " + getUser(update));
+                logger.info("Income command: '" + cmd + "' from " + getUsername(update));
 
-                State state = getBaseState(cmd);
+                State state = states.getBaseState(cmd);
 
                 if (state != null) {
                     session.updateState(state);
@@ -84,7 +75,7 @@ public class ChatManager {
                     if (!state.hasNext())
                         endSession(chatId);
                 } else {
-                    bot.sendMessage(session, bot.getLang().of("cmd.unsupported"));
+                    bot.sendMessage(session, lang.of("cmd.unsupported"));
                 }
                 return;
             }
@@ -107,11 +98,24 @@ public class ChatManager {
                 endSession(chatId);
         }
 
-        bot.sendMessage(session, bot.getLang().of("cmd.unsupported"));
+        bot.sendMessage(session, lang.of("cmd.unsupported"));
     }
 
-    private ChatSession getOrCreateSession(String chatId) {
-        return sessions.computeIfAbsent(chatId, id -> new ChatSession(this, id));
+    private ChatSession getOrCreateSession(Update update, String chatId) {
+        return sessions.computeIfAbsent(chatId, tgId -> {
+            User user = getUser(update);
+
+            if (user == null)
+                throw new IllegalArgumentException("Bot user is null");
+
+            BotUser botUser = subsService.getOrCreateUser(
+                    tgId,
+                    user.getUserName(),
+                    user.getFirstName(),
+                    user.getLastName()
+            );
+            return sessionFactory.createSession(tgId, botUser);
+        });
     }
 
     private void endSession(String chatId) {
@@ -126,7 +130,15 @@ public class ChatManager {
         return null;
     }
 
-    private String getUser(Update update) {
+    private User getUser(Update update) {
+        if (update.hasMessage())
+            return update.getMessage().getFrom();
+        else if (update.hasCallbackQuery())
+            return update.getCallbackQuery().getFrom();
+        return null;
+    }
+
+    private String getUsername(Update update) {
         String username = update.getMessage().getFrom().getUserName();
         String firstName = update.getMessage().getFrom().getFirstName();
         String lastName = update.getMessage().getFrom().getLastName();
@@ -134,47 +146,14 @@ public class ChatManager {
 
         builder.append(String.format("[%s %s", firstName, lastName));
 
-        if (username != null)
+        if (username != null) {
             builder.append("(")
                     .append(username)
                     .append(")");
+        }
 
         builder.append("]");
 
         return builder.toString();
-    }
-
-    private void registerStates() {
-        registerState(new StateHelp(bot.getLang()), "help", "start");
-
-        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow(true)), "teachersub", "teachersubscribe");
-        registerState(new StateTeacherList(bot.getLang(), new StateTeacherShow(false)), "teachershow");
-        registerState(new StateTeacherDeny(), "teacherdeny");
-        registerState(new StateTeacher(), "teacher");
-        registerState(new StateToggleNotices(), "notices");
-
-        registerState(new StateCourseList(bot.getLang(), new StateCourseShow(true)), "coursesub", "studentsubscribe");
-        registerState(new StateCourseList(bot.getLang(), new StateCourseShow(false)), "courseshow");
-        registerState(new StateCourseDeny(), "coursedeny");
-        registerState(new StateCourse(), "course");
-
-        registerState(new StateGroupList(bot.getLang(), new StateGroupShow(true)), "groupsub");
-        registerState(new StateGroupList(bot.getLang(), new StateGroupShow(false)), "groupshow");
-        registerState(new StateGroupDeny(), "groupdeny");
-        registerState(new StateGroup(), "group");
-
-        registerState(new StateConsultList(bot.getLang(), new StateConsultShow(true)), "consultsub");
-        registerState(new StateConsultList(bot.getLang(), new StateConsultShow(false)), "consultshow");
-        registerState(new StateConsultDeny(), "consultdeny");
-        registerState(new StateConsultAll(), "consall");
-        registerState(new StateConsult(), "consult");
-
-        registerState(new StateAudList(bot.getLang(), new StateAudShow()), "aud");
-        //registerState(new StateAudComp(), "audcomp");
-
-        registerState(new StateDenyAll(), "denyall");
-
-        registerState(new StatePoints(), "points");
-        registerState(new StatePointsDeny(), "pointsdeny");
     }
 }

@@ -4,8 +4,8 @@ import edu.zieit.scheduler.api.schedule.Schedule;
 import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
 import edu.zieit.scheduler.util.ChatUtil;
 import edu.zieit.scheduler.util.FilenameUtil;
 
@@ -16,12 +16,12 @@ public class StateConsultAll extends State {
 
     @Override
     public void activate(ChatSession session) {
-        ScheduleService service = session.getBot().getScheduleService();
+        ScheduleService service = session.getScheduleService();
         Schedule schedule = service.getConsultSchedule();
         InputStream img = new ByteArrayInputStream(schedule.toImage());
         String caption = session.getLang().of("cmd.consult.all.caption");
 
-        session.getChatManager().getBot().send(session, ChatUtil.editableMessage(session, img,
+        session.reply(ChatUtil.editableMessage(session, img,
                 FilenameUtil.getNameWithExt(service, "photo"), caption));
     }
 

@@ -2,9 +2,9 @@ package edu.zieit.scheduler.bot.states;
 
 import edu.zieit.scheduler.bot.chat.ChatInput;
 import edu.zieit.scheduler.bot.chat.ChatSession;
-import edu.zieit.scheduler.bot.chat.InputResult;
-import edu.zieit.scheduler.bot.chat.State;
-import napi.configurate.yaml.lang.Language;
+import edu.zieit.scheduler.bot.state.InputResult;
+import edu.zieit.scheduler.bot.state.State;
+import edu.zieit.scheduler.api.config.Language;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class StateHelp extends State {
 
     @Override
     public void activate(ChatSession session) {
-        session.getBot().sendMessage(session, message);
+        session.reply(message);
     }
 
     @Override
