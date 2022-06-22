@@ -1,4 +1,4 @@
 package edu.zieit.scheduler.server.entity;
 
-public record LoginResponse(String accessToken) {
+public record LoginResponse(String accessToken, boolean isAdmin) {
 }

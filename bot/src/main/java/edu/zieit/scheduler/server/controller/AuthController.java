@@ -46,7 +46,7 @@ public class AuthController {
             session.setAgent(ctx.userAgent());
             userService.saveSession(session);
 
-            ctx.json(new LoginResponse(session.getAccessToken()));
+            ctx.json(new LoginResponse(session.getAccessToken(), session.getUser().isAdmin()));
             return;
         }
 

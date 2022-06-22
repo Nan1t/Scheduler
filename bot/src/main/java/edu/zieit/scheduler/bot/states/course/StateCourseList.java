@@ -28,8 +28,7 @@ public class StateCourseList extends ListState {
 
     @Override
     protected void onSelected(ChatInput input, ChatSession session) {
-        session.add("course", input.update()
-                .getCallbackQuery().getData());
+        session.add("course", input.update().getCallbackQuery().getData());
     }
 
     @Override

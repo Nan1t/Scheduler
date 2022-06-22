@@ -89,7 +89,7 @@ public final class ScheduleServiceImpl implements ScheduleService {
             }
         }
 
-        return null;
+        return schedule;
     }
 
     @Override

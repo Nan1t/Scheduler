@@ -50,7 +50,6 @@ public final class StateRegistry {
         registerState(new StateTeacherList(lang, new StateTeacherShow(false)), "teachershow");
         registerState(new StateTeacherDeny(), "teacherdeny");
         registerState(new StateTeacher(), "teacher");
-        //registerState(new StateToggleNotices(), "notices");
 
         registerState(new StateCourseList(lang, new StateCourseShow(true)), "coursesub", "studentsubscribe");
         registerState(new StateCourseList(lang, new StateCourseShow(false)), "courseshow");
