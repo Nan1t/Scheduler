@@ -2,6 +2,7 @@ package edu.zieit.scheduler.server.controller;
 
 import com.google.inject.Inject;
 import edu.zieit.scheduler.api.SheetPoint;
+import edu.zieit.scheduler.api.schedule.ScheduleService;
 import edu.zieit.scheduler.config.ScheduleConfig;
 import edu.zieit.scheduler.schedule.consult.ConsultScheduleInfo;
 import edu.zieit.scheduler.server.entity.ConsultProps;
@@ -20,10 +21,12 @@ public class ConsultController {
     private static final Logger log = LogManager.getLogger(ConsultController.class);
 
     private final ScheduleConfig config;
+    private final ScheduleService service;
 
     @Inject
-    public ConsultController(ScheduleConfig config) {
+    public ConsultController(ScheduleConfig config, ScheduleService service) {
         this.config = config;
+        this.service = service;
     }
 
     public void get(Context ctx) {
@@ -67,6 +70,8 @@ public class ConsultController {
             log.error("Config saving error", e);
             throw new InternalServerErrorResponse();
         }
+
+        service.reloadAll();
 
         ctx.json(new Response(true));
     }

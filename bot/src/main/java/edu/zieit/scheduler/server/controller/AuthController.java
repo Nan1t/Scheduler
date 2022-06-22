@@ -9,6 +9,7 @@ import edu.zieit.scheduler.server.entity.Response;
 import edu.zieit.scheduler.server.entity.ResponseError;
 import edu.zieit.scheduler.services.ApiUserService;
 import edu.zieit.scheduler.util.BCrypt;
+import io.javalin.core.util.Header;
 import io.javalin.http.Context;
 import io.javalin.http.UnauthorizedResponse;
 import org.apache.logging.log4j.LogManager;
@@ -63,15 +64,25 @@ public class AuthController {
 
         if (path.equals("/login")) return;
 
-        String accessToken = ctx.header("Authentication");
+        if (ctx.method().equals("OPTIONS")) {
+            ctx.header(Header.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+            ctx.header(Header.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+            return;
+        }
+
+        System.out.println("Request");
+
+        String accessToken = ctx.header("Authorization");
 
         if (accessToken == null) {
+            System.out.println("Token null");
             throw new UnauthorizedResponse();
         }
 
         ApiSession session = userService.findSession(accessToken);
 
         if (session == null) {
+            System.out.println("Session null");
             throw new UnauthorizedResponse();
         }
 

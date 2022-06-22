@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 public abstract class AbstractConfig {
 
@@ -20,12 +21,13 @@ public abstract class AbstractConfig {
     protected ConfigurationNode conf;
 
     public AbstractConfig(Path rootDir, String configPath) {
-        ConfigurationOptions options = ConfigurationOptions.defaults()
-                .serializers(serializers());
+//        ConfigurationOptions options = ConfigurationOptions.defaults()
+//                .serializers(serializers());
 
         this.loader = YamlConfigurationLoader.builder()
                 .path(resolveFile(rootDir, configPath))
-                .defaultOptions(options)
+                //.defaultOptions(options)
+                .defaultOptions(opts -> opts.serializers(this::serializers))
                 .nodeStyle(NodeStyle.BLOCK)
                 .indent(2)
                 .build();
@@ -42,8 +44,8 @@ public abstract class AbstractConfig {
 
     protected abstract void load() throws SerializationException;
 
-    protected TypeSerializerCollection serializers() {
-        return TypeSerializerCollection.defaults();
+    protected void serializers(TypeSerializerCollection.Builder build) {
+        // Ignore
     }
 
     protected Properties loadProperties(ConfigurationNode node) {

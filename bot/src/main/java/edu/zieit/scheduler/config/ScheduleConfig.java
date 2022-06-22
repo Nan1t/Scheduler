@@ -35,11 +35,7 @@ public final class ScheduleConfig extends AbstractConfig {
         compAud = conf.node("comp_auds").getList(String.class);
         teachers = conf.node("teachers").get(TeacherScheduleInfo.class);
         consult = conf.node("consult").get(ConsultScheduleInfo.class);
-        courses = new LinkedList<>();
-
-        for (var elem : conf.node("courses").childrenList()) {
-            courses.add(elem.get(CourseScheduleInfo.class));
-        }
+        courses = conf.node("courses").getList(CourseScheduleInfo.class);
 
         DocRenderOptions.Format renderFormat = DocRenderOptions.Format
                 .valueOf(conf.node("render", "format").getString("JPEG"));
@@ -55,13 +51,11 @@ public final class ScheduleConfig extends AbstractConfig {
     }
 
     @Override
-    protected TypeSerializerCollection serializers() {
-        return TypeSerializerCollection.builder()
-                .register(SheetPoint.class, new SheetPoint.Serializer())
-                .register(TeacherScheduleInfo.class, new TeacherScheduleInfo.Serializer())
-                .register(ConsultScheduleInfo.class, new ConsultScheduleInfo.Serializer())
-                .register(CourseScheduleInfo.class, new CourseScheduleInfo.Serializer())
-                .build();
+    protected void serializers(TypeSerializerCollection.Builder build) {
+        build.register(SheetPoint.class, new SheetPoint.Serializer());
+        build.register(TeacherScheduleInfo.class, new TeacherScheduleInfo.Serializer());
+        build.register(ConsultScheduleInfo.class, new ConsultScheduleInfo.Serializer());
+        build.register(CourseScheduleInfo.class, new CourseScheduleInfo.Serializer());
     }
 
     public long getCheckRate() {

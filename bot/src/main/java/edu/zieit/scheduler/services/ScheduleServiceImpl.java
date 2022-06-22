@@ -78,8 +78,18 @@ public final class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Schedule getCourseSchedule(NamespacedKey key) {
-        return coursesSchedule.get(key);
+    public Schedule getCourseSchedule(NamespacedKey nsKey) {
+        Schedule schedule = coursesSchedule.get(nsKey);
+
+        if (schedule == null && nsKey.hasKey()) {
+            for (var entry : coursesSchedule.entrySet()) {
+                if (entry.getKey().isSimilar(nsKey)) {
+                    return entry.getValue();
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

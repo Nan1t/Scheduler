@@ -27,6 +27,16 @@ public record NamespacedKey(String namespace, String key) implements Serializabl
         return another.namespace().equals(this.namespace());
     }
 
+    public boolean hasKey() {
+        return key != null && !key.isEmpty();
+    }
+
+    public boolean isSimilar(NamespacedKey another) {
+        if (!compareNamespace(another)) return false;
+        if (!this.hasKey() && !another.hasKey()) return true;
+        return this.hasKey() && another.hasKey() && this.key.startsWith(another.key());
+    }
+
     @Override
     public String toString() {
         return key.isEmpty() ? namespace : String.format("%s:%s", namespace, key);
