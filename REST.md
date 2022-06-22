@@ -343,31 +343,6 @@ Authentication: <access token>
 * `login_taken`
 * `password_short`
 
-### [POST] /user/edit
-
-Изменить существующего пользователя панели управления.
-
-**Запрос**
-```json
-{
-  "login": "<login>",
-  "password": "<password>",
-  "isAdmin": true
-}
-```
-
-**Ответ**
-```json
-{
-  "success": true
-}
-```
-
-**Возможные ошибки**
-
-* `user_not_found`
-* `password_short`
-
 ### [POST] /user/delete
 
 Удалить пользователя панели управления.
